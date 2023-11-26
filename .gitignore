@@ -1,0 +1,5 @@
+__pycache__/
+.venv/
+*.log
+get-pip.py
+get-pip.py.1
