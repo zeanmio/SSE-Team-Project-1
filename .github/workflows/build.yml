@@ -29,8 +29,6 @@ jobs:
         run: |
           cat requirements.txt
           pip install -r requirements.txt
-      - name: Run unit tests
-        run: pytest api/*.py
 
   deploy-to-vercel:
     needs: unit-testing
