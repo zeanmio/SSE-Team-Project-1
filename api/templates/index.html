@@ -51,14 +51,31 @@
         .hero-text h1 {
             margin: 0;
         }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            color: black;
+        }
+        form input[type="text"], form select {
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+        }
+        form input[type="submit"] {
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+        }
+        form input[type="submit"]:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
 
 <div class="navbar">
     <a href="#">Home</a>
-    <a href="#">Destinations</a>
-    <a href="#">Tours</a>
     <a href="#">About</a>
     <a href="#">Contact</a>
 </div>
@@ -75,6 +92,57 @@
     <p>
         Start your journey with us, explore the best destinations, enjoy unforgettable experiences and create lasting memories.
     </p>
+
+    <form action="/submit-form" method="post">
+        <h3>Enter your travel preferences:</h3>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username">
+        
+        <label for="current-location">Current Location (Country):</label>
+        <input type="text" id="current-location" name="current_location" placeholder="Enter your current country">
+
+        <label for="travel-time">Expected Travel Time (Month):</label>
+        <select name="travel_time" id="travel-time">
+            <option value="">--Select a Month--</option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+        </select>
+
+        <label for="weather">Preferred Weather:</label>
+        <select name="weather" id="weather">
+            <option value="">--Select Weather Preference--</option>
+            <option value="warm">Warm</option>
+            <option value="cold">Cold</option>
+            <option value="mild">Mild</option>
+        </select>
+
+        <label for="distance">Distance:</label>
+        <select name="distance" id="distance">
+            <option value="">--Select Distance--</option>
+            <option value="near">Near</option>
+            <option value="far">Far</option>
+        </select>
+
+        <label for="price">Price Range:</label>
+        <select name="price" id="price">
+            <option value="">--Select Price Range--</option>
+            <option value="expensive">Expensive</option>
+            <option value="cheap">Cheap</option>
+        </select>
+
+        <input type="submit" value="Find Destinations">
+    </form>
 </div>
 
 </body>
