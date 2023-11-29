@@ -74,6 +74,13 @@
             <button id="prev">Previous</button>
             <button id="next">Next</button>
         </div>
+    <div class="carousel-item city">
+        {% if min_temp and max_temp %}
+            <p>Min Temperature: {{ min_temp }}</p>
+            <p>Max Temperature: {{ max_temp }}</p>
+        {% endif %}
+</div>
+
     </div>
 
     <script>
