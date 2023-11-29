@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Explorer Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .carousel {
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .carousel-item {
+            width: 100%;
+            display: none;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .carousel-item.active {
+            display: block;
+        }
+        .city h2 {
+            color: #61b065;
+            margin-bottom: 10px;
+        }
+        .button-container {
+            text-align: center;
+        }
+        button {
+            background: #61b065;
+            color: #fff;
+            border: 0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        button:hover {
+            background: #3f8242;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="text-align:center;">Tourist Attractions</h1>
+        <div class="carousel">
+            {% for place in places_data.features %}
+                <div class="carousel-item city">
+                    <h2>{{ place.properties.name }}</h2>
+                    <p>Coordinates: {{ place.geometry.coordinates[0] }}, {{ place.geometry.coordinates[1] }}</p>
+                    <p>Distance: {{ place.properties.dist }}</p>
+                    <p>Kinds: {{ place.properties.kinds }}</p>
+                    <p>Rate: {{ place.properties.rate }}</p>
+                    <p>Wikidata: {{ place.properties.wikidata }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="button-container">
+            <button id="prev">Previous</button>
+            <button id="next">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        const items = document.querySelectorAll('.carousel-item');
+        const totalItems = items.length;
+
+        document.getElementById('prev').addEventListener('click', function() {
+            if (items.length > 0) {
+                items[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                items[currentIndex].classList.add('active');
+            }
+        });
+
+        document.getElementById('next').addEventListener('click', function() {
+            if (items.length > 0) {
+                items[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % totalItems;
+                items[currentIndex].classList.add('active');
+            }
+        });
+
+        if (items.length > 0) {
+            items[0].classList.add('active');
+        }
+    </script>
+</body>
+</html>

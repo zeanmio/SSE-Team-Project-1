@@ -85,28 +85,6 @@
             background-color: #555;
         }
     </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('form').addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                const city = document.getElementById('city').value;
-                fetch('/get-city-info?city=${city}')
-                    .then(response => response.json())
-                    .then(data => {
-                        displayResults(data);
-                    })
-                    .catch(error => console.error('Error:', error));
-            });
-
-            function displayResults(data) {
-                const resultsContainer = document.getElementById('results');
-                resultsContainer.innerHTML = '';
-            }
-        });
-    </script>
-
 </head>
 <body>
 
@@ -124,20 +102,21 @@
 </div>
 
 <div class="container">
-    <form action="/get-city-info" method="post">
+    <form action="/get-city-info" method="get">
         <h3>Enter your exploration details:</h3>
 
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" placeholder="Choose a cool explorer name">
+        <input type="text" id="username" name="username" placeholder="Choose a cool explorer name" value="{{username}}">
         
         <label for="country">Country:</label>
-        <input type="text" id="country" name="country" placeholder="Which country are we adventuring to">
+        <input type="text" id="country" name="country" placeholder="Which country are we adventuring to" value="{{country}}">
+        <small style="font-size: small; color: grey;">Enter country code (e.g., GB for United Kingdom, FR for France)</small><br><br>
 
         <label for="city">City:</label>
-        <input type="text" id="city" name="city" placeholder="Type the city you're dreaming of">
+        <input type="text" id="city" name="city" placeholder="Type the city you're dreaming of" value="{{city}}">
 
         <label for="date">Date (Year-Month-Day):</label>
-        <input type="date" id="date" name="date" placeholder="Select your time machine's date (YYYY-MM-DD)">
+        <input type="date" id="date" name="date" placeholder="Select your time machine's date (YYYY-MM-DD)" value="{{Date}}">
 
         <input type="submit" value="Explore City">
     </form>
