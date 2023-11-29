@@ -1,6 +1,2 @@
 __pycache__/
-<<<<<<< HEAD
 *.log
-=======
-*.log.venv/
->>>>>>> d6c107c (Update .gitignore to exclude .venv)
