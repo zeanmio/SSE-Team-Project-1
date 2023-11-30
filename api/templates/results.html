@@ -95,7 +95,7 @@
                 {% for place in places_data.features %}
                     <div class="place-carousel-item">
                         <h2>{{ place.properties.name }}</h2>
-                        <p>Coordinates: {{ place.geometry.coordinates[0] }}, {{ place.geometry.coordinates[1] }}</p>
+                        <p>Coordinates: {{ place.geometry.coordinates[1] }}, {{ place.geometry.coordinates[0] }}</p>
                         <p>Distance: {{ place.properties.dist }}</p>
                         <p>Kinds: {{ place.properties.kinds }}</p>
                         <p>Rate: {{ place.properties.rate }}</p>
