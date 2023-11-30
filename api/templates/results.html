@@ -93,6 +93,9 @@
             'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4' // Make sure to add your own API KEY
         });
 
+        var lon = {{ lon }};
+        var lat = {{ lat }};
+
         items.forEach((item, index) => {
             try {
                 var defaultLayers = platform.createDefaultLayers();
@@ -102,7 +105,7 @@
                     defaultLayers.vector.normal.map,
                     {
                         zoom: 10,
-                        center: { lat: places_data.features[index].geometry.coordinates[0], lng: places_data.features[index].geometry.coordinates[1] }
+                        center: { lat: lat, lng: lon }
                     }
                 );
 

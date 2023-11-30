@@ -30,7 +30,7 @@ def get_places_data(city):
     if not places_response.ok:
         return None, "Error fetching places"
 
-    return places_response.json(), None
+    return places_response.json(), lon, lat, None
 
 
 # Add new functions here
@@ -54,13 +54,13 @@ def get_city_info():
     city = request.args.get("city")
     date = request.args.get("date")
 
-    places_data, error = get_places_data(city)
+    places_data, lon, lat, error = get_places_data(city)
     if error:
         return jsonify({"error": error}), 500
 
     # Add new API calls here
 
-    return render_template("results.html", places_data=places_data)
+    return render_template("results.html", places_data=places_data, lon=lon, lat=lat)
     # Add new data in the return function
 
 
