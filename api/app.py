@@ -34,7 +34,7 @@ def get_places_data(city):
     lon = geoname_data["lon"]
     lat = geoname_data["lat"]
 
-    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=50000&lon={lon}&lat={lat}&rate=3h&limit=20&apikey={API_KEYS['opentripmap']}"
+    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=10000&lon={lon}&lat={lat}&rate=3h&limit=20&apikey={API_KEYS['opentripmap']}"
     places_response = requests.get(places_url)
 
     if not places_response.ok:
