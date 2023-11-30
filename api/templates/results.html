@@ -53,6 +53,11 @@
             background: #3f8242;
         }
     </style>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>    
 </head>
 
 <body>
@@ -67,6 +72,7 @@
                     <p>Kinds: {{ place.properties.kinds }}</p>
                     <p>Rate: {{ place.properties.rate }}</p>
                     <p>Wikidata: {{ place.properties.wikidata }}</p>
+                    <div id="mapContainer"></div>
                 </div>
             {% endfor %}
         </div>
@@ -82,6 +88,27 @@
         let currentIndex = 0;
         const items = document.querySelectorAll('.carousel-item');
         const totalItems = items.length;
+
+        var platform = new H.service.Platform({
+            'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4' // Make sure to add your own API KEY
+        });
+
+        items.forEach((item, index) => {
+            var defaultLayers = platform.createDefaultLayers();
+
+            var map = new H.Map(
+                item.querySelector('#mapContainer'),
+                defaultLayers.vector.normal.map,
+                {
+                    zoom: 10,
+                    center: { lat: places_data.features[index].geometry.coordinates[0], lng: places_data.features[index].geometry.coordinates[1] }
+                }
+            );
+
+            var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+            new H.ui.UI.createDefault(map, defaultLayers);
+        });
 
         document.getElementById('prev').addEventListener('click', function() {
             if (items.length > 0) {
