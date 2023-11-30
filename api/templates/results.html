@@ -107,9 +107,6 @@
      
         var mapContainer = document.getElementById('map');
      
-        var lat = window.lat
-        var lon = window.lon
-     
         var map = new H.Map(document.getElementById('map'),
             defaultLayers.vector.normal.map,{
             center: {lat:50, lng:5},
@@ -117,15 +114,17 @@
             pixelRatio: window.devicePixelRatio || 1
         });
 
-     
         window.addEventListener('resize', () => map.getViewPort().resize());
      
         var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
      
         var ui = H.ui.UI.createDefault(map, defaultLayers);
      
+        var lat = lat
+        var lon = lon
+
         function moveMapToCity(map){
-        map.setCenter({lat: window.lat, lng: window.lon});
+        map.setCenter({lat: lat, lng: lon});
         map.setZoom(14);
         }
      
