@@ -72,8 +72,8 @@
                     <p>Kinds: {{ place.properties.kinds }}</p>
                     <p>Rate: {{ place.properties.rate }}</p>
                     <p>Wikidata: {{ place.properties.wikidata }}</p>
-                    <div id="mapContainer"></div>
                 </div>
+                <div id="mapContainer"></div>
             {% endfor %}
         </div>
         <div class="button-container">
@@ -94,20 +94,24 @@
         });
 
         items.forEach((item, index) => {
-            var defaultLayers = platform.createDefaultLayers();
+            try {
+                var defaultLayers = platform.createDefaultLayers();
 
-            var map = new H.Map(
-                item.querySelector('#mapContainer'),
-                defaultLayers.vector.normal.map,
-                {
-                    zoom: 10,
-                    center: { lat: places_data.features[index].geometry.coordinates[0], lng: places_data.features[index].geometry.coordinates[1] }
-                }
-            );
+                var map = new H.Map(
+                    item.querySelector('#mapContainer'),
+                    defaultLayers.vector.normal.map,
+                    {
+                        zoom: 10,
+                        center: { lat: places_data.features[index].geometry.coordinates[0], lng: places_data.features[index].geometry.coordinates[1] }
+                    }
+                );
 
-            var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
-            new H.ui.UI.createDefault(map, defaultLayers);
+                new H.ui.UI.createDefault(map, defaultLayers);
+            } catch (error) {
+                console.error('Failed to initialize map:', error);
+            }
         });
 
         document.getElementById('prev').addEventListener('click', function() {
