@@ -107,13 +107,13 @@
      
         var mapContainer = document.getElementById('map');
      
-        window.lat = lat
-        window.lon = lon
+        var lat = window.lat
+        var lon = window.lon
      
         var map = new H.Map(document.getElementById('map'),
             defaultLayers.vector.normal.map,{
             center: {lat:50, lng:5},
-            zoom: 4,
+            zoom: 14,
             pixelRatio: window.devicePixelRatio || 1
         });
 
