@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>City Explorer Results</title>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <link rel="stylesheet" type="text/css" href="demo.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="../template.css" />
+    <script type="text/javascript" src='../test-credentials.js'></script>    
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script>window.ENV_VARIABLE = 'developer.here.com'</script><script src='../iframeheight.js'></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,11 +69,6 @@
             background: #3f8242;
         }
     </style>
-    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>    
 </head>
 
 <body>
@@ -81,6 +86,7 @@
                 </div>
             {% endfor %}
         </div>
+        <div id="map"></div>
         <div class="button-container">
             <button id="prev">Previous</button>
             <button id="next">Next</button>
@@ -94,33 +100,32 @@
         const items = document.querySelectorAll('.carousel-item');
         const totalItems = items.length;
 
+        function moveMapToCity(map){
+        map.setCenter({lat: window.lat, lng: window.lon});
+        map.setZoom(14);
+        }
+
         var platform = new H.service.Platform({
             'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4'
         });
-
-        var lon = {{ lon }};
-        var lat = {{ lat }};
-
         var defaultLayers = platform.createDefaultLayers();
 
-        items.forEach((item, index) => {
-            try {
-                var map = new H.Map(
-                    item.querySelector('#mapContainer'),
-                    defaultLayers.vector.normal.map,
-                    {
-                        zoom: 10,
-                        center: { lat: lat, lng: lon }
-                    }
-                );
-
-                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
-                new H.ui.UI.createDefault(map, defaultLayers);
-            } catch (error) {
-                console.error('Failed to initialize map:', error);
-            }
+        var map = new H.Map(document.getElementById('map'),
+        defaultLayers.vector.normal.map,{
+        center: {lat:50, lng:5},
+        zoom: 4,
+        pixelRatio: window.devicePixelRatio || 1
         });
+
+        window.addEventListener('resize', () => map.getViewPort().resize());
+
+        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+        var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+        window.onload = function () {
+        moveMapToCity(map);
+        }
 
         document.getElementById('prev').addEventListener('click', function() {
             if (items.length > 0) {
