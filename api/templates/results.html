@@ -110,9 +110,16 @@
         });
         var defaultLayers = platform.createDefaultLayers();
 
-        var map = new H.Map(document.getElementById('map'),
-        defaultLayers.vector.normal.map,{
-        center: {lat:50, lng:5},
+        var mapContainer = document.getElementById('map');
+        console.log('Map container:', mapContainer);
+
+        var lat = window.lat;
+        var lon = window.lon;
+        console.log('Latitude:', lat);
+        console.log('Longitude:', lon);
+
+        var map = new H.Map(mapContainer, defaultLayers.vector.normal.map, {
+        center: {lat: lat, lng: lon},
         zoom: 4,
         pixelRatio: window.devicePixelRatio || 1
         });
