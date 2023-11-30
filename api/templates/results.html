@@ -109,7 +109,7 @@
             <h1 style="text-align:center;">Tourist Attractions</h1>
             <div class="place-carousel">
                 {% for place in places_data.features %}
-                    <div class="place-carousel-item">
+                    <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
                         <h2>{{ place.properties.name }}</h2>
                         <p>Coordinates: {{ place.geometry.coordinates[1] }}, {{ place.geometry.coordinates[0] }}</p>
                         <p>Distance: {{ place.properties.dist }}</p>
@@ -179,10 +179,12 @@
 
         document.getElementById('place-prev').addEventListener('click', function() {
             currentPlaceIndex = updateCarousel(placeItems, currentPlaceIndex, -1);
+            addMarkers();
         });
         
         document.getElementById('place-next').addEventListener('click', function() {
             currentPlaceIndex = updateCarousel(placeItems, currentPlaceIndex, 1);
+            addMarkers();
         });
         
         document.getElementById('event-prev').addEventListener('click', function() {
@@ -200,6 +202,7 @@
             eventItems[0].classList.add('active');
         }
 
+        // map script 
         var platform = new H.service.Platform({
             'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4'
         });
@@ -230,29 +233,6 @@
      
         window.onload = function () {
             moveMapToCity(map);
-            addMarkers();
-        }
-     
-        document.getElementById('prev').addEventListener('click', function() {
-            if (items.length > 0) {
-                items[currentIndex].classList.remove('active');
-                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-                items[currentIndex].classList.add('active');
-                addMarkers();
-            }
-        });
-     
-        document.getElementById('next').addEventListener('click', function() {
-            if (items.length > 0) {
-                items[currentIndex].classList.remove('active');
-                currentIndex = (currentIndex + 1) % totalItems;
-                items[currentIndex].classList.add('active');
-                addMarkers();
-            }
-        });
-     
-        if (items.length > 0) {
-            items[0].classList.add('active');
             addMarkers();
         }
 
