@@ -78,7 +78,7 @@
             {% for place in places_data.features %}
                 <div class="carousel-item city">
                     <h2>{{ place.properties.name }}</h2>
-                    <p>Coordinates: {{ place.geometry.coordinates[0] }}, {{ place.geometry.coordinates[1] }}</p>
+                    <p>Coordinates: {{ place.geometry.coordinates[1] }}, {{ place.geometry.coordinates[0] }}</p>
                     <p>Distance: {{ place.properties.dist }}</p>
                     <p>Kinds: {{ place.properties.kinds }}</p>
                     <p>Rate: {{ place.properties.rate }}</p>
@@ -124,12 +124,13 @@
         var lon = {{ lon }};
 
         function moveMapToCity(map){
-        map.setCenter({lat: lat, lng: lon});
-        map.setZoom(14);
+            map.setCenter({lat: lat, lng: lon});
+            map.setZoom(10);
         }
      
         window.onload = function () {
-        moveMapToCity(map);
+            moveMapToCity(map);
+            addMarkers();
         }
      
         document.getElementById('prev').addEventListener('click', function() {
@@ -137,6 +138,7 @@
                 items[currentIndex].classList.remove('active');
                 currentIndex = (currentIndex - 1 + totalItems) % totalItems;
                 items[currentIndex].classList.add('active');
+                addMarkers();
             }
         });
      
@@ -145,11 +147,22 @@
                 items[currentIndex].classList.remove('active');
                 currentIndex = (currentIndex + 1) % totalItems;
                 items[currentIndex].classList.add('active');
+                addMarkers();
             }
         });
      
         if (items.length > 0) {
             items[0].classList.add('active');
+            addMarkers();
+        }
+
+        function addMarkers(){
+            map.removeObjects(map.getObjects());
+            const currentPlace = items[currentIndex].querySelector('.carousel-item.city');
+            const lat = parseFloat(currentPlace.querySelector('p[data-coordinates]').getAttribute('data-coordinates').split(',')[0]);
+            const lon = parseFloat(currentPlace.querySelector('p[data-coordinates]').getAttribute('data-coordinates').split(',')[1]);
+            var marker = new H.map.Marker({lat: lat, lng: lon});
+            map.addObject(marker);
         }
      </script>     
 </body>
