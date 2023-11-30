@@ -5,12 +5,16 @@ import requests
 app = Flask(__name__)
 
 
-API_KEYS = {"opentripmap": "5ae2e3f221c38a28845f05b6f0cdf9cd4ed80f90f5ddfc9ebf916642",
-            "openweather": "1d3ffd302d0bd84b18314ffbc3d10669"}
+API_KEYS = {
+    "opentripmap": "5ae2e3f221c38a28845f05b6f0cdf9cd4ed80f90f5ddfc9ebf916642",
+    "openweather": "1d3ffd302d0bd84b18314ffbc3d10669",
+}
 
 
-BASE_URLS = {"opentripmap": "https://api.opentripmap.com",
-            "openweather": "https://api.openweathermap.org"}
+BASE_URLS = {
+    "opentripmap": "https://api.opentripmap.com",
+    "openweather": "https://api.openweathermap.org",
+}
 
 
 def get_places_data(city):
@@ -31,6 +35,7 @@ def get_places_data(city):
         return None, "Error fetching places"
 
     return places_response.json(), None
+
 
 def get_weather_data(lat, lon, date):
     weather_url = f"{BASE_URLS['openweather']}/data/3.0/onecall/day_summary?lat={lat}&lon={lon}&date={date}&appid={API_KEYS['openweather']}"
@@ -80,12 +85,14 @@ def get_city_info():
             return jsonify({"error": weather_error}), 500
 
         # Extract min and max temperatures from weather_data
-        min_temp = round (weather_data["temperature"]["min"] - 273.15)
-        max_temp = round (weather_data["temperature"]["max"] - 273.15)
-        
-        print (min_temp)
+        min_temp = round(weather_data["temperature"]["min"] - 273.15)
+        max_temp = round(weather_data["temperature"]["max"] - 273.15)
 
-    return render_template("results.html", places_data=places_data, min_temp=min_temp, max_temp=max_temp)
+        print(min_temp)
+
+    return render_template(
+        "results.html", places_data=places_data, min_temp=min_temp, max_temp=max_temp
+    )
 
 
 if __name__ == "__main__":
