@@ -37,6 +37,12 @@
             color: #61b065;
             margin-bottom: 10px;
         }
+
+        #mapContainer {
+            height: 400px;
+            width: 100%;
+        }
+
         .button-container {
             text-align: center;
         }
@@ -74,7 +80,6 @@
                     <p>Wikidata: {{ place.properties.wikidata }}</p>
                 </div>
             {% endfor %}
-            <div id="mapContainer"></div>
         </div>
         <div class="button-container">
             <button id="prev">Previous</button>
@@ -90,16 +95,16 @@
         const totalItems = items.length;
 
         var platform = new H.service.Platform({
-            'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4' // Make sure to add your own API KEY
+            'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4'
         });
 
         var lon = {{ lon }};
         var lat = {{ lat }};
 
+        var defaultLayers = platform.createDefaultLayers();
+
         items.forEach((item, index) => {
             try {
-                var defaultLayers = platform.createDefaultLayers();
-
                 var map = new H.Map(
                     item.querySelector('#mapContainer'),
                     defaultLayers.vector.normal.map,
