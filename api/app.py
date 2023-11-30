@@ -99,7 +99,6 @@ def get_city_info():
     city = request.args.get("city")
     date = request.args.get("date")
 
-
     places_data, places_error = get_places_data(city)
     events_data, events_error = get_seatgeek_events(city, date)
     print("Events data:", events_data)
@@ -124,9 +123,11 @@ def get_city_info():
         print(min_temp)
 
     return render_template(
-        
-        "results.html", places_data=places_data, events_data=events_data
-    , min_temp=min_temp, max_temp=max_temp
+        "results.html",
+        places_data=places_data,
+        events_data=events_data,
+        min_temp=min_temp,
+        max_temp=max_temp,
     )
 
 
