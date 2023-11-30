@@ -164,7 +164,6 @@
 
 
     <script>
-<<<<<<< HEAD
         const placeItems = document.querySelectorAll('.place-carousel-item');
         const eventItems = document.querySelectorAll('.event-carousel-item');
         let currentPlaceIndex = 0;
@@ -199,11 +198,8 @@
         }
         if (eventItems.length > 0) {
             eventItems[0].classList.add('active');
-=======
-        let currentIndex = 0;
-        const items = document.querySelectorAll('.carousel-item');
-        const totalItems = items.length;
-     
+        }
+
         var platform = new H.service.Platform({
             'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4'
         });
@@ -258,7 +254,6 @@
         if (items.length > 0) {
             items[0].classList.add('active');
             addMarkers();
->>>>>>> map
         }
 
         function addMarkers(){

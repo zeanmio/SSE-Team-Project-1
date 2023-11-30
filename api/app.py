@@ -132,7 +132,7 @@ def get_city_info():
         min_temp=min_temp,
         max_temp=max_temp,
         lon=lon,
-        lat=lat
+        lat=lat,
     )
     # Add new data in the return function
 
