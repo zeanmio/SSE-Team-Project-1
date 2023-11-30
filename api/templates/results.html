@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>City Explorer Results</title>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <link rel="stylesheet" type="text/css" href="demo.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="../template.css" />
+    <script type="text/javascript" src='../test-credentials.js'></script>    
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script>window.ENV_VARIABLE = 'developer.here.com'</script><script src='../iframeheight.js'></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -48,6 +58,12 @@
             color: #333;
             margin-bottom: 10px;
         }
+
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+
         .button-container {
             text-align: center;
             margin-bottom: 20px;
@@ -103,6 +119,7 @@
                     </div>
                 {% endfor %}
             </div>
+            <div id="map"></div>
             <div class="button-container">
                 <button id="place-prev">Previous</button>
                 <button id="place-next">Next</button>
@@ -147,6 +164,7 @@
 
 
     <script>
+<<<<<<< HEAD
         const placeItems = document.querySelectorAll('.place-carousel-item');
         const eventItems = document.querySelectorAll('.event-carousel-item');
         let currentPlaceIndex = 0;
@@ -181,7 +199,76 @@
         }
         if (eventItems.length > 0) {
             eventItems[0].classList.add('active');
+=======
+        let currentIndex = 0;
+        const items = document.querySelectorAll('.carousel-item');
+        const totalItems = items.length;
+     
+        var platform = new H.service.Platform({
+            'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4'
+        });
+        var defaultLayers = platform.createDefaultLayers();
+     
+        var mapContainer = document.getElementById('map');
+     
+        var map = new H.Map(document.getElementById('map'),
+            defaultLayers.vector.normal.map,{
+            center: {lat:50, lng:5},
+            zoom: 14,
+            pixelRatio: window.devicePixelRatio || 1
+        });
+
+        window.addEventListener('resize', () => map.getViewPort().resize());
+     
+        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+     
+        var ui = H.ui.UI.createDefault(map, defaultLayers);
+     
+        var lat = {{ lat }};
+        var lon = {{ lon }};
+
+        function moveMapToCity(map){
+            map.setCenter({lat: lat, lng: lon});
+            map.setZoom(14);
         }
-    </script>
+     
+        window.onload = function () {
+            moveMapToCity(map);
+            addMarkers();
+        }
+     
+        document.getElementById('prev').addEventListener('click', function() {
+            if (items.length > 0) {
+                items[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                items[currentIndex].classList.add('active');
+                addMarkers();
+            }
+        });
+     
+        document.getElementById('next').addEventListener('click', function() {
+            if (items.length > 0) {
+                items[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % totalItems;
+                items[currentIndex].classList.add('active');
+                addMarkers();
+            }
+        });
+     
+        if (items.length > 0) {
+            items[0].classList.add('active');
+            addMarkers();
+>>>>>>> map
+        }
+
+        function addMarkers(){
+            map.removeObjects(map.getObjects());
+            const currentPlace = items[currentIndex];
+            const attraction_lat = parseFloat(currentPlace.dataset.lat);
+            const attraction_lon = parseFloat(currentPlace.dataset.lon);
+            var marker = new H.map.Marker({lat: attraction_lat, lng: attraction_lon});
+            map.addObject(marker);
+        }
+     </script>     
 </body>
 </html>

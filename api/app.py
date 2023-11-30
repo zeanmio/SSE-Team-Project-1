@@ -40,7 +40,7 @@ def get_places_data(city):
     if not places_response.ok:
         return None, "Error fetching places from OpenTripMap"
 
-    return places_response.json(), None
+    return places_response.json(), lon, lat, None
 
 
 def get_seatgeek_events(city, date):
@@ -97,7 +97,7 @@ def get_city_info():
     date = request.args.get("date")
 
     # Tourist Attractions
-    places_data, places_error = get_places_data(city)
+    places_data, lon, lat, places_error = get_places_data(city)
     if places_error:
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
@@ -131,7 +131,10 @@ def get_city_info():
         events_data=events_data,
         min_temp=min_temp,
         max_temp=max_temp,
+        lon=lon,
+        lat=lat
     )
+    # Add new data in the return function
 
 
 if __name__ == "__main__":
