@@ -63,6 +63,8 @@ def get_city_info():
     city = request.args.get("city")
     date = request.args.get("date")
 
+    print("All request parameters:", request.args)
+
     places_data, error = get_places_data(city)
     if error:
         return jsonify({"error": error}), 500
@@ -78,8 +80,10 @@ def get_city_info():
             return jsonify({"error": weather_error}), 500
 
         # Extract min and max temperatures from weather_data
-        min_temp = weather_data["temperature"]["min"]
-        max_temp = weather_data["temperature"]["max"]
+        min_temp = round (weather_data["temperature"]["min"] - 273.15)
+        max_temp = round (weather_data["temperature"]["max"] - 273.15)
+        
+        print (min_temp)
 
     return render_template("results.html", places_data=places_data, min_temp=min_temp, max_temp=max_temp)
 

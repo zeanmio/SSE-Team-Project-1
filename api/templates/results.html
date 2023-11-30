@@ -33,6 +33,12 @@
         .carousel-item.active {
             display: block;
         }
+        .temperature-block {
+            background-color: #eff7ff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
         .city h2 {
             color: #61b065;
             margin-bottom: 10px;
@@ -58,6 +64,7 @@
 <body>
     <div class="container">
         <h1 style="text-align:center;">Tourist Attractions</h1>
+
         <div class="carousel">
             {% for place in places_data.features %}
                 <div class="carousel-item city">
@@ -69,6 +76,11 @@
                     <p>Wikidata: {{ place.properties.wikidata }}</p>
                 </div>
             {% endfor %}
+        </div>
+        <!-- Display temperature information block -->
+        <div class="temperature-block">
+            <p>Min Temperature: {{ min_temp }}°C</p>
+            <p>Max Temperature: {{ max_temp }}°C</p>
         </div>
         <div class="button-container">
             <button id="prev">Previous</button>
