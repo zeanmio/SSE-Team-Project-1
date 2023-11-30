@@ -27,6 +27,10 @@ jobs:
           python-version: 3.9
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Run app.py
+        env:
+          OPENTRIPMAP_API_KEY: ${{ secrets.OPENTRIPMAP }}
+        run: python api/app.py
 #      - name: Run unit tests
 #        run: pytest api/*.py
 

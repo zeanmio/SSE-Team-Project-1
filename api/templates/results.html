@@ -11,6 +11,13 @@
             color: #333;
             line-height: 1.6;
         }
+        .section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
         .container {
             width: 80%;
             margin: 20px auto;
@@ -21,11 +28,9 @@
         }
         .carousel {
             overflow: hidden;
-            width: 100%;
             margin-bottom: 20px;
         }
         .carousel-item {
-            width: 100%;
             display: none;
             padding: 15px;
             border-bottom: 1px solid #ddd;
@@ -34,119 +39,148 @@
             display: block;
         }
         .temperature-block {
-            background-color: #eff7ff;
+            background-color: #fff;
             padding: 10px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
-        .city h2 {
-            color: #61b065;
+        .city h2, .event h2 {
+            color: #333;
             margin-bottom: 10px;
         }
         .button-container {
             text-align: center;
+            margin-bottom: 20px;
         }
         button {
-            background: #61b065;
+            background: #555;
             color: #fff;
-            border: 0;
+            border: 1px solid #333;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             margin: 0 10px;
         }
         button:hover {
-            background: #3f8242;
+            background: #333;
+        }
+        .event-carousel, .place-carousel {
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .event-carousel-item, .place-carousel-item {
+            width: 100%;
+            display: none;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .event-carousel-item.active, .place-carousel-item.active {
+            display: block;
+        }
+        .event-item, .place-item {
+            margin-bottom: 20px;
+        }
+        .event-item ul {
+            padding-left: 20px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1 style="text-align:center;">Tourist Attractions</h1>
-
-        <div class="carousel">
-            {% for place in places_data.features %}
-                <div class="carousel-item city">
-                    <h2>{{ place.properties.name }}</h2>
-                    <p>Coordinates: {{ place.geometry.coordinates[0] }}, {{ place.geometry.coordinates[1] }}</p>
-                    <p>Distance: {{ place.properties.dist }}</p>
-                    <p>Kinds: {{ place.properties.kinds }}</p>
-                    <p>Rate: {{ place.properties.rate }}</p>
-                    <p>Wikidata: {{ place.properties.wikidata }}</p>
-                </div>
-            {% endfor %}
-        </div>
-        <!-- Display temperature information block -->
-        <div class="temperature-block">
-            <p>Min Temperature: {{ min_temp }}°C</p>
-            <p>Max Temperature: {{ max_temp }}°C</p>
-        </div>
-        <div class="button-container">
-            <button id="prev">Previous</button>
-            <button id="next">Next</button>
-        </div>
-    <div class="carousel-item city">
-        {% if min_temp and max_temp %}
-            <p>Min Temperature: {{ min_temp }}</p>
-            <p>Max Temperature: {{ max_temp }}</p>
-        {% endif %}
-</div>
-
-    </div>
-
-    
-    <h1 style="text-align:center;">Upcoming Events</h1>
-     <div class="event">
-        {% if events_data %}
-            {% for event in events_data %}
-                <div class="event-item">
-                    <h2>{{ event.title }}</h2>
-                    <p>Date: {{ event.datetime_local }}</p>
-                    <p>Venue: {{ event.venue.name }}</p>
-                    <p>City: {{ event.venue.city }}</p>
-	            <p>Performers:</p>
-                    <ul>
-                        {% for performer in event.performers %}
-                            <li>{{ performer.name }}</li>
-			{% endfor %}
-	            </ul>
+        <div class="section">
+            <h1 style="text-align:center;">Tourist Attractions</h1>
+            <div class="place-carousel">
+                {% for place in places_data.features %}
+                    <div class="place-carousel-item">
+                        <h2>{{ place.properties.name }}</h2>
+                        <p>Coordinates: {{ place.geometry.coordinates[0] }}, {{ place.geometry.coordinates[1] }}</p>
+                        <p>Distance: {{ place.properties.dist }}</p>
+                        <p>Kinds: {{ place.properties.kinds }}</p>
+                        <p>Rate: {{ place.properties.rate }}</p>
+                        <p>Wikidata: {{ place.properties.wikidata }}</p>
                     </div>
                 {% endfor %}
             </div>
-	{% else %}
-            <p>No events found.</p>
-        {% endif %}
-        <div class="button-container">
-            <button id="prev">Previous</button>
-            <button id="next">Next</button>
+            <div class="button-container">
+                <button id="place-prev">Previous</button>
+                <button id="place-next">Next</button>
+            </div>
         </div>
-    </div>
+
+        <div class="section">
+            <h1 style="text-align:center;">Upcoming Events</h1>
+            <div class="event-carousel">
+                {% if events_data %}
+                    {% for event in events_data %}
+                        <div class="event-carousel-item">
+                            <h2>{{ event.title }}</h2>
+                            <p>Date: {{ event.datetime_local }}</p>
+                            <p>Venue: {{ event.venue.name }}</p>
+                            <p>City: {{ event.venue.city }}</p>
+                            <p>Performers:</p>
+                                <ul>
+                                    {% for performer in event.performers %}
+                                        <li>{{ performer.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No events found.</p>
+                {% endif %}
+            </div>
+            <div class="button-container">
+                <button id="event-prev">Previous</button>
+                <button id="event-next">Next</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h1 style="text-align:center;">Weather</h1>
+            <div class="temperature-block">
+                <p>Min Temperature: {{ min_temp }}°C</p>
+                <p>Max Temperature: {{ max_temp }}°C</p>
+            </div>
+        </div>
 
 
     <script>
-        let currentIndex = 0;
-        const items = document.querySelectorAll('.carousel-item');
-        const totalItems = items.length;
+        const placeItems = document.querySelectorAll('.place-carousel-item');
+        const eventItems = document.querySelectorAll('.event-carousel-item');
+        let currentPlaceIndex = 0;
+        let currentEventIndex = 0;
 
-        document.getElementById('prev').addEventListener('click', function() {
-            if (items.length > 0) {
-                items[currentIndex].classList.remove('active');
-                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-                items[currentIndex].classList.add('active');
-            }
+        function updateCarousel(items, currentIndex, direction) {
+            items[currentIndex].classList.remove('active');
+            const totalItems = items.length;
+            currentIndex = (currentIndex + direction + totalItems) % totalItems;
+            items[currentIndex].classList.add('active');
+            return currentIndex;
+        }
+
+        document.getElementById('place-prev').addEventListener('click', function() {
+            currentPlaceIndex = updateCarousel(placeItems, currentPlaceIndex, -1);
         });
-
-        document.getElementById('next').addEventListener('click', function() {
-            if (items.length > 0) {
-                items[currentIndex].classList.remove('active');
-                currentIndex = (currentIndex + 1) % totalItems;
-                items[currentIndex].classList.add('active');
-            }
+        
+        document.getElementById('place-next').addEventListener('click', function() {
+            currentPlaceIndex = updateCarousel(placeItems, currentPlaceIndex, 1);
         });
-
-        if (items.length > 0) {
-            items[0].classList.add('active');
+        
+        document.getElementById('event-prev').addEventListener('click', function() {
+            currentEventIndex = updateCarousel(eventItems, currentEventIndex, -1);
+        });
+        
+        document.getElementById('event-next').addEventListener('click', function() {
+            currentEventIndex = updateCarousel(eventItems, currentEventIndex, 1);
+        });
+        
+        if (placeItems.length > 0) {
+            placeItems[0].classList.add('active');
+        }
+        if (eventItems.length > 0) {
+            eventItems[0].classList.add('active');
         }
     </script>
 </body>
