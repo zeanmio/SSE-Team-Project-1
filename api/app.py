@@ -4,7 +4,10 @@ import requests
 app = Flask(__name__)
 
 
-API_KEYS = {"opentripmap": "5ae2e3f221c38a28845f05b6f0cdf9cd4ed80f90f5ddfc9ebf916642"}
+API_KEYS = {
+    "opentripmap": "5ae2e3f221c38a28845f05b6f0cdf9cd4ed80f90f5ddfc9ebf916642",
+    "openweather": "1d3ffd302d0bd84b18314ffbc3d10669",
+}
 # Add new API keys in the brackets above, separated by commas
 
 
@@ -16,7 +19,10 @@ SEATGEEK_CLIENT_SECRET = (
 )
 
 
-BASE_URLS = {"opentripmap": "https://api.opentripmap.com"}
+BASE_URLS = {
+    "opentripmap": "https://api.opentripmap.com",
+    "openweather": "https://api.openweathermap.org",
+}
 # Add new base URLs in the brackets above, separated by commas
 
 
@@ -62,6 +68,19 @@ def get_places_data(city):
 # Add new functions here
 
 
+def get_weather_data(lat, lon, date):
+    weather_url = f"{BASE_URLS['openweather']}/data/3.0/onecall/day_summary?lat={lat}&lon={lon}&date={date}&appid={API_KEYS['openweather']}"
+    response = requests.get(weather_url)
+    print("Request URL:", weather_url)
+
+    response = requests.get(weather_url)
+    print("Response:", response.text)
+
+    if not response.ok:
+        return None, "Error fetching weather data"
+    return response.json(), None
+
+
 @app.route("/", methods=["GET", "POST"])
 def form():
     if request.method == "POST":
@@ -80,6 +99,7 @@ def get_city_info():
     city = request.args.get("city")
     date = request.args.get("date")
 
+
     places_data, places_error = get_places_data(city)
     events_data, events_error = get_seatgeek_events(city, date)
     print("Events data:", events_data)
@@ -87,8 +107,26 @@ def get_city_info():
         error_message = places_error or events_error
         return jsonify({"error": error_message}), 500
 
+    # Extract latitude and longitude from places_data
+    if places_data and "features" in places_data:
+        location = places_data["features"][0]["geometry"]["coordinates"]
+        lat, lon = location[1], location[0]
+
+        # Get weather data
+        weather_data, weather_error = get_weather_data(lat, lon, date)
+        if weather_error:
+            return jsonify({"error": weather_error}), 500
+
+        # Extract min and max temperatures from weather_data
+        min_temp = round(weather_data["temperature"]["min"] - 273.15)
+        max_temp = round(weather_data["temperature"]["max"] - 273.15)
+
+        print(min_temp)
+
     return render_template(
+        
         "results.html", places_data=places_data, events_data=events_data
+    , min_temp=min_temp, max_temp=max_temp
     )
 
 
