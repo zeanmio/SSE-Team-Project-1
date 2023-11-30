@@ -120,8 +120,8 @@
      
         var ui = H.ui.UI.createDefault(map, defaultLayers);
      
-        var lat = lat
-        var lon = lon
+        var lat = {{ lat }};
+        var lon = {{ lon }};
 
         function moveMapToCity(map){
         map.setCenter({lat: lat, lng: lon});
