@@ -258,7 +258,7 @@
 
         function addMarkers(){
             map.removeObjects(map.getObjects());
-            const currentPlace = items[currentIndex];
+            const currentPlace = placeItems[currentPlaceIndex];
             const attraction_lat = parseFloat(currentPlace.dataset.lat);
             const attraction_lon = parseFloat(currentPlace.dataset.lon);
             var marker = new H.map.Marker({lat: attraction_lat, lng: attraction_lon});
