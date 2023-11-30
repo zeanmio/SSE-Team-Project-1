@@ -99,41 +99,41 @@
         let currentIndex = 0;
         const items = document.querySelectorAll('.carousel-item');
         const totalItems = items.length;
-
-        function moveMapToCity(map){
-        map.setCenter({lat: window.lat, lng: window.lon});
-        map.setZoom(14);
-        }
-
+     
         var platform = new H.service.Platform({
             'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4'
         });
         var defaultLayers = platform.createDefaultLayers();
-
+     
         var mapContainer = document.getElementById('map');
         console.log('Map container:', mapContainer);
-
+     
         var lat = window.lat;
         var lon = window.lon;
         console.log('Latitude:', lat);
         console.log('Longitude:', lon);
-
+     
         var map = new H.Map(mapContainer, defaultLayers.vector.normal.map, {
         center: {lat: lat, lng: lon},
         zoom: 4,
         pixelRatio: window.devicePixelRatio || 1
         });
-
+     
         window.addEventListener('resize', () => map.getViewPort().resize());
-
+     
         var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
+     
         var ui = H.ui.UI.createDefault(map, defaultLayers);
-
+     
+        function moveMapToCity(map){
+        map.setCenter({lat: window.lat, lng: window.lon});
+        map.setZoom(14);
+        }
+     
         window.onload = function () {
         moveMapToCity(map);
         }
-
+     
         document.getElementById('prev').addEventListener('click', function() {
             if (items.length > 0) {
                 items[currentIndex].classList.remove('active');
@@ -141,7 +141,7 @@
                 items[currentIndex].classList.add('active');
             }
         });
-
+     
         document.getElementById('next').addEventListener('click', function() {
             if (items.length > 0) {
                 items[currentIndex].classList.remove('active');
@@ -149,10 +149,10 @@
                 items[currentIndex].classList.add('active');
             }
         });
-
+     
         if (items.length > 0) {
             items[0].classList.add('active');
         }
-    </script>
+     </script>     
 </body>
 </html>
