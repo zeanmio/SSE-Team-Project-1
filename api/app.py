@@ -59,11 +59,8 @@ def get_city_info():
         return jsonify({"error": error}), 500
 
     # Add new API calls here
-    # Get the coordinates of the first place
-    lon = places_data.features[0].geometry.coordinates[0]
-    lat = places_data.features[0].geometry.coordinates[1]
 
-    return render_template("results.html", places_data=places_data, lon=lon, lat=lat)
+    return render_template("results.html", places_data=places_data)
     # Add new data in the return function
 
 
