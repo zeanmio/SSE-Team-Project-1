@@ -107,8 +107,8 @@
      
         var mapContainer = document.getElementById('map');
      
-        var lat = window.lat;
-        var lon = window.lon;
+        window.lat = lat
+        window.lon = lon
      
         var map = new H.Map(document.getElementById('map'),
             defaultLayers.vector.normal.map,{
