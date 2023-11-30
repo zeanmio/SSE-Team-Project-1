@@ -76,7 +76,7 @@
         <h1 style="text-align:center;">Tourist Attractions</h1>
         <div class="carousel">
             {% for place in places_data.features %}
-                <div class="carousel-item city">
+                <div class="carousel-item city" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}">
                     <h2>{{ place.properties.name }}</h2>
                     <p>Coordinates: {{ place.geometry.coordinates[1] }}, {{ place.geometry.coordinates[0] }}</p>
                     <p>Distance: {{ place.properties.dist }}</p>
@@ -159,8 +159,8 @@
         function addMarkers(){
             map.removeObjects(map.getObjects());
             const currentPlace = items[currentIndex];
-            const attraction_lat = parseFloat(currentPlace.getAttribute('place.geometry.coordinates').split(',')[1]);
-            const attraction_lon = parseFloat(currentPlace.getAttribute('place.geometry.coordinates').split(',')[0]);
+            const attraction_lat = parseFloat(currentPlace.dataset.lat);
+            const attraction_lon = parseFloat(currentPlace.dataset.lon);
             var marker = new H.map.Marker({lat: attraction_lat, lng: attraction_lon});
             map.addObject(marker);
         }
