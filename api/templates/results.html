@@ -158,10 +158,10 @@
 
         function addMarkers(){
             map.removeObjects(map.getObjects());
-            const currentPlace = items[currentIndex].querySelector('.carousel-item.city');
-            const lat = parseFloat(currentPlace.querySelector('p[data-coordinates]').getAttribute('data-coordinates').split(',')[0]);
-            const lon = parseFloat(currentPlace.querySelector('p[data-coordinates]').getAttribute('data-coordinates').split(',')[1]);
-            var marker = new H.map.Marker({lat: lat, lng: lon});
+            const currentPlace = items[currentIndex];
+            const attraction_lat = parseFloat(currentPlace.getAttribute('place.geometry.coordinates').split(',')[1]);
+            const attraction_lon = parseFloat(currentPlace.getAttribute('place.geometry.coordinates').split(',')[0]);
+            var marker = new H.map.Marker({lat: attraction_lat, lng: attraction_lon});
             map.addObject(marker);
         }
      </script>     
