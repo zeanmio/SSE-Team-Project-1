@@ -77,17 +77,27 @@
     </div>
 
     
-        <h1 style="text-align:center;">Upcoming Events</h1>
-        <div class="carousel">
+    <h1 style="text-align:center;">Upcoming Events</h1>
+     <div class="event">
+        {% if events_data %}
             {% for event in events_data %}
-                <div class="carousel-item">
+                <div class="event-item">
                     <h2>{{ event.title }}</h2>
                     <p>Date: {{ event.datetime_local }}</p>
                     <p>Venue: {{ event.venue.name }}</p>
                     <p>City: {{ event.venue.city }}</p>
-                </div>
-            {% endfor %}
-        </div>
+	            <p>Performers:</p>
+                    <ul>
+                        {% for performer in event.performers %}
+                            <li>{{ performer.name }}</li>
+			{% endfor %}
+	            </ul>
+                    </div>
+                {% endfor %}
+            </div>
+	{% else %}
+            <p>No events found.</p>
+        {% endif %}
         <div class="button-container">
             <button id="prev">Previous</button>
             <button id="next">Next</button>
