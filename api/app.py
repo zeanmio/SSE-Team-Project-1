@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 
 API_KEYS = {"opentripmap": "5ae2e3f221c38a28845f05b6f0cdf9cd4ed80f90f5ddfc9ebf916642"}
+# Add new API keys in the brackets above, separated by commas
 
 
 SEATGEEK_CLIENT_ID = "Mzg2MDA4NDd8MTcwMTI1MzQ0Mi42NzI0ODE4"
@@ -16,6 +17,7 @@ SEATGEEK_CLIENT_SECRET = (
 
 
 BASE_URLS = {"opentripmap": "https://api.opentripmap.com"}
+# Add new base URLs in the brackets above, separated by commas
 
 
 def get_seatgeek_events(city, date):
@@ -55,6 +57,9 @@ def get_places_data(city):
         return None, "Error fetching places"
 
     return places_response.json(), None
+
+
+# Add new functions here
 
 
 @app.route("/", methods=["GET", "POST"])
