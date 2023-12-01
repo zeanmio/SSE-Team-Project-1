@@ -30,10 +30,10 @@ def get_db_connection():
 
 # API
 API_KEYS = {
-    "opentripmap": "5ae2e3f221c38a28845f05b6f0cdf9cd4ed80f90f5ddfc9ebf916642",
-    "seatgeek_client_id": "Mzg2MDA4NDd8MTcwMTI1MzQ0Mi42NzI0ODE4",
-    "seatgeek_client_secret": "42ab0a3837f94f19b3bdcf5f0ba4192c5c399491e49bcb78dd39852ab61c698b",
-    "openweather": "1d3ffd302d0bd84b18314ffbc3d10669",
+    "opentripmap": os.getenv("OPENTRIPMAP_KEY"),
+    "seatgeek_client_id": os.getenv("SEATGEEK_ID"),
+    "seatgeek_client_secret": os.getenv("SEATGEEK_SECRET"),
+    "openweather": os.getenv("OPENWEATHER_KEY"),
 }
 
 
