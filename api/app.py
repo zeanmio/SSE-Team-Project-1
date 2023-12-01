@@ -1,18 +1,40 @@
-import logging
 from flask import Flask, render_template, request, jsonify, redirect, url_for
-import requests
+import requests, logging, psycopg2, os
 
 
 app = Flask(__name__)
 
 
+# SQL
+DB_HOST = "db.doc.ic.ac.uk"
+DB_USER = "xl6423"
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = "xl6423"
+DB_PORT = "5432"
+
+
+def get_db_connection():
+    try:
+        connection = psycopg2.connect(
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT,
+            database=DB_NAME,
+        )
+        return connection
+    except (Exception, psycopg2.Error) as error:
+        print("Error while connecting to PostgreSQL", error)
+        return None
+
+
+# API
 API_KEYS = {
     "opentripmap": "5ae2e3f221c38a28845f05b6f0cdf9cd4ed80f90f5ddfc9ebf916642",
     "seatgeek_client_id": "Mzg2MDA4NDd8MTcwMTI1MzQ0Mi42NzI0ODE4",
     "seatgeek_client_secret": "42ab0a3837f94f19b3bdcf5f0ba4192c5c399491e49bcb78dd39852ab61c698b",
     "openweather": "1d3ffd302d0bd84b18314ffbc3d10669",
 }
-# Add new API keys in the brackets above, separated by commas
 
 
 BASE_URLS = {
@@ -20,9 +42,9 @@ BASE_URLS = {
     "seatgeek": "https://api.seatgeek.com",
     "openweather": "https://api.openweathermap.org",
 }
-# Add new base URLs in the brackets above, separated by commas
 
 
+# Tourist Attractions
 def get_places_data(city):
     geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
     geoname_response = requests.get(geoname_url)
@@ -43,6 +65,7 @@ def get_places_data(city):
     return places_response.json(), lon, lat, None
 
 
+# Upcoming Events
 def get_seatgeek_events(city, date):
     base_url = f"{BASE_URLS['seatgeek']}/2/events"
     params = {
@@ -62,6 +85,7 @@ def get_seatgeek_events(city, date):
         return None, "Error fetching events from SeatGeek"
 
 
+# Weather
 def get_weather_data(lat, lon, date):
     weather_url = f"{BASE_URLS['openweather']}/data/3.0/onecall/day_summary?lat={lat}&lon={lon}&date={date}&appid={API_KEYS['openweather']}"
     response = requests.get(weather_url)
@@ -73,9 +97,6 @@ def get_weather_data(lat, lon, date):
     if not response.ok:
         return None, "Error fetching weather data"
     return response.json(), None
-
-
-# Add new functions here
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -95,6 +116,20 @@ def get_city_info():
     country = request.args.get("country")
     city = request.args.get("city")
     date = request.args.get("date")
+
+    # Connect to database
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            query = "INSERT INTO userdata (username, country, city, exploration_date) VALUES (%s, %s, %s, %s)"
+            cursor.execute(query, (username, country, city, date))
+            connection.commit()
+            cursor.close()
+        except (Exception, psycopg2.Error) as error:
+            print("Error while inserting data into Postgres", error)
+        finally:
+            connection.close()
 
     # Tourist Attractions
     places_data, lon, lat, places_error = get_places_data(city)
@@ -132,9 +167,8 @@ def get_city_info():
         min_temp=min_temp,
         max_temp=max_temp,
         lon=lon,
-        lat=lat
+        lat=lat,
     )
-    # Add new data in the return function
 
 
 if __name__ == "__main__":
