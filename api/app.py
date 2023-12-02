@@ -53,6 +53,10 @@ def get_places_data(city):
         return None, "Error fetching geoname data from OpenTripMap"
 
     geoname_data = geoname_response.json()
+
+    if "lon" not in geoname_data or "lat" not in geoname_data:
+        return None, "Invalid data received from OpenTripMap"
+
     lon = geoname_data["lon"]
     lat = geoname_data["lat"]
 
