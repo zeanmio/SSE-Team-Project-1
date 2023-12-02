@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch, MagicMock
 from app import app
 
 
@@ -12,7 +13,22 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"City Explorer", response.data)
 
-    def test_city_info_page(self):
+    @patch("app.get_db_connection")
+    @patch("app.get_places_data")
+    @patch("app.get_seatgeek_events")
+    @patch("app.get_weather_data")
+    def test_city_info_page(
+        self, mock_weather_data, mock_events_data, mock_places_data, mock_db_connection
+    ):
+        mock_db_connection.return_value = MagicMock()
+
+        mock_places_data.return_value = ([], 0, 0, None)
+        mock_events_data.return_value = ([], None)
+        mock_weather_data.return_value = (
+            {"temperature": {"min": 280, "max": 285}},
+            None,
+        )
+
         response = self.app.get(
             "/get-city-info?city=London&username=test&country=UK&date=2023-12-31"
         )
