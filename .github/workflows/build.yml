@@ -42,7 +42,7 @@ jobs:
           python-version: 3.9
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Test database connection
+      - name: Test Database Connection
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
@@ -50,7 +50,7 @@ jobs:
           python -c "import psycopg2; conn = psycopg2.connect('${{ env.DATABASE_URL }}'); print('Connected successfully'); conn.close()"
 
   deploy-to-vercel:
-    needs: unit-testing
+    needs: [unit-testing, database-connection-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
