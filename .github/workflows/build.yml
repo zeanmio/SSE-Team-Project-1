@@ -30,6 +30,25 @@ jobs:
 #      - name: Run unit tests
 #        run: pytest api/*.py
 
+  database-connection-test:
+    needs: python-formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Test database connection
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "Running database connection test..."
+          python -c "import psycopg2; conn = psycopg2.connect('${{ env.DATABASE_URL }}'); print('Connected successfully'); conn.close()"
+
   deploy-to-vercel:
     needs: unit-testing
     runs-on: ubuntu-latest
