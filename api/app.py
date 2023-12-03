@@ -149,6 +149,8 @@ def get_city_info():
         return jsonify({"error": events_error}), 500
 
     # Weather
+    min_temp = max_temp = None
+    weather_data = {}  # Initialize weather_data as an empty dictionary
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
         lat, lon = location[1], location[0]
