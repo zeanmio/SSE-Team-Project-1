@@ -91,16 +91,17 @@ def get_seatgeek_events(city, date):
 
 # Weather
 def get_weather_data(lat, lon, date):
-    weather_url = f"{BASE_URLS['openweather']}/data/3.0/onecall/day_summary?lat={lat}&lon={lon}&date={date}&appid={API_KEYS['openweather']}"
+    weather_url = f"{BASE_URLS['openweather']}/data/3.0/onecall/day_summary?lat={lat}&lon={lon}&units=metric&date={date}&appid={API_KEYS['openweather']}"
     response = requests.get(weather_url)
-    print("Request URL:", weather_url)
 
-    response = requests.get(weather_url)
+    #debugging
+    print("Request URL:", weather_url)
     print("Response:", response.text)
 
     if not response.ok:
         return None, "Error fetching weather data"
-    return response.json(), None
+    weather_data = response.json()
+    return weather_data, None
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -148,8 +149,6 @@ def get_city_info():
         return jsonify({"error": events_error}), 500
 
     # Weather
-    min_temp = max_temp = None
-
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
         lat, lon = location[1], location[0]
@@ -159,8 +158,10 @@ def get_city_info():
             logging.error(f"Error in getting weather data: {weather_error}")
             return jsonify({"error": weather_error}), 500
 
-        min_temp = round(weather_data["temperature"]["min"] - 273.15)
-        max_temp = round(weather_data["temperature"]["max"] - 273.15)
+        min_temp = round(weather_data["temperature"]["min"])
+        max_temp = round(weather_data["temperature"]["max"])
+        weather_data["min_temp"] = min_temp
+        weather_data["max_temp"] = max_temp
 
         print(min_temp)
 
@@ -168,8 +169,7 @@ def get_city_info():
         "results.html",
         places_data=places_data,
         events_data=events_data,
-        min_temp=min_temp,
-        max_temp=max_temp,
+        weather_data=weather_data,
         lon=lon,
         lat=lat,
     )
