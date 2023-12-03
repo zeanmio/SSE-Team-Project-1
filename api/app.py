@@ -94,7 +94,7 @@ def get_weather_data(lat, lon, date):
     weather_url = f"{BASE_URLS['openweather']}/data/3.0/onecall/day_summary?lat={lat}&lon={lon}&units=metric&date={date}&appid={API_KEYS['openweather']}"
     response = requests.get(weather_url)
 
-    #debugging
+    # debugging
     print("Request URL:", weather_url)
     print("Response:", response.text)
 
