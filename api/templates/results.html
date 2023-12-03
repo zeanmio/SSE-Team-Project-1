@@ -202,7 +202,9 @@
                     {% endif %}
                 </div>
             </div>
-            <p class="wind-info">Wind: {{ weather_data.wind.max.speed }} mph</p>
+            {% if weather_data.wind and weather_data.wind.max %}
+                <p class="wind-info">Wind: {{ weather_data.wind.max.speed }} mph</p>
+            {% endif %} 
             <p class="humidity-info">Humidity: {{ weather_data.humidity.afternoon }} %</p>
          </div>
 
