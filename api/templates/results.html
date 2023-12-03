@@ -48,12 +48,39 @@
         .carousel-item.active {
             display: block;
         }
-        .temperature-block {
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+
+        .temperature-info {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
         }
+
+        .temperature-range {
+        font-size: 24px;
+        color: #333;
+        margin-right: 10px;
+        }
+
+        .weather-condition{
+        font-size:18px;
+        }
+
+        .min-temp {
+        color: #888;
+        font-size: 20px;
+        }
+
+        .max-temp {
+        font-size: 24px;
+        }
+
+        .weather-icon {
+        width: 40px;
+        height: 40px;
+        }
+
         .city h2, .event h2 {
             color: #333;
             margin-bottom: 10px;
@@ -152,16 +179,32 @@
                 <button id="event-prev">Previous</button>
                 <button id="event-next">Next</button>
             </div>
-        </div>
+        </div>     
 
         <div class="section">
             <h1 style="text-align:center;">Weather</h1>
-            <div class="temperature-block">
-                <p>Min Temperature: {{ weather_data.min_temp }}°C</p>
-                <p>Max Temperature: {{ weather_data.max_temp }}°C</p>
+            <div class="temperature-info">
+                <div class="temperature-range">
+                    <p>
+                        <span class="min-temp">{{ weather_data.min_temp }}°C</span>
+                        <span class="temp-divider"> - </span>
+                        <span class="max-temp">{{ weather_data.max_temp }}°C</span>
+                    </p>
+                    <div class="weather-condition">
+                        {% if weather_data.weather_condition %}
+                            <p>{{ weather_data.weather_condition }}</p>
+                        {% endif %}  
+                    </div>
+                </div>
+                <div class="weather-icon">
+                    {% if weather_data.weather_icon %}
+                        <img src="https://openweathermap.org/img/wn/{{ weather_data.weather_icon }}@2x.png" alt="Weather Icon">
+                    {% endif %}
+                </div>
             </div>
-        </div>
-
+            <p class="wind-info">Wind: {{ weather_data.wind.max.speed }} mph</p>
+            <p class="humidity-info">Humidity: {{ weather_data.humidity.afternoon }} %</p>
+         </div>
 
     <script>
         const placeItems = document.querySelectorAll('.place-carousel-item');

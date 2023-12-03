@@ -93,15 +93,31 @@ def get_seatgeek_events(city, date):
 def get_weather_data(lat, lon, date):
     weather_url = f"{BASE_URLS['openweather']}/data/3.0/onecall/day_summary?lat={lat}&lon={lon}&units=metric&date={date}&appid={API_KEYS['openweather']}"
     response = requests.get(weather_url)
-
-    # debugging
-    print("Request URL:", weather_url)
-    print("Response:", response.text)
-
     if not response.ok:
         return None, "Error fetching weather data"
     weather_data = response.json()
     return weather_data, None
+
+
+def determine_weather_condition(data):
+    cloud_cover = data.get("cloud_cover", {}).get("afternoon", 0)
+    humidity = data.get("humidity", {}).get("afternoon", 0)
+    precipitation = data.get("precipitation", {}).get("total", 0)
+    min_temperature = data.get("temperature", {}).get("min", 0)
+
+    if cloud_cover < 10 and humidity < 40 and precipitation == 0:
+        return "Sunny", "01d"
+    elif cloud_cover < 30 and precipitation == 0:
+        return "Partly cloudy", "02d"
+    elif cloud_cover < 70 and precipitation == 0:
+        return "Cloudy", "03d"
+    elif cloud_cover < 70 and precipitation > 0:
+        if precipitation > 5 and min_temperature < 0:
+            return "Snowy", "13d"
+        else:
+            return "Shower Rain", "09d"
+    elif cloud_cover >= 70 or precipitation > 0:
+        return "Rainy", "10d"
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -165,7 +181,10 @@ def get_city_info():
         weather_data["min_temp"] = min_temp
         weather_data["max_temp"] = max_temp
 
-        print(min_temp)
+        # Determine weather conditions
+        weather_condition, weather_icon = determine_weather_condition(weather_data)
+        weather_data["weather_condition"] = weather_condition
+        weather_data["weather_icon"] = weather_icon
 
     return render_template(
         "results.html",
