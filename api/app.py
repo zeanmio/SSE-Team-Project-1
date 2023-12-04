@@ -45,7 +45,7 @@ BASE_URLS = {
 
 
 # Tourist Attractions
-def get_places_data(city):
+def get_places_data(city, attraction_type):
     geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
     geoname_response = requests.get(geoname_url)
 
@@ -60,7 +60,7 @@ def get_places_data(city):
     lon = geoname_data["lon"]
     lat = geoname_data["lat"]
 
-    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&rate=3h&limit=100&apikey={API_KEYS['opentripmap']}"
+    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3h&limit=100&apikey={API_KEYS['opentripmap']}"
     places_response = requests.get(places_url)
 
     if not places_response.ok:
@@ -127,6 +127,7 @@ def form():
         country = request.form.get("country")
         city = request.form.get("city")
         date = request.form.get("date")
+        attraction_type = request.form.get('attraction_type')
         return redirect(url_for("get-city-info", city=city))
     return render_template("index.html")
 
@@ -137,14 +138,15 @@ def get_city_info():
     country = request.args.get("country")
     city = request.args.get("city")
     date = request.args.get("date")
+    attraction_type = request.args.get('attraction_type')
 
     # Connect to database
     connection = get_db_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            query = "INSERT INTO userdata (username, country, city, exploration_date) VALUES (%s, %s, %s, %s)"
-            cursor.execute(query, (username, country, city, date))
+            query = "INSERT INTO userdata (username, country, city, exploration_date, attraction_type) VALUES (%s, %s, %s, %s, %s)"
+            cursor.execute(query, (username, country, city, date, attraction_type))
             connection.commit()
             cursor.close()
         except (Exception, psycopg2.Error) as error:
@@ -153,7 +155,7 @@ def get_city_info():
             connection.close()
 
     # Tourist Attractions
-    places_data, lon, lat, places_error = get_places_data(city)
+    places_data, lon, lat, places_error = get_places_data(city, attraction_type)
     if places_error:
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
