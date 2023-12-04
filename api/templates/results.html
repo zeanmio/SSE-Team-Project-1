@@ -130,33 +130,27 @@
     </style>
 </head>
 
-<body>
-    <div class="container">
-        <div class="section">
-            <h1 style="text-align:center;">Tourist Attractions</h1>
-            <div class="place-carousel">
-                {% for place in places_data.features %}
-                    <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
-                        <h2>{{ place.properties.name }}</h2>
-                        {% if place.properties.wikipedia_extracts %}
-                            <div class="attraction-info">
-                                <img src="{{ place.properties.preview.source }}" alt="Attraction Image">
-                                <p>{{ place.properties.wikipedia_extracts.text }}</p>
-                                <p><a href="{{ place.properties.url }}" target="_blank">Learn more</a></p>
-                            </div>
-                        {% else %}
-                            <p>No additional information available for this attraction.</p>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="button-container">
-                <button id="place-prev">Previous</button>
-                <button id="place-next">Next</button>
-            </div>
-            <div id="map"></div>
+<div class="container">
+    <div class="section">
+        <h1 style="text-align:center;">Tourist Attractions</h1>
+        <div class="place-carousel">
+            {% for place in places_data.features %}
+                <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
+                    <h2>{{ place.properties.name }}</h2>
+                    <img src="{{ place.properties.preview.source }}" alt="{{ place.properties.name }} Image">
+                    <p>{{ place.properties.wikipedia_extracts.text }}</p>
+                    <p>Read more about {{ place.properties.name }} on <a href="{{ place.properties.wikipedia }}" target="_blank">Wikipedia</a></p>
+                    <p>Visit the official website: <a href="{{ place.properties.url }}" target="_blank">{{ place.properties.url }}</a></p>
+                </div>
+            {% endfor %}
         </div>
-    </div>    
+        <div class="button-container">
+            <button id="place-prev">Previous</button>
+            <button id="place-next">Next</button>
+        </div>
+        <div id="map"></div>
+    </div>
+</div>   
 
         <div class="section">
             <h1 style="text-align:center;">Upcoming Events</h1>
