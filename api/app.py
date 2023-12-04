@@ -68,24 +68,19 @@ def get_places_data(city, attraction_type):
 
     places_data = places_response.json()
 
-    detailed_places = []
     for place in places_data.get("features", []):
         xid = place.get("properties", {}).get("xid")
         if xid:
-            detailed_info_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/xid/{xid}?apikey={API_KEYS['opentripmap']}"
-            detailed_info_response = requests.get(detailed_info_url)
+            place_details_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/xid/{xid}?apikey={API_KEYS['opentripmap']}"
+            place_details_response = requests.get(place_details_url)
 
-            if detailed_info_response.ok:
-                detailed_info = detailed_info_response.json()
-                place["properties"].update(detailed_info.get("info", {}))
-            else:
-                print(
-                    f"Error fetching detailed information for {place['properties']['name']}"
-                )
+            if place_details_response.ok:
+                place_details = place_details_response.json()
 
-        detailed_places.append(place)
+                # Update the place properties with additional details
+                place["properties"].update(place_details.get("info", {}))
 
-    return {"features": detailed_places}, lon, lat, None
+    return places_data, lon, lat, None
 
 
 # Upcoming Events
