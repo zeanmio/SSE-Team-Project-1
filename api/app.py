@@ -68,18 +68,6 @@ def get_places_data(city, attraction_type):
 
     places_data = places_response.json()
 
-    for place in places_data.get("features", []):
-        xid = place.get("properties", {}).get("xid")
-        if xid:
-            place_details_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/xid/{xid}?apikey={API_KEYS['opentripmap']}"
-            place_details_response = requests.get(place_details_url)
-
-            if place_details_response.ok:
-                place_details = place_details_response.json()
-
-                # Update the place properties with additional details
-                place["properties"].update(place_details.get("info", {}))
-
     return places_data, lon, lat, None
 
 

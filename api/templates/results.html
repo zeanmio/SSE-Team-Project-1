@@ -136,9 +136,6 @@
                     {% for place in places_data.features %}
                         <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
                             <h2>{{ place.properties.name }}</h2>
-                            <img src="{{ place.properties.info.image }}" alt="{{ place.properties.name }} Image">
-                            <p>{{ place.properties.wikipedia_extracts.text }}</p>
-                            <p><a href="{{ place.properties.url }}" target="_blank">Learn more</a></p>
                         </div>
                     {% endfor %}
                 </div>
