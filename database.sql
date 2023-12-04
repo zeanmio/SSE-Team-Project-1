@@ -3,7 +3,7 @@ CREATE TABLE userdata (
     username VARCHAR(50) NOT NULL,
     country VARCHAR(50),
     city VARCHAR(50),
-    exploration_date DATE
+    exploration_date DATE,
     attraction_type VARCHAR(50)
 );
 
