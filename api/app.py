@@ -181,6 +181,7 @@ def get_city_info():
     # Weather
     min_temp = max_temp = None
     weather_data = {}  # Initialize weather_data as an empty dictionary
+    sunrise_time = sunset_time = None  # Initialize sunrise and sunset times
 
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
@@ -192,8 +193,6 @@ def get_city_info():
         if sunrisesunset_error:
             logging.error(f"Error in getting sunrisesunset data: {sunrisesunset_error}")
             return jsonify({"error": sunrisesunset_error}), 500
-
-        sunrise_time = sunset_time = None  # Initialize sunrise and sunset times
 
         # Extract sunrise and sunset times from the API response
         sunrise_str = sunrisesunset_data.get("results", {}).get("sunrise", "")
