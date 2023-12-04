@@ -129,25 +129,24 @@
         }
     </style>
 </head>
-
-<div class="container">
-    <div class="section">
-        <h1 style="text-align:center;">Tourist Attractions</h1>
-        <div class="place-carousel">
-            {% for place in places_data.features %}
-                <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
-                    <h2>{{ place.properties.name }}</h2>
-                    <p>{{ place.properties.wikipedia_extracts.text }}</p>
+    <div class="container">
+        <div class="section">
+            <h1 style="text-align:center;">Tourist Attractions</h1>
+                <div class="place-carousel">
+                    {% for place in places_data.features %}
+                        <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
+                            <h2>{{ place.properties.name }}</h2>
+                            <p>{{ place.properties.wikipedia }}</p>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </div>
-        <div class="button-container">
-            <button id="place-prev">Previous</button>
-            <button id="place-next">Next</button>
-        </div>
-        <div id="map"></div>
-    </div>
-</div>   
+                <div class="button-container">
+                    <button id="place-prev">Previous</button>
+                    <button id="place-next">Next</button>
+                </div>
+                <div id="map"></div>
+            </div>
+        </div>   
 
         <div class="section">
             <h1 style="text-align:center;">Upcoming Events</h1>
