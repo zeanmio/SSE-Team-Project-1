@@ -42,7 +42,7 @@ BASE_URLS = {
     "opentripmap": "https://api.opentripmap.com",
     "seatgeek": "https://api.seatgeek.com",
     "openweather": "https://api.openweathermap.org",
-    "sunrisesunset": "https://api.sunrisesunset.io"
+    "sunrisesunset": "https://api.sunrisesunset.io",
 }
 
 
@@ -100,12 +100,15 @@ def get_weather_data(lat, lon, date):
     weather_data = response.json()
     return weather_data, None
 
+
 def get_sunrisesunset_data(lat, lon, date):
-    sunrisesunset_url = f"{BASE_URLS['sunrisesunset']}/json?lat={lat}&lng={lon}&date={date}"
+    sunrisesunset_url = (
+        f"{BASE_URLS['sunrisesunset']}/json?lat={lat}&lng={lon}&date={date}"
+    )
     response = requests.get(sunrisesunset_url)
     if not response.ok:
         return None, "Error fetching sunrisesunset data"
-    
+
     sunrisesunset_data = response.json()
     return sunrisesunset_data, None
 
@@ -185,7 +188,7 @@ def get_city_info():
 
         # Sunrisesunset
         sunrisesunset_data, sunrisesunset_error = get_sunrisesunset_data(lat, lon, date)
-        print (sunrisesunset_data)
+        print(sunrisesunset_data)
         if sunrisesunset_error:
             logging.error(f"Error in getting sunrisesunset data: {sunrisesunset_error}")
             return jsonify({"error": sunrisesunset_error}), 500
@@ -206,9 +209,9 @@ def get_city_info():
             sunset_datetime = datetime.strptime(sunset_str, "%I:%M:%S %p")
             sunset_time = sunset_datetime.strftime("%I:%M %p")
 
-        print (sunrise_time)
-        print (sunset_time)
-        #Extract weatehr data from the API response
+        print(sunrise_time)
+        print(sunset_time)
+        # Extract weatehr data from the API response
         weather_data, weather_error = get_weather_data(lat, lon, date)
         if weather_error:
             logging.error(f"Error in getting weather data: {weather_error}")
