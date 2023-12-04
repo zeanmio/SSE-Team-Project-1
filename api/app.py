@@ -127,7 +127,7 @@ def form():
         country = request.form.get("country")
         city = request.form.get("city")
         date = request.form.get("date")
-        attraction_type = request.form.get('attraction_type')
+        attraction_type = request.form.get("attraction_type")
         return redirect(url_for("get-city-info", city=city))
     return render_template("index.html")
 
@@ -138,7 +138,7 @@ def get_city_info():
     country = request.args.get("country")
     city = request.args.get("city")
     date = request.args.get("date")
-    attraction_type = request.args.get('attraction_type')
+    attraction_type = request.args.get("attraction_type")
 
     # Connect to database
     connection = get_db_connection()
