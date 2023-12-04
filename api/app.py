@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
+from datetime import datetime
 import requests, logging, psycopg2, os
 
 
@@ -41,6 +42,7 @@ BASE_URLS = {
     "opentripmap": "https://api.opentripmap.com",
     "seatgeek": "https://api.seatgeek.com",
     "openweather": "https://api.openweathermap.org",
+    "sunrisesunset": "https://api.sunrisesunset.io"
 }
 
 
@@ -97,6 +99,15 @@ def get_weather_data(lat, lon, date):
         return None, "Error fetching weather data"
     weather_data = response.json()
     return weather_data, None
+
+def get_sunrisesunset_data(lat, lon, date):
+    sunrisesunset_url = f"{BASE_URLS['sunrisesunset']}/json?lat={lat}&lng={lon}&date={date}"
+    response = requests.get(sunrisesunset_url)
+    if not response.ok:
+        return None, "Error fetching sunrisesunset data"
+    
+    sunrisesunset_data = response.json()
+    return sunrisesunset_data, None
 
 
 def determine_weather_condition(data):
@@ -167,10 +178,37 @@ def get_city_info():
     # Weather
     min_temp = max_temp = None
     weather_data = {}  # Initialize weather_data as an empty dictionary
+
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
         lat, lon = location[1], location[0]
 
+        # Sunrisesunset
+        sunrisesunset_data, sunrisesunset_error = get_sunrisesunset_data(lat, lon, date)
+        print (sunrisesunset_data)
+        if sunrisesunset_error:
+            logging.error(f"Error in getting sunrisesunset data: {sunrisesunset_error}")
+            return jsonify({"error": sunrisesunset_error}), 500
+
+        sunrise_time = sunset_time = None  # Initialize sunrise and sunset times
+
+        # Extract sunrise and sunset times from the API response
+        sunrise_str = sunrisesunset_data.get("results", {}).get("sunrise", "")
+        sunset_str = sunrisesunset_data.get("results", {}).get("sunset", "")
+
+        # Parse and format sunrise time
+        if sunrise_str:
+            sunrise_datetime = datetime.strptime(sunrise_str, "%I:%M:%S %p")
+            sunrise_time = sunrise_datetime.strftime("%I:%M %p")
+
+        # Parse and format sunset time
+        if sunset_str:
+            sunset_datetime = datetime.strptime(sunset_str, "%I:%M:%S %p")
+            sunset_time = sunset_datetime.strftime("%I:%M %p")
+
+        print (sunrise_time)
+        print (sunset_time)
+        #Extract weatehr data from the API response
         weather_data, weather_error = get_weather_data(lat, lon, date)
         if weather_error:
             logging.error(f"Error in getting weather data: {weather_error}")
@@ -191,6 +229,8 @@ def get_city_info():
         places_data=places_data,
         events_data=events_data,
         weather_data=weather_data,
+        sunrise_time=sunrise_time,
+        sunset_time=sunset_time,
         lon=lon,
         lat=lat,
     )
