@@ -62,7 +62,7 @@ def get_places_data(city, attraction_type):
     lon = geoname_data["lon"]
     lat = geoname_data["lat"]
 
-    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3h&limit=100&apikey={API_KEYS['opentripmap']}"
+    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3&limit=100&apikey={API_KEYS['opentripmap']}"
     places_response = requests.get(places_url)
 
     if not places_response.ok:
@@ -196,7 +196,7 @@ def get_city_info():
     date = request.args.get("date")
     attraction_type = request.args.get("attraction_type")
 
-    # Connect to database
+    # Connect to database & Save user data
     connection = get_db_connection()
     if connection:
         try:
@@ -216,16 +216,58 @@ def get_city_info():
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
 
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            if places_data and "features" in places_data:
+                for feature in places_data["features"]:
+                    id = feature["id"]
+                    name = feature["properties"]["name"].encode("utf-8")
+                    location = feature["geometry"]["coordinates"]
+                    latitude = location[1]
+                    longitude = location[0]
+                    rate = feature["properties"]["rate"]
+                    wikidata = feature["properties"]["wikidata"]
+                    insert_sql = "INSERT INTO attractions (id, name, latitude, longitude, rate, wikidata) VALUES (%s, %s, %s, %s, %s, %s) ON CONFLICT (id) DO NOTHING;"
+                    cursor.execute(
+                        insert_sql, (id, name, latitude, longitude, rate, wikidata)
+                    )
+            connection.commit()
+        except (Exception, psycopg2.Error) as error:
+            print("Error while inserting data into Postgres", error)
+        finally:
+            if connection is not None:
+                connection.close()
+
     # Upcoming Events
     events_data, events_error = get_seatgeek_events(city, date)
     if events_error:
         logging.error(f"Error in getting events data: {events_error}")
         return jsonify({"error": events_error}), 500
 
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            if events_data:
+                for event in events_data:
+                    title = event["title"]
+                    datetime_local = event["datetime_local"]
+                    venue_name = event["venue"]["name"]
+                    insert_sql = "INSERT INTO events (title, datetime_local, venue_name) VALUES (%s, %s, %s)"
+                    cursor.execute(insert_sql, (title, datetime_local, venue_name))
+            connection.commit()
+        except (Exception, psycopg2.Error) as error:
+            print("Error while inserting data into Postgres", error)
+        finally:
+            if connection is not None:
+                connection.close()
+
     # Weather
     min_temp = max_temp = None
-    weather_data = {}  # Initialize weather_data as an empty dictionary
-    sunrise_time = sunset_time = None  # Initialize sunrise and sunset times
+    weather_data = {}
+    sunrise_time = sunset_time = None
 
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
@@ -269,6 +311,28 @@ def get_city_info():
         weather_condition, weather_icon = determine_weather_condition(weather_data)
         weather_data["weather_condition"] = weather_condition
         weather_data["weather_icon"] = weather_icon
+
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+
+            # Insert weather data
+            weather_insert_sql = "INSERT INTO weather (date, min_temp, max_temp, weather_condition) VALUES (%s, %s, %s, %s)"
+            cursor.execute(
+                weather_insert_sql, (date, min_temp, max_temp, weather_condition)
+            )
+
+            # Insert sunrise and sunset times
+            sunrise_sunset_insert_sql = "INSERT INTO sunrise_sunset (date, sunrise_time, sunset_time) VALUES (%s, %s, %s)"
+            cursor.execute(sunrise_sunset_insert_sql, (date, sunrise_time, sunset_time))
+
+            connection.commit()
+        except (Exception, psycopg2.Error) as error:
+            print("Error while inserting data into Postgres", error)
+        finally:
+            if connection is not None:
+                connection.close()
 
     return render_template(
         "results.html",
