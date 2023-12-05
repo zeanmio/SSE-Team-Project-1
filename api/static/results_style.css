@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+.section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.container {
+    width: 80%;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.carousel {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.carousel-item {
+    display: none;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+.carousel-item.active {
+    display: block;
+}
+
+.weather-columns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.first-weather-column{
+    width: 50%;
+}
+.second-weather-column {
+    width: 50%;
+    text-align: left;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.temperature-info {
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: flex-start;
+width: 100%;
+}
+
+.temperature-range {
+font-size: 24px;
+color: #333;
+margin-right: 10px;
+}
+
+.weather-condition{
+font-size:18px;
+}
+
+.min-temp {
+color: #888;
+font-size: 20px;
+}
+
+.max-temp {
+font-size: 24px;
+}
+
+.weather-icon {
+width: 40px;
+height: 40px;
+}
+
+.city h2, .event h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+}
+
+.button-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+button {
+    background: #555;
+    color: #fff;
+    border: 1px solid #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+button:hover {
+    background: #333;
+}
+.event-carousel, .place-carousel {
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.event-carousel-item, .place-carousel-item {
+    width: 100%;
+    display: none;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+.event-carousel-item.active, .place-carousel-item.active {
+    display: block;
+}
+.event-item, .place-item {
+    margin-bottom: 20px;
+}
+.event-item ul {
+    padding-left: 20px;
+}
