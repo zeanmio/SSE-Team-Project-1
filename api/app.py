@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 import requests, logging, psycopg2, os
 
 
@@ -132,6 +132,46 @@ def form():
         attraction_type = request.form.get("attraction_type")
         return redirect(url_for("get-city-info", city=city))
     return render_template("index.html")
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
+@app.route("/feedback", methods=["GET", "POST"])
+def feedback():
+    if request.method == "POST":
+        username = request.form.get("username")
+        feedback = request.form.get("feedback")
+        return redirect(
+            url_for("submit-feedback", username=username, feedback=feedback)
+        )
+    return render_template("feedback.html")
+
+
+@app.route("/submit-feedback", methods=["GET"])
+def submit_feedback():
+    username = request.args.get("username")
+    feedback = request.args.get("feedback")
+
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            insert_sql = "INSERT INTO feedback (username, feedback) VALUES (%s, %s)"
+            cursor.execute(insert_sql, (username, feedback))
+            connection.commit()
+            cursor.close()
+            connection.close()
+
+        except (Exception, psycopg2.Error) as error:
+            print("Error while inserting data into PostgreSQL", error)
+        finally:
+            if connection is not None:
+                connection.close()
+
+    return redirect(url_for("feedback"))
 
 
 @app.route("/get-city-info", methods=["GET"])

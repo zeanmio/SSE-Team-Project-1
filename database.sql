@@ -10,3 +10,14 @@ CREATE TABLE userdata (
 INSERT INTO userdata (username, country, city, exploration_date, attraction_type) VALUES ('exampleuser', 'examplecountry', 'examplecity', '2023-01-01', 'exampletype');
 
 SELECT * FROM userdata;
+
+
+CREATE TABLE feedback (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    feedback TEXT NOT NULL
+);
+
+INSERT INTO feedback (username, feedback) VALUES ('exampleuser', 'examplefeedback');
+
+SELECT * FROM feedback;

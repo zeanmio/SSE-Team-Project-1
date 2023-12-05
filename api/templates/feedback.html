@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>City Explorer</title>
+    <title>Feedback on City Explorer</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <style>
         body {
@@ -37,7 +38,7 @@
         .container {
             max-width: 1200px;
             margin: auto;
-            padding: 20px;
+            padding: 10px;
             background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -61,7 +62,7 @@
         form {
             margin-top: 20px;
         }
-        input[type="text"], input[type="date"], select {
+        input[type="text"], textarea {
             box-sizing: border-box;
             display: block;
             width: 30%;
@@ -97,39 +98,20 @@
 
 <div class="hero-image">
     <div class="hero-text">
-        <h1>City Explorer: Your Local Guide</h1>
-        <p>Unlock the latest in local weather, vibrant events, and must-see attractions for an unforgettable urban journey.</p>
+        <h1>Feedback on City Explorer</h1>
+        <p>We value your insights and suggestions. Help us improve City Explorer to serve you better.</p>
     </div>
 </div>
 
 <div class="container">
-    <form action="/get-city-info" method="get">
-        <h2>Enter your exploration details:</h2>
-
+    <form action="{{ url_for('submit_feedback') }}" method="get">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" placeholder="Choose a cool explorer name" value="{{username}}">
+        <input type="text" id="username" name="username" required>
         
-        <label for="country">Country:</label>
-        <input type="text" id="country" name="country" placeholder="Which country are we adventuring to" value="{{country}}">
+        <label for="feedback">Your Feedback:</label>
+        <textarea id="feedback" name="feedback" required rows="6" style="width: 100%;"></textarea>
 
-        <label for="city">City:</label>
-        <input type="text" id="city" name="city" placeholder="Type the city you're dreaming of" value="{{city}}">
-
-        <label for="attraction_type" title="Choose the type of attractions you are interested in.">Attraction Type:</label>
-        <select id="attraction_type" name="attraction_type">
-            <option value="" disabled selected>Select an option</option>
-            <option value="architecture">Architectural</option>
-            <option value="cultural">Cultural</option>
-            <option value="historic">Historical</option>
-            <option value="industrial_facilities">Industrial</option>
-            <option value="natural">Natural</option>
-            <option value="religion">Religious</option>
-        </select>
-
-        <label for="date">Exploration Date:</label>
-        <input type="date" id="date" name="date" value="{{Date}}">
-
-        <input type="submit" value="Explore City">
+        <input type="submit" value="Submit">
     </form>
 
     <div id="results"></div>
