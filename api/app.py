@@ -207,7 +207,7 @@ def get_city_info():
         if sunset_str:
             sunset_datetime = datetime.strptime(sunset_str, "%I:%M:%S %p")
             sunset_time = sunset_datetime.strftime("%I:%M %p")
-        
+
         if golden_hour_str:
             golden_hour_datetime = datetime.strptime(golden_hour_str, "%I:%M:%S %p")
             golden_hour_time = golden_hour_datetime.strftime("%I:%M %p")
@@ -236,7 +236,7 @@ def get_city_info():
         weather_data=weather_data,
         sunrise_time=sunrise_time,
         sunset_time=sunset_time,
-        golden_hour_time = golden_hour_time,
+        golden_hour_time=golden_hour_time,
         lon=lon,
         lat=lat,
     )
