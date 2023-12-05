@@ -197,19 +197,22 @@ def get_city_info():
         # Extract sunrise and sunset times from the API response
         sunrise_str = sunrisesunset_data.get("results", {}).get("sunrise", "")
         sunset_str = sunrisesunset_data.get("results", {}).get("sunset", "")
+        golden_hour_str = sunrisesunset_data.get("results", {}).get("golden_hour", "")
 
-        # Parse and format sunrise time
+        # Parse and format sunrise time, sunset time, and golden hour
         if sunrise_str:
             sunrise_datetime = datetime.strptime(sunrise_str, "%I:%M:%S %p")
             sunrise_time = sunrise_datetime.strftime("%I:%M %p")
 
-        # Parse and format sunset time
         if sunset_str:
             sunset_datetime = datetime.strptime(sunset_str, "%I:%M:%S %p")
             sunset_time = sunset_datetime.strftime("%I:%M %p")
+        
+        if golden_hour_str:
+            golden_hour_datetime = datetime.strptime(golden_hour_str, "%I:%M:%S %p")
+            golden_hour_time = golden_hour_datetime.strftime("%I:%M %p")
 
-        print(sunrise_time)
-        print(sunset_time)
+        print(golden_hour_time)
         # Extract weatehr data from the API response
         weather_data, weather_error = get_weather_data(lat, lon, date)
         if weather_error:
@@ -233,6 +236,7 @@ def get_city_info():
         weather_data=weather_data,
         sunrise_time=sunrise_time,
         sunset_time=sunset_time,
+        golden_hour_time = golden_hour_time,
         lon=lon,
         lat=lat,
     )

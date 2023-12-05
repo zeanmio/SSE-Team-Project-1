@@ -99,9 +99,10 @@
         
                 <!-- Second Column -->
                 <div class="second-weather-column">
-                    {% if sunrise_time and sunset_time %}
+                    {% if sunrise_time and sunset_time and golden_hour_time %}
                         <p>Sunrise: {{ sunrise_time }}</p>
                         <p>Sunset: {{ sunset_time }}</p>
+                        <p>Golden hour: {{ golden_hour_time }}</p>
                     {% endif %}
                 </div>
             </div>
