@@ -82,7 +82,7 @@ def get_seatgeek_events(lat, lon, date):
         "lat": lat,
         "lon": lon,
         "datetime_local.gte": date,
-        "range": "50mi" 
+        "range": "50mi",
     }
 
     response = requests.get(base_url, params=params)
@@ -93,7 +93,6 @@ def get_seatgeek_events(lat, lon, date):
         return events_data, None
     else:
         return None, "Error fetching events from SeatGeek"
-
 
 
 # Weather
