@@ -181,7 +181,9 @@ def get_city_info():
     # Weather
     min_temp = max_temp = None
     weather_data = {}  # Initialize weather_data as an empty dictionary
-    sunrise_time = sunset_time = golden_hour_time =  None  # Initialize sunrise, sunset, and golden hour times
+    sunrise_time = None
+    sunset_time = None
+    golden_hour_time = None  # Initialize sunrise, sunset, and golden hour times
 
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
