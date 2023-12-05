@@ -28,7 +28,7 @@ class AppTestCase(unittest.TestCase):
     ):
         mock_db_connection.return_value = MagicMock()
 
-        mock_places_data.return_value = ([], 0, 0, None)
+        mock_places_data.return_value = ([], [], 0, 0, None)
         mock_events_data.return_value = ([], None)
         mock_weather_data.return_value = (
             {"temperature": {"min": 280, "max": 285}},
