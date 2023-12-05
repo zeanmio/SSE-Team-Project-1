@@ -74,13 +74,15 @@ def get_places_data(city, attraction_type):
 
 
 # Upcoming Events
-def get_seatgeek_events(city, date):
+def get_seatgeek_events(lat, lon, date):
     base_url = f"{BASE_URLS['seatgeek']}/2/events"
     params = {
         "client_id": API_KEYS["seatgeek_client_id"],
         "client_secret": API_KEYS["seatgeek_client_secret"],
-        "venue.city": city,
+        "lat": lat,
+        "lon": lon,
         "datetime_local.gte": date,
+        "range": "50mi" 
     }
 
     response = requests.get(base_url, params=params)
@@ -91,6 +93,7 @@ def get_seatgeek_events(city, date):
         return events_data, None
     else:
         return None, "Error fetching events from SeatGeek"
+
 
 
 # Weather
@@ -241,7 +244,7 @@ def get_city_info():
                 connection.close()
 
     # Upcoming Events
-    events_data, events_error = get_seatgeek_events(city, date)
+    events_data, events_error = get_seatgeek_events(lat, lon, date)
     if events_error:
         logging.error(f"Error in getting events data: {events_error}")
         return jsonify({"error": events_error}), 500
