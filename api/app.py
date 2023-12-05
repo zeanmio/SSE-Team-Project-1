@@ -291,7 +291,9 @@ def get_city_info():
                 connection.close()
 
     # Tourist Attractions
-    places_data, dining_data, lon, lat, places_error = get_places_data(city, attraction_type)
+    places_data, dining_data, lon, lat, places_error = get_places_data(
+        city, attraction_type
+    )
     if places_error:
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
