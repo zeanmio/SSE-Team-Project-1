@@ -115,15 +115,29 @@
         <label for="city">City:</label>
         <input type="text" id="city" name="city" placeholder="Type the city you're dreaming of" value="{{city}}">
 
-        <label for="attraction_type" title="Choose the type of attractions you are interested in.">Attraction Type:</label>
+        <label for="attraction_type" title="Choose the type of attractions you are interested in.">Filter:</label>
         <select id="attraction_type" name="attraction_type">
             <option value="" disabled selected>Select an option</option>
-            <option value="architecture">Architectural</option>
-            <option value="cultural">Cultural</option>
-            <option value="historic">Historical</option>
-            <option value="industrial_facilities">Industrial</option>
-            <option value="natural">Natural</option>
-            <option value="religion">Religious</option>
+                <!-- Tourist Attractions -->
+            <optgroup label="Tourist Attractions">
+                <option value="interesting_places">All attractions</option>
+                <option value="architecture">Architectural</option>
+                <option value="cultural">Cultural</option>
+                <option value="historic">Historical</option>
+                <option value="industrial_facilities">Industrial</option>
+                <option value="natural">Natural</option>
+                <option value="religion">Religious</option>
+            </optgroup>
+                <!-- Food -->
+            <optgroup label="Food">
+                <option value="foods">All food</option>
+                <option value="bars">Bars</option>
+                <option value="bakeries">Bakeries</option>
+                <option value="cafes">Cafes</option>
+                <option value="fast_food">Fast food</option>
+                <option value="pubs">Pubs</option>
+                <option value="restaurants">Restaurants</option>
+            </optgroup>
         </select>
 
         <label for="date">Exploration Date:</label>

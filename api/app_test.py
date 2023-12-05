@@ -33,7 +33,7 @@ class AppTestCase(unittest.TestCase):
             "/get-city-info?city=London&username=test&country=UK&date=2023-12-31"
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Tourist Attractions", response.data)
+        self.assertIn(b"Discover", response.data)
         self.assertIn(b"Upcoming Events", response.data)
         self.assertIn(b"Weather", response.data)
 

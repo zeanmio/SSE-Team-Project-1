@@ -337,6 +337,7 @@ def get_city_info():
     return render_template(
         "results.html",
         places_data=places_data,
+        attraction_type=attraction_type,
         events_data=events_data,
         weather_data=weather_data,
         sunrise_time=sunrise_time,
