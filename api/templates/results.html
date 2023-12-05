@@ -14,7 +14,7 @@
 </head>
     <div class="container">
         <div class="section">
-            <h1 style="text-align:center;">{{ attraction_type }}</h1>
+            <h1 style="text-align:center;" id="attraction-type-label"></h1>
                 <div class="place-carousel">
                     {% for place in places_data.features %}
                         <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
@@ -124,6 +124,15 @@
         document.getElementById('place-next').addEventListener('click', function() {
             currentPlaceIndex = updateCarousel(placeItems, currentPlaceIndex, 1);
             addMarkers();
+        });
+
+        document.getElementById('attraction_type').addEventListener('change', function() {
+        // Get the selected option
+        const selectedOption = this.options[this.selectedIndex];
+        // Get the label of the selected option's group
+        const groupLabel = selectedOption.parentElement.label;
+        // Update the h1 element with the group label
+        document.getElementById('attraction-type-label').textContent = groupLabel;
         });
         
         document.getElementById('event-prev').addEventListener('click', function() {
