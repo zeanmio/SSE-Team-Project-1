@@ -6,6 +6,7 @@
     <title>City Explorer Results</title>
     <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" /> 
     <link rel="stylesheet" href="{{ url_for('static', filename='results_style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
     <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
     <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
@@ -103,11 +104,21 @@
         
             <!-- Second Column -->
             <div class="second-weather-column">
-                {% if sunrise_time and sunset_time %}
-                    <p>Sunrise: {{ sunrise_time }}</p>
+                {% if sunrise_time and sunset_time and golden_hour_time %}
+                    <p>Sunrise: {{ sunrise_time }}
+                            <img src="https://www.flaticon.com/free-icons/sunset">
+                        </p>
                     <p>Sunset: {{ sunset_time }}</p>
+                        <p>Golden hour: {{ golden_hour_time }}</p>
                 {% endif %}
             </div>
+
+                 <!-- Third Column -->
+                <div class="third-weather-column">
+                    <!-- <h2>Air Quality Index</h2> -->
+                    <p style="text-align: center;">Air Quality Forecast for the Next 48 Hours</p>
+                    <canvas id="airQualityChart"></canvas> 
+                </div>
         </div>
     </div>
 
@@ -117,6 +128,127 @@
         // carousel script
         const placeItems = document.querySelectorAll('.place-carousel-item');
         const eventItems = document.querySelectorAll('.event-carousel-item');
+
+        
+        // Assume airquality_forecast is already set to the JSON data in the correct format
+        var airquality_forecast = {{ airquality_forecast | tojson }};
+
+        function renderAqiChart(airqualityData) {
+            const labels = airqualityData.map(forecast => new Date(forecast.time * 1000).toLocaleString());
+            const values = airqualityData.map(forecast => forecast.avg_aqi);
+            const ctx = document.getElementById('airQualityChart').getContext('2d');
+
+            // Calculate gradient stops based on data
+            function calculateGradientStops(minAqi, maxAqi) {
+                const aqiLimits = {good: 1, fair: 2, moderate: 3, poor: 4, veryPoor: 5};
+                const aqiColors = {
+                    good: 'rgba(110, 235, 152, 0.5)',
+                    fair: 'rgba(228, 232, 21, 0.5)',
+                    moderate: 'rgba(247, 185, 52, 0.5)',
+                    poor: 'rgba(235, 50, 40, 0.5)',
+                    veryPoor: 'rgba(97, 30, 26, 0.5)'
+                };
+
+                const stops = [];
+                Object.keys(aqiLimits).forEach((key, index, array) => {
+                    if (minAqi <= aqiLimits[key] && maxAqi >= aqiLimits[key]) {
+                        let nextLimit = aqiLimits[array[index + 1]] || maxAqi;
+                        let stopPosition = (aqiLimits[key] - minAqi) / (maxAqi - minAqi);
+                        let nextStopPosition = (nextLimit - minAqi) / (maxAqi - minAqi);
+                        stops.push({stop: stopPosition, color: aqiColors[key]});
+                        if (index === array.length - 1 || nextStopPosition > 1) {
+                            stops.push({stop: nextStopPosition, color: aqiColors[key]});
+                        }
+                    }
+                });
+                return stops;
+            }
+
+            // Get the min and max AQI values
+            const minAqiValue = Math.min(...values);
+            const maxAqiValue = Math.max(...values);
+
+            // Create gradient
+            let gradientStops = calculateGradientStops(minAqiValue, maxAqiValue);
+            let gradient = ctx.createLinearGradient(0, ctx.canvas.clientHeight, 0, 0);
+            gradientStops.forEach(stop => {
+                // gradient.addColorStop(stop.stop, stop.color);
+                console.log(`Adding color stop: ${stop.stop}, ${stop.color}`); // Log the stop position and color
+                if (stop.stop < 0 || stop.stop > 1) {
+                    console.error(`Invalid stop position: ${stop.stop}, color: ${stop.color}`);
+                } else {
+                    gradient.addColorStop(stop.stop, stop.color);
+                }
+            });
+
+            const aqiChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        label: 'Air quality',
+                        borderColor: 'black',
+                        borderWidth: 2,
+                    }],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                min: 1,
+                                max: 5,
+                                stepSize: 1,
+                                callback: function(value) {
+                                    switch (value) {
+                                        case 1: return 'Good';
+                                        case 2: return 'Fair';
+                                        case 3: return 'Moderate';
+                                        case 4: return 'Poor';
+                                        case 5: return 'Very Poor';
+                                        default: return '';
+                                    }
+                                }
+                            }
+                        },
+                        x: {
+                            display: false
+                        }
+                    },
+                    plugins:{
+                        legend: {
+                            display: true
+                        }
+                    },
+                    elements: {
+                        point: {
+                            radius: 0
+                        },
+                        line: {
+                            tension: 0.5
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: true
+                },
+                plugins: [{
+                    beforeDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const chartArea = chart.chartArea;
+                        ctx.save();
+                        ctx.globalCompositeOperation = 'destination-over';
+                        ctx.fillStyle = gradient;
+                        ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
+                        ctx.restore();
+                    }
+                }]
+            });
+        }
+        renderAqiChart(airquality_forecast);
+
+        //End of air quality line chart 
+
         let currentPlaceIndex = 0;
         let currentEventIndex = 0;
 
