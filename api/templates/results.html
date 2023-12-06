@@ -109,6 +109,8 @@
             {% for dining in dining_data.features %}
                 <div class="dining-carousel-item" data-lat="{{ dining.geometry.coordinates[1] }}" data-lon="{{ dining.geometry.coordinates[0] }}" >
                     <h2>{{ dining.properties.name }}</h2>
+                    <p>{{ dining.properties.kinds }}</p>
+                    <p>{{ dining.properties.wikidata }}</p>
                 </div>
             {% endfor %}
         </div>

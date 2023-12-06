@@ -447,6 +447,7 @@ def get_city_info():
         places_data=places_data,
         dining_data=dining_data,
         attraction_type=attraction_type,
+        food_type=food_type,
         events_data=events_data,
         weather_data=weather_data,
         sunrise_time=sunrise_time,
