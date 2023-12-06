@@ -315,7 +315,7 @@ def get_city_info():
                 connection.close()
 
     # Tourist Attractions
-    places_data, lon, lat, places_error = get_places_data(city, food_type)
+    places_data, lon, lat, places_error = get_places_data(city, attraction_type)
     if places_error:
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
@@ -349,7 +349,7 @@ def get_city_info():
                 connection.close()
 
     # Dining
-    dining_data, lon, lat, dining_error = get_dining_data(city, attraction_type)
+    dining_data, lon, lat, dining_error = get_dining_data(city, food_type)
     if dining_error:
         logging.error(f"Error in getting dining data: {dining_error}")
         return jsonify({"error": dining_error}), 500
