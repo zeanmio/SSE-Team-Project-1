@@ -12,6 +12,7 @@ CREATE TABLE userdata (
     city VARCHAR(50),
     exploration_date DATE,
     attraction_type VARCHAR(50),
+    food_type VARCHAR(50),
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 SELECT * FROM userdata;
