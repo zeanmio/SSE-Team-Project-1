@@ -15,73 +15,81 @@
 </head>
 
 <body>
-    <br><br><br>
+        <br><br>
+        <div class="header-text">
+            <h2>Exploring {{ city }}, {{ country }} on {{ date }}<h2>
+        </div>
+        <div class="button-container">
+                <button onclick="redirectToIndex()">Start a New Exploration</button>
+        </div>
+        <br><br>
 
     <div class="container">
-        <h1 style="text-align:center;">Weather</h1>
-        <div class="weather-columns">
-            <!-- First Column -->
-            <div class="first-weather-column">
-                <div class="temperature-info">
-                    <div class="temperature-range">
-                        <p>
-                            <span class="min-temp">{{ weather_data.min_temp }}°C</span>
-                            <span class="temp-divider"> - </span>         
-                            <span class="max-temp">{{ weather_data.max_temp }}°C</span>
-                        </p>
-                    </div>
-                    <div class="weather-icon">
-                        {% if weather_data.weather_icon %}
-                            <img src="https://openweathermap.org/img/wn/{{ weather_data.weather_icon }}@2x.png" alt="Weather Icon">
+        <br>
+        <div class="section">
+            <h1 style="text-align:center;">Weather</h1>
+            <div class="weather-columns">
+                <!-- First Column -->
+                <div class="first-weather-column">
+                        <div class="temperature-range">
+                            <p>
+                                <span class="min-temp">{{ weather_data.min_temp }}°C</span>
+                                <span class="temp-divider"> - </span>         
+                                <span class="max-temp">{{ weather_data.max_temp }}°C</span>
+                            </p>
+                        </div>
+                    <div class="weather-condition">
+                        {% if weather_data.weather_condition %}
+                            <p>
+                                {% if weather_data.weather_icon %}
+                                    <img src="https://openweathermap.org/img/wn/{{ weather_data.weather_icon }}@2x.png" alt="Weather Icon" class="weather-icon">
+                                {% endif %}
+                                {{ weather_data.weather_condition }}
+                            </p>
                         {% endif %}
                     </div>
                 </div>
-                <div class="weather-condition">
-                    {% if weather_data.weather_condition %}
-                        <p>{{ weather_data.weather_condition }}</p>
+            
+                <!-- Second Column -->
+                <div class="second-weather-column">
+                    {% if weather_data.wind and weather_data.wind.max %}
+                        <p class="wind-info">
+                            <img src="/static/images/wind.png" class="icon">
+                            Wind: {{ weather_data.wind.max.speed }} mph
+                        </p>
+                    {% endif %} 
+                    {% if weather_data.humidity and weather_data.humidity.afternoon %}
+                        <p class="humidity-info">
+                            <img src="/static/images/humidity.png" class="icon">
+                            Humidity: {{ weather_data.humidity.afternoon }} %
+                        </p>
+                    {% endif %} 
+                    {% if sunrise_time and sunset_time and golden_hour_time %}
+                        <p>
+                            <img src="/static/images/sunrise.png" class="icon">
+                            Sunrise: {{ sunrise_time }}
+                        </p>
+                        <p>
+                            <img src="/static/images/sunset.png" class="icon">
+                            Sunset: {{ sunset_time }}                       
+                        </p>
+                        <p>
+                            <img src="/static/images/golden_hour.png" class="icon">
+                            Golden hour: {{ golden_hour_time }}
+                        </p>
                     {% endif %}
                 </div>
-                {% if weather_data.wind and weather_data.wind.max %}
-                    <p class="wind-info">
-                        <img src="/static/images/wind.png" class="icon">
-                        Wind: {{ weather_data.wind.max.speed }} mph
-                    </p>
-                {% endif %} 
-                {% if weather_data.humidity and weather_data.humidity.afternoon %}
-                    <p class="humidity-info">
-                        <img src="/static/images/humidity.png" class="icon">
-                        Humidity: {{ weather_data.humidity.afternoon }} %
-                    </p>
-                {% endif %} 
-            </div>
-        
-            <!-- Second Column -->
-            <div class="second-weather-column">
-                {% if sunrise_time and sunset_time and golden_hour_time %}
-                    <p>
-                        <img src="/static/images/sunrise.png" class="icon">
-                        Sunrise: {{ sunrise_time }}
-                    </p>
-                    <p>
-                        <img src="/static/images/sunset.png" class="icon">
-                        Sunset: {{ sunset_time }}                       
-                    </p>
-                    <p>
-                        <img src="/static/images/golden_hour.png" class="icon">
-                        Golden hour: {{ golden_hour_time }}
-                    </p>
-                {% endif %}
-            </div>
 
-                 <!-- Third Column -->
-                <div class="third-weather-column">
-                    <!-- <h2>Air Quality Index</h2> -->
-                    <p style="text-align: center;">Air Quality Forecast for the Next 48 Hours</p>
-                    <canvas id="airQualityChart"></canvas> 
-                </div>
+                    <!-- Third Column -->
+                    <div class="third-weather-column">
+                        <!-- <h2>Air Quality Index</h2> -->
+                        <p style="text-align: center;">Air Quality Forecast for the Next 48 Hours</p>
+                        <canvas id="airQualityChart"></canvas> 
+                    </div>
+            </div>
         </div>
 
-    <br><br><br>
+        <br><br>
 
     <div class="container">
         <h1 style="text-align:center;">Discover Attractions</h1>
@@ -158,6 +166,10 @@
         var airquality_forecast = {{ airquality_forecast | tojson }};
         var lat = {{ lat }};
         var lon = {{ lon }};
+
+        function redirectToIndex() {
+            window.location.href = '/';
+        }
     </script>
     <script src="/static/js/event_script.js"></script>
     <script src="/static/js/weather_script.js"></script>
