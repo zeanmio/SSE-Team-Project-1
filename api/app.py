@@ -235,6 +235,11 @@ def about():
     return render_template("about.html")
 
 
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
 @app.route("/feedback", methods=["GET", "POST"])
 def feedback():
     if request.method == "POST":
@@ -456,6 +461,10 @@ def get_city_info():
         airquality_forecast=airquality_forecast_data,
         lon=lon,
         lat=lat,
+        country=country,
+        username=username,
+        city=city,
+        date=date,
     )
 
 

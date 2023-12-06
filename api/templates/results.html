@@ -15,8 +15,17 @@
 </head>
 
 <body>
-    <br><br><br>
+        <br><br>
+        <div class="header-text">
+            <h2>Exploring {{ city }}, {{ country }} on {{ date }}<h2>
+        </div>
+        <div class="button-container">
+                <button onclick="redirectToIndex()">Start a New Exploration</button>
+        </div>
+        <br><br>
+
     <div class="container">
+        <br>
         <div class="section">
             <h1 style="text-align:center;">Weather</h1>
             <div class="weather-columns">
@@ -80,7 +89,7 @@
             </div>
         </div>
 
-        <br><br><br>
+        <br><br>
 
     <div class="container">
         <h1 style="text-align:center;">Discover Attractions</h1>
@@ -157,6 +166,10 @@
         var airquality_forecast = {{ airquality_forecast | tojson }};
         var lat = {{ lat }};
         var lon = {{ lon }};
+
+        function redirectToIndex() {
+            window.location.href = '/';
+        }
     </script>
     <script src="/static/js/event_script.js"></script>
     <script src="/static/js/weather_script.js"></script>
