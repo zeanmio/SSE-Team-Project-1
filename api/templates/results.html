@@ -53,10 +53,12 @@
             <div class="second-weather-column">
                 {% if sunrise_time and sunset_time and golden_hour_time %}
                     <p>Sunrise: {{ sunrise_time }}
-                            <!-- <img src="https://www.flaticon.com/free-icons/sunset"> -->
-                        </p>
-                    <p>Sunset: {{ sunset_time }}</p>
-                        <p>Golden hour: {{ golden_hour_time }}</p>
+                        <img src="/static/images/sunrise.png" class="icon">
+                    </p>
+                    <p>Sunset: {{ sunset_time }}
+                        <img src="/static/images/sunset.png" class="icon">
+                    </p>
+                    <p>Golden hour: {{ golden_hour_time }}</p>
                 {% endif %}
             </div>
 
