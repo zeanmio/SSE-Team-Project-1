@@ -211,20 +211,26 @@ def user_favourites(username):
 
 
 @app.route(
-    "/save-favourite/<name>/<float:latitude>/<float:longitude>", methods=["POST"]
+    "/save-favourite/<username>/<name>/<float:latitude>/<float:longitude>",
+    methods=["POST"],
 )
-def save_favourite(name, latitude, longitude):
-    # Retrieve additional data from the request body
+def save_favourite(username, name, latitude, longitude):
+    # Extract the data from the JSON request body
     data = request.get_json()
-    # Process the data and save it to the database
 
-    # Example: Save data to the user_favourites table
+    # Extract the relevant data (you can add more error checking here)
+    username = data.get("username", username)
+    name = data.get("name", name)
+    latitude = data.get("latitude", latitude)
+    longitude = data.get("longitude", longitude)
+
+    # Save the favourite in the database
     connection = get_db_connection()
     if connection:
         try:
             cursor = connection.cursor()
             query = "INSERT INTO user_favourites (username, name, latitude, longitude) VALUES (%s, %s, %s, %s)"
-            cursor.execute(query, ("test_user", name, latitude, longitude))
+            cursor.execute(query, (username, name, latitude, longitude))
             connection.commit()
             cursor.close()
         except (Exception, psycopg2.Error) as error:
