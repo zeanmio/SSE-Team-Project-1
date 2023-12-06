@@ -1,5 +1,9 @@
 function renderAqiChart(airqualityData) {
-    const labels = airqualityData.map(forecast => new Date(forecast.time * 1000).toLocaleString());
+    const labels = airqualityData.map(forecast => {
+        let date = new Date(forecast.time * 1000);
+        return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours() % 12 === 0 ? 12 : date.getHours() % 12}${date.getHours() >= 12 ? 'PM' : 'AM'}`;
+    });
+    console.log(labels);
     const values = airqualityData.map(forecast => forecast.avg_aqi);
     const ctx = document.getElementById('airQualityChart').getContext('2d');
 
@@ -78,7 +82,20 @@ function renderAqiChart(airqualityData) {
                     }
                 },
                 x: {
-                    display: false
+                    display: true,
+                    ticks: {
+                        autoSkip: false, // Turn off auto-skip to ensure we can manually control which labels are displayed
+                        maxRotation: 0, // Prevents the labels from rotating
+                        minRotation: 0,
+                        callback: function(value, index, values) {
+                            // Display only the first and last labels
+                            if (index === 0 || index === values.length - 1) {
+                                return labels[index];
+                            } else {
+                                return null; // Return null to hide the label
+                            }
+                        }
+                    }
                 }
             },
             plugins:{
