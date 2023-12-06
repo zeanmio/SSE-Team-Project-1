@@ -118,11 +118,9 @@
         <label for="date">Exploration Date:</label>
         <input type="date" id="date" name="date" value="{{Date}}">
         
-        <label for="attraction_type" title="Choose the type of attractions/food you are interested in.">Exploration Preference:</label>
+        <label for="attraction_type" title="Choose the type of attractions you are interested in.">Attraction Preference:</label>
         <select id="attraction_type" name="attraction_type">
             <option value="" disabled selected>Select an option</option>
-                <!-- Tourist Attractions -->
-            <optgroup label="Tourist Attractions">
                 <option value="interesting_places">All attractions</option>
                 <option value="architecture">Architectural</option>
                 <option value="cultural">Cultural</option>
@@ -130,9 +128,11 @@
                 <option value="industrial_facilities">Industrial</option>
                 <option value="natural">Natural</option>
                 <option value="religion">Religious</option>
-            </optgroup>
-                <!-- Food -->
-            <optgroup label="Food">
+        </select>
+
+        <label for="food_type" title="Choose the type of restaurant you are interested in.">Dining Preference:</label>
+        <select id="food_type" name="food_type">
+            <option value="" disabled selected>Select an option</option>
                 <option value="foods">All food</option>
                 <option value="bars">Bars</option>
                 <option value="bakeries">Bakeries</option>
@@ -140,7 +140,6 @@
                 <option value="fast_food">Fast food</option>
                 <option value="pubs">Pubs</option>
                 <option value="restaurants">Restaurants</option>
-            </optgroup>
         </select>
 
         <input type="submit" value="Explore City">
