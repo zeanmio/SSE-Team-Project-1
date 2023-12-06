@@ -101,13 +101,22 @@
                         <p>{{ place.properties.description }}</p>
                     {% endif %}
                     {% if place.properties.instagram %}
-                        <p>Instagram: {{ place.properties.instagram }}</p>
+                        <p>
+                            <img src="/static/images/instagram.png" class="icon">
+                            Instagram: {{ place.properties.instagram }}
+                        </p>
                     {% endif %}
                     {% if place.properties.instagram %}
-                        <p>X: {{ place.properties.twitter }}</p>
+                        <p>
+                            <img src="/static/images/twitter.png" class="icon">
+                            X: {{ place.properties.twitter }}
+                        </p>
                     {% endif %}
-                    {% if place.properties.facebok %}
-                        <p>Facebook: {{ place.properties.facebook }}</p>
+                    {% if place.properties.facebook %}
+                        <p>
+                            <img src="/static/images/facebook.png" class="icon">
+                            Facebook: {{ place.properties.facebook }}
+                        </p>
                     {% endif %}
                     {% if place.properties.official_websites %}
                         <p>Official website: 

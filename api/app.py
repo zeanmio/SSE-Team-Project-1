@@ -70,7 +70,6 @@ def get_places_data(city, attraction_type):
         return None, "Error fetching places from OpenTripMap"
 
     places_data = places_response.json()
-
     return places_data, lon, lat, None
 
 
@@ -349,6 +348,7 @@ def get_city_info():
 
     # Tourist Attractions
     places_data, lon, lat, places_error = get_places_data(city, attraction_type)
+
     if places_error:
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
