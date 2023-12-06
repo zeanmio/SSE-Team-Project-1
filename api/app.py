@@ -212,7 +212,7 @@ def user_favourites(username):
 
 @app.route(
     "/save-favourite/<username>/<name>/<float:latitude>/<float:longitude>",
-    methods=["POST"],
+    methods=["GET"],
 )
 def save_favourite(username, name, latitude, longitude):
     print(
