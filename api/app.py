@@ -188,6 +188,49 @@ def submit_feedback():
     return redirect(url_for("feedback"))
 
 
+# Favourites
+@app.route("/favourites/<username>")
+def user_favourites(username):
+    # Fetch the user's saved attractions from the database
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            query = "SELECT * FROM user_favourites WHERE username = %s"
+            cursor.execute(query, (username,))
+            favourites = cursor.fetchall()
+            cursor.close()
+        except (Exception, psycopg2.Error) as error:
+            print("Error while fetching user favourites", error)
+        finally:
+            if connection is not None:
+                connection.close()
+    return render_template(
+        "user_favourites.html", username=username, favourites=favourites
+    )
+
+
+@app.route(
+    "/save-favourite/<name>/<float:latitude>/<float:longitude>", methods=["POST"]
+)
+def save_favourite(name, latitude, longitude):
+    # Save the favourite in the database
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            query = "INSERT INTO user_favourites (username, name, latitude, longitude) VALUES (%s, %s, %s, %s)"
+            cursor.execute(query, (current_username, name, latitude, longitude))
+            connection.commit()
+            cursor.close()
+        except (Exception, psycopg2.Error) as error:
+            print("Error while saving favourite", error)
+        finally:
+            if connection is not None:
+                connection.close()
+    return jsonify({"message": "Favourite saved successfully"})
+
+
 @app.route("/get-city-info", methods=["GET"])
 def get_city_info():
     username = request.args.get("username")
@@ -333,49 +376,6 @@ def get_city_info():
         finally:
             if connection is not None:
                 connection.close()
-
-
-# Favourites
-@app.route("/favourites/<username>")
-def user_favourites(username):
-    # Fetch the user's saved attractions from the database
-    connection = get_db_connection()
-    if connection:
-        try:
-            cursor = connection.cursor()
-            query = "SELECT * FROM user_favourites WHERE username = %s"
-            cursor.execute(query, (username,))
-            favourites = cursor.fetchall()
-            cursor.close()
-        except (Exception, psycopg2.Error) as error:
-            print("Error while fetching user favourites", error)
-        finally:
-            if connection is not None:
-                connection.close()
-    return render_template(
-        "user_favourites.html", username=username, favourites=favourites
-    )
-
-
-@app.route(
-    "/save-favourite/<name>/<float:latitude>/<float:longitude>", methods=["POST"]
-)
-def save_favourite(name, latitude, longitude):
-    # Save the favourite in the database
-    connection = get_db_connection()
-    if connection:
-        try:
-            cursor = connection.cursor()
-            query = "INSERT INTO user_favourites (username, name, latitude, longitude) VALUES (%s, %s, %s, %s)"
-            cursor.execute(query, (current_username, name, latitude, longitude))
-            connection.commit()
-            cursor.close()
-        except (Exception, psycopg2.Error) as error:
-            print("Error while saving favourite", error)
-        finally:
-            if connection is not None:
-                connection.close()
-    return jsonify({"message": "Favourite saved successfully"})
 
     return render_template(
         "results.html",
