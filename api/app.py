@@ -401,6 +401,7 @@ def get_city_info():
         sunset_time=sunset_time,
         lon=lon,
         lat=lat,
+        username=username,
     )
 
 
