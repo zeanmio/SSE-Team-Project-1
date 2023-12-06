@@ -66,36 +66,43 @@ body {
     margin-left: 0;
 }
 
+.third-weather-column {
+    flex-shrink: 0;
+    align-items: center;
+    width: 30%;
+    height: 20%;
+}
+
 .temperature-info {
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: flex-start;
-width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
 }
 
 .temperature-range {
-font-size: 24px;
-color: #333;
-margin-right: 10px;
+    font-size: 24px;
+    color: #333;
+    margin-right: 10px;
 }
 
 .weather-condition{
-font-size:18px;
+    font-size:18px;
 }
 
 .min-temp {
-color: #888;
-font-size: 20px;
+    color: #888;
+    font-size: 20px;
 }
 
 .max-temp {
-font-size: 24px;
+    font-size: 24px;
 }
 
 .weather-icon {
-width: 40px;
-height: 40px;
+    width: 40px;
+    height: 40px;
 }
 
 .city h2, .event h2 {
