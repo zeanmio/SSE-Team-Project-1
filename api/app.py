@@ -211,13 +211,19 @@ def user_favourites(username):
 
 
 @app.route(
-    "/save-favourite/<username>/<name>/<float:latitude>/<float:longitude>",
-    methods=["GET"],
+    "/save-favourite",
+    methods=["POST"],
 )
-def save_favourite(username, name, latitude, longitude):
+def save_favourite():
+    username = request.form.get("username")
+    name = request.form.get("name")
+    latitude = request.form.get("latitude")
+    longitude = request.form.get("longitude")
+
     print(
         f"Received data: username={username}, name={name}, latitude={latitude}, longitude={longitude}"
     )
+
     # Save the favourite in the database
     connection = get_db_connection()
     if connection:

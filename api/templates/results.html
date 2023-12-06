@@ -186,14 +186,41 @@
         }
 
         function saveFavourite(username, name, latitude, longitude) {
-            // Create a form and submit it
+        // Create a form and submit it
             var form = document.createElement('form');
             form.method = 'POST';
-            form.action = `/save-favourite/${username}/${name}/${latitude}/${longitude}`;
+            form.action = '/save-favourite';
             form.style.display = 'none';
+
+        // Add the parameters to the form
+            var usernameInput = document.createElement('input');
+            usernameInput.type = 'hidden';
+            usernameInput.name = 'username';
+            usernameInput.value = username;
+            form.appendChild(usernameInput);
+
+            var nameInput = document.createElement('input');
+            nameInput.type = 'hidden';
+            nameInput.name = 'name';
+            nameInput.value = name;
+            form.appendChild(nameInput);
+
+            var latitudeInput = document.createElement('input');
+            latitudeInput.type = 'hidden';
+            latitudeInput.name = 'latitude';
+            latitudeInput.value = latitude;
+            form.appendChild(latitudeInput);
+
+            var longitudeInput = document.createElement('input');
+            longitudeInput.type = 'hidden';
+            longitudeInput.name = 'longitude';
+            longitudeInput.value = longitude;
+            form.appendChild(longitudeInput);
+
             document.body.appendChild(form);
             form.submit();
         }
+
 
      </script>     
 </body>
