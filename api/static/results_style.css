@@ -66,10 +66,16 @@ body {
     margin-left: 0;
 }
 
-.second-weather-column .icon{
-    max-width: 6%; /* Maximum width of the image */
+.first-weather-column .icon{
+    max-width: 6%; 
     height: auto; /* Maintain aspect ratio */
-    vertical-align: middle; /* Aligns the image vertically with the text */
+    vertical-align: middle; 
+}
+
+.second-weather-column .icon{
+    max-width: 6%; 
+    height: auto; /* Maintain aspect ratio */
+    vertical-align: middle; 
 }
 
 .temperature-info {

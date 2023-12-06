@@ -42,24 +42,33 @@
                     {% endif %}
                 </div>
                 {% if weather_data.wind and weather_data.wind.max %}
-                    <p class="wind-info">Wind: {{ weather_data.wind.max.speed }} mph</p>
+                    <p class="wind-info">
+                        <img src="/static/images/wind.png" class="icon">
+                        Wind: {{ weather_data.wind.max.speed }} mph
+                    </p>
                 {% endif %} 
                 {% if weather_data.humidity and weather_data.humidity.afternoon %}
-                    <p class="humidity-info">Humidity: {{ weather_data.humidity.afternoon }} %</p>
+                    <p class="humidity-info">
+                        <img src="/static/images/humidity.png" class="icon">
+                        Humidity: {{ weather_data.humidity.afternoon }} %
+                    </p>
                 {% endif %} 
             </div>
         
             <!-- Second Column -->
             <div class="second-weather-column">
                 {% if sunrise_time and sunset_time and golden_hour_time %}
-                    <p>Sunrise: {{ sunrise_time }}
+                    <p>
                         <img src="/static/images/sunrise.png" class="icon">
+                        Sunrise: {{ sunrise_time }}
                     </p>
-                    <p>Sunset: {{ sunset_time }}
+                    <p>
                         <img src="/static/images/sunset.png" class="icon">
+                        Sunset: {{ sunset_time }}                       
                     </p>
-                    <p>Golden hour: {{ golden_hour_time }}
+                    <p>
                         <img src="/static/images/golden_hour.png" class="icon">
+                        Golden hour: {{ golden_hour_time }}
                     </p>
                 {% endif %}
             </div>
