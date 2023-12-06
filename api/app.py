@@ -344,7 +344,7 @@ def get_city_info():
                 connection.close()
 
     # Dining
-    dining_data, lon, lat, dining_error = get_dining_data(city, food_type)
+    dining_data, dining_error = get_dining_data(city, food_type)
     if dining_error:
         logging.error(f"Error in getting dining data: {dining_error}")
         return jsonify({"error": dining_error}), 500
