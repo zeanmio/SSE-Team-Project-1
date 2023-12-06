@@ -57,6 +57,7 @@ body {
 
 .first-weather-column{
     width: 50%;
+    text-align:left;
 }
 
 .second-weather-column {
@@ -66,10 +67,15 @@ body {
     margin-left: 0;
 }
 
+.third-weather-column{
+    text-align:left;
+}
+
 .first-weather-column .icon{
     max-width: 6%; 
     height: auto; /* Maintain aspect ratio */
     vertical-align: middle; 
+    align-items: flex-start;
 }
 
 .second-weather-column .icon{
@@ -78,36 +84,32 @@ body {
     vertical-align: middle; 
 }
 
-.temperature-info {
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: flex-start;
-width: 100%;
-}
-
 .temperature-range {
-font-size: 24px;
-color: #333;
-margin-right: 10px;
+    /* font-size: 24px; */
+    color: #333;
+    margin-right: 10px;
 }
 
 .weather-condition{
-font-size:18px;
+    /* display: inline-block; */
+    font-size: 1.5em;
+    vertical-align: middle; 
 }
 
 .min-temp {
-color: #888;
-font-size: 20px;
+    color: #888;
+    font-size: 1.7rem; 
 }
 
 .max-temp {
-font-size: 24px;
+    font-size: 2.2rem;
 }
 
 .weather-icon {
-width: 40px;
-height: 40px;
+    /* width: 12%; */
+    width: 6vw;
+    height: auto;
+    vertical-align: middle; 
 }
 
 .city h2, .event h2 {
