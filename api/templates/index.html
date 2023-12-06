@@ -104,7 +104,7 @@
 <div class="username-input">
     <label for="favUsername">Enter your username to view favourites:</label>
     <input type="text" id="favUsername" name="favUsername" placeholder="Your Username">
-    <button onclick="goToUserFavorites()">Go to Favorites</button>
+    <button onclick="goToUserFavourites()">Go to Favourites</button>
 </div>
 <div class="container">
     <form id="explorationForm" action="/get-city-info" method="get">
@@ -156,9 +156,9 @@
 
 <br><br><br>
 <script>
-    function goToUserFavorites() {
+    function goToUserFavourites() {
         const username = document.getElementById('favUsername').value;
-        window.location.href = `/favorites/${username}`;
+        window.location.href = `/favourites/${username}`;
     }
 </script>
 </body>

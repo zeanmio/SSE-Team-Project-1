@@ -214,13 +214,17 @@ def user_favourites(username):
     "/save-favourite/<name>/<float:latitude>/<float:longitude>", methods=["POST"]
 )
 def save_favourite(name, latitude, longitude):
-    # Save the favourite in the database
+    # Retrieve additional data from the request body
+    data = request.get_json()
+    # Process the data and save it to the database
+
+    # Example: Save data to the user_favourites table
     connection = get_db_connection()
     if connection:
         try:
             cursor = connection.cursor()
             query = "INSERT INTO user_favourites (username, name, latitude, longitude) VALUES (%s, %s, %s, %s)"
-            cursor.execute(query, (current_username, name, latitude, longitude))
+            cursor.execute(query, ("test_user", name, latitude, longitude))
             connection.commit()
             cursor.close()
         except (Exception, psycopg2.Error) as error:
@@ -228,6 +232,7 @@ def save_favourite(name, latitude, longitude):
         finally:
             if connection is not None:
                 connection.close()
+
     return jsonify({"message": "Favourite saved successfully"})
 
 
