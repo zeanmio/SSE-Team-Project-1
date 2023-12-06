@@ -186,24 +186,15 @@
         }
 
         function saveFavourite(username, name, latitude, longitude) {
-        // Use AJAX or fetch to send a request to your Flask backend to save the favourite
-        console.log(`Data to be sent: username=${username}, name=${name}, latitude=${latitude}, longitude=${longitude}`);
-        fetch(`/save-favourite/${username}/${name}/${latitude}/${longitude}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            // You can include additional data in the body if needed
-            body: JSON.stringify({ username, name, latitude, longitude }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert('Favourite saved!');
-        })
-        .catch((error) => {
-            console.error('Error saving favourite:', error);
-        });
-    }
+            // Create a form and submit it
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/save-favourite/${username}/${name}/${latitude}/${longitude}`;
+            form.style.display = 'none';
+            document.body.appendChild(form);
+            form.submit();
+        }
+
      </script>     
 </body>
 </html>

@@ -218,15 +218,6 @@ def save_favourite(username, name, latitude, longitude):
     print(
         f"Received data: username={username}, name={name}, latitude={latitude}, longitude={longitude}"
     )
-    # Extract the data from the JSON request body
-    data = request.get_json()
-
-    # Extract the relevant data (you can add more error checking here)
-    username = data.get("username", username)
-    name = data.get("name", name)
-    latitude = data.get("latitude", latitude)
-    longitude = data.get("longitude", longitude)
-
     # Save the favourite in the database
     connection = get_db_connection()
     if connection:
