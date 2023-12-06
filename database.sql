@@ -12,6 +12,7 @@ CREATE TABLE userdata (
     city VARCHAR(50),
     exploration_date DATE,
     attraction_type VARCHAR(50),
+    food_type VARCHAR(50),
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 SELECT * FROM userdata;
@@ -34,6 +35,13 @@ CREATE TABLE attractions (
 );
 SELECT * FROM attractions;
 
+CREATE TABLE food (
+    id SERIAL PRIMARY KEY,
+    userid INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (userid) REFERENCES users(userid)
+);
+SELECT * FROM food;
 
 CREATE TABLE events (
     id SERIAL PRIMARY KEY,

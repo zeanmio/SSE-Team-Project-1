@@ -63,11 +63,7 @@ def get_places_data(city, attraction_type):
     lon = geoname_data["lon"]
     lat = geoname_data["lat"]
 
-<<<<<<< HEAD
     places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3&limit=10&apikey={API_KEYS['opentripmap']}"
-=======
-    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3&limit=100&apikey={API_KEYS['opentripmap']}"
->>>>>>> 8894150 (add restaurant carousel)
     places_response = requests.get(places_url)
 
     if not places_response.ok:
@@ -75,7 +71,26 @@ def get_places_data(city, attraction_type):
 
     places_data = places_response.json()
 
-    dining_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds=foods&rate=3&limit=100&apikey={API_KEYS['opentripmap']}"
+    return places_data, lon, lat, None
+
+
+# Dining
+def get_dining_data(city, food_type):
+    geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
+    geoname_response = requests.get(geoname_url)
+
+    if not geoname_response.ok:
+        return None, "Error fetching geoname data from OpenTripMap"
+
+    geoname_data = geoname_response.json()
+
+    if "lon" not in geoname_data or "lat" not in geoname_data:
+        return None, "Invalid data received from OpenTripMap"
+
+    lon = geoname_data["lon"]
+    lat = geoname_data["lat"]
+
+    dining_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={food_type}&rate=3&limit=100&apikey={API_KEYS['opentripmap']}"
     dining_response = requests.get(dining_url)
 
     if not dining_response.ok:
@@ -83,7 +98,7 @@ def get_places_data(city, attraction_type):
 
     dining_data = dining_response.json()
 
-    return places_data, dining_data, lon, lat, None
+    return dining_data, lon, lat, None
 
 
 # Upcoming Events
@@ -210,6 +225,7 @@ def form():
         city = request.form.get("city")
         date = request.form.get("date")
         attraction_type = request.form.get("attraction_type")
+        food_type = request.form.get("food_type")
         return redirect(url_for("get-city-info", city=city))
     return render_template("index.html")
 
@@ -265,6 +281,7 @@ def get_city_info():
     city = request.args.get("city")
     date = request.args.get("date")
     attraction_type = request.args.get("attraction_type")
+    food_type = request.args.get("food_type")
 
     # Connect to database & Save user data
     connection = get_db_connection()
@@ -281,8 +298,10 @@ def get_city_info():
                 userid = cursor.fetchone()[0]
             else:
                 userid = result[0]
-            query = "INSERT INTO userdata (userid, country, city, exploration_date, attraction_type) VALUES (%s, %s, %s, %s, %s)"
-            cursor.execute(query, (userid, country, city, date, attraction_type))
+            query = "INSERT INTO userdata (username, country, city, exploration_date, attraction_type, food_type) VALUES (%s, %s, %s, %s, %s, %s)"
+            cursor.execute(
+                query, (username, country, city, date, attraction_type, food_type)
+            )
             connection.commit()
         except (Exception, psycopg2.Error) as error:
             print("Error while inserting data into Postgres", error)
@@ -291,9 +310,7 @@ def get_city_info():
                 connection.close()
 
     # Tourist Attractions
-    places_data, dining_data, lon, lat, places_error = get_places_data(
-        city, attraction_type
-    )
+    places_data, lon, lat, places_error = get_places_data(city, attraction_type)
     if places_error:
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
@@ -325,6 +342,11 @@ def get_city_info():
         finally:
             if connection is not None:
                 connection.close()
+    # Dining
+    dining_data, lon, lat, dining_error = get_dining_data(city, food_type)
+    if dining_error:
+        logging.error(f"Error in getting dining data: {dining_error}")
+        return jsonify({"error": dining_error}), 500
 
     # Upcoming Events
     events_data, events_error = get_seatgeek_events(lat, lon, date)

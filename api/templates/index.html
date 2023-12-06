@@ -103,17 +103,18 @@
 </div>
 
 <div class="container">
-    <form action="/get-city-info" method="get">
+    <form id="explorationForm" action="/get-city-info" method="get">
         <h2>Enter your exploration details:</h2>
-
+     
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" placeholder="Choose a cool explorer name" value="{{username}}">
         
         <label for="country">Country:</label>
         <input type="text" id="country" name="country" placeholder="Which country are we adventuring to" value="{{country}}">
-
+     
         <label for="city">City:</label>
         <input type="text" id="city" name="city" placeholder="Type the city you're dreaming of" value="{{city}}">
+<<<<<<< HEAD
 
         <label for="date">Exploration Date:</label>
         <input type="date" id="date" name="date" value="{{Date}}">
@@ -143,9 +144,44 @@
             </optgroup>
         </select>
 
+=======
+     
+        <label for="attraction_type" title="Choose the type of attractions you are interested in.">Tourist Attraction:</label>
+        <select id="attraction_type" name="attraction_type">
+            <option value="" disabled selected>Select an option</option>
+            <!-- Tourist Attractions -->
+            <optgroup label="Tourist Attractions">
+                <option value="interesting_places">All attractions</option>
+                <option value="architecture">Architectural</option>
+                <option value="cultural">Cultural</option>
+                <option value="historic">Historical</option>
+                <option value="industrial_facilities">Industrial</option>
+                <option value="natural">Natural</option>
+                <option value="religion">Religious</option>
+            </optgroup>
+        </select>
+     
+        <label for="food_type" title="Choose the type of food you are interested in.">Food:</label>
+        <select id="food_type" name="food_type">
+            <option value="" disabled selected>Select an option</option>
+            <!-- Food -->
+            <optgroup label="Food">
+                <option value="foods">All food</option>
+                <option value="bars">Bars</option>
+                <option value="bakeries">Bakeries</option>
+                <option value="cafes">Cafes</option>
+                <option value="fast_food">Fast food</option>
+                <option value="pubs">Pubs</option>
+                <option value="restaurants">Restaurants</option>
+            </optgroup>
+        </select>
+     
+        <label for="date">Exploration Date:</label>
+        <input type="date" id="date" name="date" value="{{Date}}">
+     
+>>>>>>> 3c72f58 (separate attraction and food)
         <input type="submit" value="Explore City">
-    </form>
-
+     </form>     
     <div id="results"></div>
 
 </div>
