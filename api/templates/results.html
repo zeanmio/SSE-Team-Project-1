@@ -19,7 +19,7 @@
                     {% for place in places_data.features %}
                         <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
                             <h2>{{ place.properties.name }}</h2>
-                            <button onclick="saveFavourite('{{ place.properties.name }}', {{ place.geometry.coordinates[1] }}, {{ place.geometry.coordinates[0] }})">Save Favourite</button>
+                            <button onclick="saveFavourite('{{ username }}', '{{ place.properties.name }}', {{ place.geometry.coordinates[1] }}, {{ place.geometry.coordinates[0] }})">Save Favourite</button>
                         </div>
                     {% endfor %}
                 </div>
@@ -185,7 +185,7 @@
             map.addObject(marker);
         }
 
-        function saveFavourite(name, latitude, longitude) {
+        function saveFavourite(username, name, latitude, longitude) {
         // Use AJAX or fetch to send a request to your Flask backend to save the favourite
         fetch(`/save-favourite/${name}/${latitude}/${longitude}`, {
             method: 'POST',
@@ -193,7 +193,7 @@
                 'Content-Type': 'application/json',
             },
             // You can include additional data in the body if needed
-            body: JSON.stringify({ name, latitude, longitude }),
+            body: JSON.stringify({ username, name, latitude, longitude }),
         })
         .then(response => response.json())
         .then(data => {
