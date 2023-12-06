@@ -19,6 +19,9 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     color: #333;
     text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
@@ -148,3 +151,51 @@ button:hover {
 .event-item ul {
     padding-left: 20px;
 }
+
+.circular-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: -50px;
+    z-index: 2;
+    align-self: flex-start;
+  }
+
+.text-and-carousel {
+    width: 100%;
+    padding-top: 50px;
+    z-index: 1;
+}
+
+.content-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: row;
+}
+
+.text-title {
+    display: inline-block;
+    flex-grow: 1;
+    margin: 0 20px;
+}
+
+.calendar-day {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    vertical-align: top;
+    min-height: 100px;
+  }
+  
+  .calendar-day-header {
+    background-color: #eee;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .calendar-row {
+    display: flex;
+  }
+  

@@ -18,7 +18,9 @@
     
     <div class="container">
         <div class="section">
-            <h1 style="text-align:center;">Discover {{ attraction_type }}</h1>
+            <img src="https://source.unsplash.com/featured/?{{ attraction_type }}" alt="Attraction Image" class="circular-image">
+            <div class="text-and-carousel">
+                <h1 class="text-title">Discover {{ attraction_type }}</h1>
                 <div class="place-carousel">
                     {% for place in places_data.features %}
                         <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
@@ -26,13 +28,14 @@
                         </div>
                     {% endfor %}
                 </div>
+            </div>
                 <div class="button-container">
                     <button id="place-prev">Previous</button>
                     <button id="place-next">Next</button>
                 </div>
                 <div id="map"></div>
         </div>
-    </div>   
+    </div>
 
     <br><br><br>
 
@@ -111,6 +114,7 @@
     <br><br><br>
 
     <script>
+        // carousel script
         const placeItems = document.querySelectorAll('.place-carousel-item');
         const eventItems = document.querySelectorAll('.event-carousel-item');
         let currentPlaceIndex = 0;
@@ -191,6 +195,43 @@
             var marker = new H.map.Marker({lat: attraction_lat, lng: attraction_lon});
             map.addObject(marker);
         }
+
+        // marker
+        function addMarkers() {
+            map.removeObjects(map.getObjects());
+            const currentPlace = placeItems[currentPlaceIndex];
+            const attraction_lat = parseFloat(currentPlace.dataset.lat);
+            const attraction_lon = parseFloat(currentPlace.dataset.lon);
+        
+            // Create an icon from an image URL
+            const iconUrl = 'https://source.unsplash.com/featured/?' + currentPlace.dataset.attractionType;
+            const iconSize = { w: 56, h: 56 }; // Icon size in pixels
+        
+            // Create a canvas to draw the circular image
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = iconSize.w;
+            canvas.height = iconSize.h;
+            const image = new Image();
+            image.crossOrigin = 'Anonymous'; // Handle CORS
+            image.onload = function() {
+                // Draw the circular image onto the canvas
+                context.beginPath();
+                context.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, 0, Math.PI * 2, true);
+                context.closePath();
+                context.clip();
+        
+                context.drawImage(image, 0, 0, iconSize.w, iconSize.h);
+        
+                // Once the image is drawn, create the icon and marker
+                const iconDataUrl = canvas.toDataURL();
+                const icon = new H.map.Icon(iconDataUrl);
+                const marker = new H.map.Marker({ lat: attraction_lat, lng: attraction_lon }, { icon: icon });
+                map.addObject(marker);
+            };
+            image.src = iconUrl;
+        }
+        
      </script>     
 </body>
 </html>
