@@ -17,7 +17,7 @@ class AppTestCase(unittest.TestCase):
     @patch("app.get_places_data")
     @patch("app.get_seatgeek_events")
     @patch("app.get_weather_data")
-    @patch("app.get_air_quality_data")
+    @patch("app.get_airquality_forecast_data")
     def test_city_info_page(
         self,
         mock_weather_data,
