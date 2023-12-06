@@ -44,7 +44,7 @@
         <div class="event-carousel">
             {% if events_data %}
                 {% for event in events_data %}
-                    <div class="event-carousel-item">
+                    <div class="event-carousel-item" data-lat="{{ event.venue.latitude }}" data-lon="{{ event.venue.longitude }}">
                         <h2>{{ event.title }}</h2>
                         <p>Date: {{ event.datetime_local }}</p>
                         <p>Venue: {{ event.venue.name }}</p>
@@ -130,20 +130,22 @@
 
         document.getElementById('place-prev').addEventListener('click', function() {
             currentPlaceIndex = updateCarousel(placeItems, currentPlaceIndex, -1);
-            addMarkers();
+            updatePlaceMarkers();
         });
         
         document.getElementById('place-next').addEventListener('click', function() {
             currentPlaceIndex = updateCarousel(placeItems, currentPlaceIndex, 1);
-            addMarkers();
+            updatePlaceMarker();
         });
 
         document.getElementById('event-prev').addEventListener('click', function() {
             currentEventIndex = updateCarousel(eventItems, currentEventIndex, -1);
+            updateEventMarker();
         });
         
         document.getElementById('event-next').addEventListener('click', function() {
             currentEventIndex = updateCarousel(eventItems, currentEventIndex, 1);
+            updateEventMarker();
         });
         
         if (placeItems.length > 0) {
@@ -177,6 +179,9 @@
         var lat = {{ lat }};
         var lon = {{ lon }};
 
+        var currentPlaceMarker = null;
+        var currentEventMarker = null;
+
         function moveMapToCity(map){
             map.setCenter({lat: lat, lng: lon});
             map.setZoom(14);
@@ -184,17 +189,36 @@
      
         window.onload = function () {
             moveMapToCity(map);
-            addMarkers();
+            updatePlaceMarker();
+            updateEventMarker();
         }
 
-        function addMarkers(){
-            map.removeObjects(map.getObjects());
+        function updatePlaceMarker(){
+            if (currentPlaceMarker !== null) {
+                map.removeObject(currentPlaceMarker);
+            }
+
             const currentPlace = placeItems[currentPlaceIndex];
             const attraction_lat = parseFloat(currentPlace.dataset.lat);
             const attraction_lon = parseFloat(currentPlace.dataset.lon);
-            var marker = new H.map.Marker({lat: attraction_lat, lng: attraction_lon});
-            map.addObject(marker);
+            currentPlaceMarker = new H.map.Marker({lat: attraction_lat, lng: attraction_lon});
+            map.addObject(currentPlaceMarker);
         }
+
+        function updateEventMarker() {
+            if (currentEventMarker !== null) {
+                map.removeObject(currentEventMarker);
+            }
+
+            if (eventItems.length > 0) {
+                const currentEvent = eventItems[currentEventIndex];
+                const event_lat = parseFloat(currentEvent.getAttribute('data-lat'));
+                const event_lon = parseFloat(currentEvent.getAttribute('data-lon'));
+                currentEventMarker = new H.map.Marker({lat: event_lat, lng: event_lon});
+                map.addObject(currentEventMarker);
+            }
+        }
+        
      </script>     
 </body>
 </html>
