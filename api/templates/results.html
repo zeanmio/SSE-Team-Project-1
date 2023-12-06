@@ -84,7 +84,7 @@
     <br><br><br>
 
     <div class="container">
-        <h1 style="text-align:center;">Discover {{ attraction_type }}</h1>
+        <h1 style="text-align:center;">Discover Attractions</h1>
         <div class="place-carousel">
             {% for place in places_data.features %}
                 <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
@@ -104,7 +104,7 @@
     <br><br><br>
 
     <div class="container">
-        <h1 style="text-align:center;">Discover {{ food_type }}</h1>
+        <h1 style="text-align:center;">Discover Food</h1>
         <div class="dining-carousel">
             {% for dining in dining_data.features %}
                 <div class="dining-carousel-item" data-lat="{{ dining.geometry.coordinates[1] }}" data-lon="{{ dining.geometry.coordinates[0] }}" >
@@ -117,9 +117,6 @@
         <div class="button-container">
             <button id="dining-prev">Previous</button>
             <button id="dining-next">Next</button>
-        </div>
-        <div class="section">
-        </div>
     </div>
 
     <br><br><br>
