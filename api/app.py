@@ -63,7 +63,11 @@ def get_places_data(city, attraction_type):
     lon = geoname_data["lon"]
     lat = geoname_data["lat"]
 
+<<<<<<< HEAD
     places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3&limit=10&apikey={API_KEYS['opentripmap']}"
+=======
+    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3&limit=100&apikey={API_KEYS['opentripmap']}"
+>>>>>>> 8894150 (add restaurant carousel)
     places_response = requests.get(places_url)
 
     if not places_response.ok:
@@ -71,7 +75,15 @@ def get_places_data(city, attraction_type):
 
     places_data = places_response.json()
 
-    return places_data, lon, lat, None
+    dining_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds=foods&rate=3&limit=100&apikey={API_KEYS['opentripmap']}"
+    dining_response = requests.get(dining_url)
+
+    if not dining_response.ok:
+        return None, "Error fetching restaurants from OpenTripMap"
+
+    dining_data = dining_response.json()
+
+    return places_data, dining_data, lon, lat, None
 
 
 # Upcoming Events
@@ -279,7 +291,7 @@ def get_city_info():
                 connection.close()
 
     # Tourist Attractions
-    places_data, lon, lat, places_error = get_places_data(city, attraction_type)
+    places_data, dining_data, lon, lat, places_error = get_places_data(city, attraction_type)
     if places_error:
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
@@ -408,7 +420,7 @@ def get_city_info():
     return render_template(
         "results.html",
         places_data=places_data,
-        attraction_type=attraction_type,
+        dining_data=dining_data,
         events_data=events_data,
         weather_data=weather_data,
         sunrise_time=sunrise_time,

@@ -29,6 +29,84 @@
                             <span class="temp-divider"> - </span>         
                             <span class="max-temp">{{ weather_data.max_temp }}°C</span>
                         </p>
+        <div class="section">
+            <h1 style="text-align:center;">Tourist Attractions</h1>
+                <div class="place-carousel">
+                    {% for place in places_data.features %}
+                        <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
+                            <h2>{{ place.properties.name }}</h2>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="button-container">
+                    <button id="place-prev">Previous</button>
+                    <button id="place-next">Next</button>
+                </div>
+                <div id="map"></div>
+            </div>
+        </div>   
+        <div class="section">
+            <h1 style="text-align:center;">Dining Options</h1>
+            <div class="dining-carousel">
+                {% for restaurant in dining_data.features %}
+                    <div class="dining-carousel-item" data-lat="{{ restaurant.geometry.coordinates[1] }}" data-lon="{{ restaurant.geometry.coordinates[0] }}" >
+                        <h2>{{ restaurant.properties.name }}</h2>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="button-container">
+                <button id="restaurant-prev">Previous</button>
+                <button id="restaurant-next">Next</button>
+            </div>
+            <div id="restaurant-map"></div>
+        </div>
+        <div class="section">
+            <h1 style="text-align:center;">Upcoming Events</h1>
+            <div class="event-carousel">
+                {% if events_data %}
+                    {% for event in events_data %}
+                        <div class="event-carousel-item">
+                            <h2>{{ event.title }}</h2>
+                            <p>Date: {{ event.datetime_local }}</p>
+                            <p>Venue: {{ event.venue.name }}</p>
+                            <p>City: {{ event.venue.city }}</p>
+                            <p>Performers:</p>
+                                <ul>
+                                    {% for performer in event.performers %}
+                                        <li>{{ performer.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No events found.</p>
+                {% endif %}
+            </div>
+            <div class="button-container">
+                <button id="event-prev">Previous</button>
+                <button id="event-next">Next</button>
+            </div>
+        </div>     
+
+ 
+         <div class="section">
+            <h1 style="text-align:center;">Weather</h1>
+            <div class="weather-columns">
+                <!-- First Column -->
+                <div class="first-weather-column">
+                    <div class="temperature-info">
+                        <div class="temperature-range">
+                            <p>
+                                <span class="min-temp">{{ weather_data.min_temp }}°C</span>
+                                <span class="temp-divider"> - </span>
+                                <span class="max-temp">{{ weather_data.max_temp }}°C</span>
+                            </p>
+                        </div>
+                        <div class="weather-icon">
+                            {% if weather_data.weather_icon %}
+                                <img src="https://openweathermap.org/img/wn/{{ weather_data.weather_icon }}@2x.png" alt="Weather Icon">
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="weather-icon">
                         {% if weather_data.weather_icon %}
