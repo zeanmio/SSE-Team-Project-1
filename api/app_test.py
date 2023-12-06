@@ -15,19 +15,21 @@ class AppTestCase(unittest.TestCase):
 
     @patch("app.get_db_connection")
     @patch("app.get_places_data")
+    @patch("app.get_place_information")
     @patch("app.get_dining_data")
     @patch("app.get_seatgeek_events")
     @patch("app.get_weather_data")
     @patch("app.get_airquality_forecast_data")
     def test_city_info_page(
-        self,
-        mock_weather_data,
-        mock_airquality_forecast_data,
-        mock_events_data,
-        mock_dining_data,
-        mock_places_data,
-        mock_db_connection,
-    ):
+            self,
+            mock_weather_data,
+            mock_airquality_forecast_data,
+            mock_events_data,
+            mock_dining_data,
+            mock_place_information,
+            mock_places_data,
+            mock_db_connection,
+        ):
         mock_db_connection.return_value = MagicMock()
 
         mock_places_data.return_value = ([], 0, 0, None)
@@ -39,6 +41,14 @@ class AppTestCase(unittest.TestCase):
         )
         mock_airquality_forecast_data.return_value = (
             [{"time": 1701864000, "avg_aqi": 2.3333333333333335}, ...],  # Example data
+            None,
+        )
+        mock_place_information.return_value = (
+            "Example Description",
+            ["https://example.com"],
+            "example_instagram",
+            "example_twitter",
+            "example_facebook",
             None,
         )
         response = self.app.get(
