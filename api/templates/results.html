@@ -71,23 +71,20 @@
     <br><br><br>
 
     <div class="container">
+        <h1 style="text-align:center;">Discover {{ attraction_type }}</h1>
+        <div class="place-carousel">
+            {% for place in places_data.features %}
+                <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
+                    <h2>{{ place.properties.name }}</h2>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="button-container">
+            <button id="place-prev">Previous</button>
+            <button id="place-next">Next</button>
+        </div>
         <div class="section">
-            
-            <div class="text-and-carousel">
-                <h1 class="text-title">Discover {{ attraction_type }}</h1>
-                <div class="place-carousel">
-                    {% for place in places_data.features %}
-                        <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
-                            <h2>{{ place.properties.name }}</h2>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-                <div class="button-container">
-                    <button id="place-prev">Previous</button>
-                    <button id="place-next">Next</button>
-                </div>
-                <div id="map"></div>
+            <div id="map"></div>
         </div>
     </div>
 
