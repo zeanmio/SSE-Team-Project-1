@@ -91,8 +91,8 @@ def get_seatgeek_events(lat, lon, date):
         data = response.json()
         events_data = data.get("events", [])
         for event in events_data:
-            event['venue']['latitude'] = event['venue']['location']['lat']
-            event['venue']['longitude'] = event['venue']['location']['lon']
+            event["venue"]["latitude"] = event["venue"]["location"]["lat"]
+            event["venue"]["longitude"] = event["venue"]["location"]["lon"]
         return events_data, None
     else:
         return None, "Error fetching events from SeatGeek"
