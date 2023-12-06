@@ -119,14 +119,14 @@
                         </p>
                     {% endif %}
                     {% if place.properties.official_websites %}
-                        <p>Official website: 
-                            {% for website in place.properties.official_websites %}
-                                <a href="{{ website }}" target="_blank">{{ website }}</a>
-                            {% endfor %}
-                        </p>
-        {% endif %}
+                        {% for website in place.properties.official_websites %}
+                            <a href="{{ website }}" target="_blank">
+                                <button type="button">Official Website</button>
+                            </a>
+                        {% endfor %}
+                    {% endif %} 
                 </div>
-            {% endfor %}
+            {% endfor %} 
         </div>
         <div class="button-container">
             <button id="place-prev">Previous</button>
@@ -175,7 +175,6 @@
         var airquality_forecast = {{ airquality_forecast | tojson }};
         var lat = {{ lat }};
         var lon = {{ lon }};
-
         function redirectToIndex() {
             window.location.href = '/';
         }

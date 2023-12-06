@@ -90,7 +90,7 @@ body {
 }
 
 .place-carousel-item .icon{
-    max-width: 6%; 
+    max-width: 3%; 
     height: auto; /* Maintain aspect ratio */
     vertical-align: middle; 
 }
