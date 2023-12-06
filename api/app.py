@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from datetime import datetime
 import requests, logging, psycopg2, os
+import numpy as np
 
 
 app = Flask(__name__)
@@ -113,6 +114,54 @@ def get_sunrisesunset_data(lat, lon, date):
     return sunrisesunset_data, None
 
 
+def get_airquality_forecast_data(lat, lon):
+    airquality_forecast_url = f"{BASE_URLS['openweather']}/data/2.5/air_pollution/forecast?lat={lat}&lon={lon}&appid={API_KEYS['openweather']}"
+    response = requests.get(airquality_forecast_url)
+    if not response.ok:
+        return None, "Error fetching airquality forecast data"
+
+    airquality_forecast_data = response.json()
+    forecasts = airquality_forecast_data.get("list", [])
+    processed_data = process_airquality_data(forecasts)
+
+    return processed_data, None
+
+
+def process_airquality_data(forecasts):
+    # Split the data into chunks of 6 hours each
+    chunk_size = 6
+    chunks = [
+        forecasts[i : i + chunk_size] for i in range(0, len(forecasts), chunk_size)
+    ]
+
+    # Calculate average AQI for each chunk
+    avg_aqi_values = []
+
+    for chunk in chunks:
+        # Safely calculate average AQI, ignoring forecasts without 'aqi'
+        aqi_values = [
+            forecast.get("main", {}).get("aqi")
+            for forecast in chunk
+            if "main" in forecast and "aqi" in forecast["main"]
+        ]
+        if aqi_values:  # Check if the list is not empty
+            avg_aqi = np.mean(aqi_values)
+            avg_aqi_values.append(avg_aqi)
+        else:
+            avg_aqi_values.append(
+                None
+            )  # Append None or a default value if no aqi values are found
+
+    line_chart_data = []
+    for chunk, avg_aqi in zip(chunks, avg_aqi_values):
+        if (
+            chunk and avg_aqi is not None
+        ):  # Check if chunk is not empty and avg_aqi is calculated
+            line_chart_data.append({"time": chunk[0]["dt"], "avg_aqi": avg_aqi})
+
+    return line_chart_data
+
+
 def determine_weather_condition(data):
     cloud_cover = data.get("cloud_cover", {}).get("afternoon", 0)
     humidity = data.get("humidity", {}).get("afternoon", 0)
@@ -184,6 +233,8 @@ def get_city_info():
     sunrise_time = None
     sunset_time = None
     golden_hour_time = None  # Initialize sunrise, sunset, and golden hour times
+    airquality_forecast_data = {}
+    processed_aqi_data = []
 
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
@@ -191,7 +242,6 @@ def get_city_info():
 
         # Sunrisesunset
         sunrisesunset_data, sunrisesunset_error = get_sunrisesunset_data(lat, lon, date)
-        print(sunrisesunset_data)
         if sunrisesunset_error:
             logging.error(f"Error in getting sunrisesunset data: {sunrisesunset_error}")
             return jsonify({"error": sunrisesunset_error}), 500
@@ -214,8 +264,7 @@ def get_city_info():
             golden_hour_datetime = datetime.strptime(golden_hour_str, "%I:%M:%S %p")
             golden_hour_time = golden_hour_datetime.strftime("%I:%M %p")
 
-        print(golden_hour_time)
-        # Extract weatehr data from the API response
+        # Extract weather data from the API response
         weather_data, weather_error = get_weather_data(lat, lon, date)
         if weather_error:
             logging.error(f"Error in getting weather data: {weather_error}")
@@ -231,6 +280,19 @@ def get_city_info():
         weather_data["weather_condition"] = weather_condition
         weather_data["weather_icon"] = weather_icon
 
+        # Extract air quality data from the API response
+        (
+            airquality_forecast_data,
+            airquality_forecast_error,
+        ) = get_airquality_forecast_data(lat, lon)
+        if airquality_forecast_error:
+            logging.error(
+                f"Error in getting air quality forecast data: {airquality_forecast_error}"
+            )
+            return jsonify({"error": airquality_forecast_error}), 500
+
+        print(airquality_forecast_data)
+
     return render_template(
         "results.html",
         places_data=places_data,
@@ -239,6 +301,7 @@ def get_city_info():
         sunrise_time=sunrise_time,
         sunset_time=sunset_time,
         golden_hour_time=golden_hour_time,
+        airquality_forecast=airquality_forecast_data,
         lon=lon,
         lat=lat,
     )
