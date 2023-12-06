@@ -303,7 +303,7 @@ def get_city_info():
                 userid = cursor.fetchone()[0]
             else:
                 userid = result[0]
-            query = "INSERT INTO userdata (userid, country, city, exploration_date, attraction_type, food_type) VALUES (%s, %s, %s, %s, %s, %s)"
+            query = "INSERT INTO userdata (userid, country, city, exploration_date, attraction_preference, dining_preference) VALUES (%s, %s, %s, %s, %s, %s)"
             cursor.execute(
                 query, (userid, country, city, date, attraction_type, food_type)
             )
@@ -353,6 +353,34 @@ def get_city_info():
     if dining_error:
         logging.error(f"Error in getting dining data: {dining_error}")
         return jsonify({"error": dining_error}), 500
+
+    # Connect to database & Save dinings data
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT userid FROM users WHERE username = %s", (username,))
+            result = cursor.fetchone()
+            userid = result[0]
+            if dining_data and "features" in dining_data:
+                for feature in dining_data["features"]:
+                    name = feature["properties"]["name"]
+                    cursor.execute(
+                        "SELECT id FROM dinings WHERE userid = %s AND name = %s",
+                        (userid, name),
+                    )
+                    result = cursor.fetchone()
+                    if not result:
+                        insert_sql = (
+                            "INSERT INTO dinings (userid, name) VALUES (%s, %s)"
+                        )
+                        cursor.execute(insert_sql, (userid, name))
+            connection.commit()
+        except (Exception, psycopg2.Error) as error:
+            print("Error while inserting data into Postgres", error)
+        finally:
+            if connection is not None:
+                connection.close()
 
     # Upcoming Events
     events_data, events_error = get_seatgeek_events(lat, lon, date)
