@@ -121,8 +121,8 @@ def get_sunrisesunset_data(lat, lon, date):
 def get_airquality_forecast_data(lat, lon):
     airquality_forecast_url = f"{BASE_URLS['openweather']}/data/2.5/air_pollution/forecast?lat={lat}&lon={lon}&appid={API_KEYS['openweather']}"
     response = requests.get(airquality_forecast_url)
-    print (airquality_forecast_url)
-    print (response)
+    print(airquality_forecast_url)
+    print(response)
     if not response.ok:
         return None, "Error fetching airquality forecast data"
 
