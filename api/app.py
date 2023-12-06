@@ -334,6 +334,7 @@ def get_city_info():
             if connection is not None:
                 connection.close()
 
+
 # Favourites
 @app.route("/favourites/<username>")
 def user_favourites(username):
@@ -354,6 +355,7 @@ def user_favourites(username):
     return render_template(
         "user_favourites.html", username=username, favourites=favourites
     )
+
 
 @app.route(
     "/save-favourite/<name>/<float:latitude>/<float:longitude>", methods=["POST"]
