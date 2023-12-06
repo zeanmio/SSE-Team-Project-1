@@ -1,33 +1,47 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)), url('https://source.unsplash.com/featured/?city,travel');
+    background-attachment: fixed;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
 }
+
 .section {
-    background: #fff;
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #333;
+    text-align: center;
 }
+
 .container {
-    width: 80%;
-    margin: 20px auto;
-    background: #fff;
+    max-width: 1200px;
+    margin: auto;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #333;
 }
+
 .carousel {
     overflow: hidden;
     margin-bottom: 20px;
 }
+
 .carousel-item {
     display: none;
     padding: 15px;
     border-bottom: 1px solid #ddd;
 }
+
 .carousel-item.active {
     display: block;
 }
@@ -41,6 +55,7 @@ body {
 .first-weather-column{
     width: 50%;
 }
+
 .second-weather-column {
     width: 50%;
     text-align: left;
@@ -94,6 +109,7 @@ height: 40px;
     text-align: center;
     margin-bottom: 20px;
 }
+
 button {
     background: #555;
     color: #fff;
@@ -103,26 +119,32 @@ button {
     cursor: pointer;
     margin: 0 10px;
 }
+
 button:hover {
     background: #333;
 }
+
 .event-carousel, .place-carousel {
     overflow: hidden;
     width: 100%;
     margin-bottom: 20px;
 }
+
 .event-carousel-item, .place-carousel-item {
     width: 100%;
     display: none;
     padding: 15px;
     border-bottom: 1px solid #ddd;
 }
+
 .event-carousel-item.active, .place-carousel-item.active {
     display: block;
 }
+
 .event-item, .place-item {
     margin-bottom: 20px;
 }
+
 .event-item ul {
     padding-left: 20px;
 }

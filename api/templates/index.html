@@ -115,7 +115,10 @@
         <label for="city">City:</label>
         <input type="text" id="city" name="city" placeholder="Type the city you're dreaming of" value="{{city}}">
 
-        <label for="attraction_type" title="Choose the type of attractions you are interested in.">Filter:</label>
+        <label for="date">Exploration Date:</label>
+        <input type="date" id="date" name="date" value="{{Date}}">
+        
+        <label for="attraction_type" title="Choose the type of attractions/food you are interested in.">Exploration Preference:</label>
         <select id="attraction_type" name="attraction_type">
             <option value="" disabled selected>Select an option</option>
                 <!-- Tourist Attractions -->
@@ -139,9 +142,6 @@
                 <option value="restaurants">Restaurants</option>
             </optgroup>
         </select>
-
-        <label for="date">Exploration Date:</label>
-        <input type="date" id="date" name="date" value="{{Date}}">
 
         <input type="submit" value="Explore City">
     </form>
