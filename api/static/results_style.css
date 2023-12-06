@@ -89,6 +89,12 @@ body {
     vertical-align: middle; 
 }
 
+.place-carousel-item .icon{
+    max-width: 3%; 
+    height: auto; /* Maintain aspect ratio */
+    vertical-align: middle; 
+}
+
 .temperature-range {
     /* font-size: 24px; */
     color: #333;
