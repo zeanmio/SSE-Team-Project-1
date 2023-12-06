@@ -101,9 +101,13 @@
         <p>Unlock the latest in local weather, vibrant events, and must-see attractions for an unforgettable urban journey.</p>
     </div>
 </div>
-
+<div class="username-input">
+    <label for="favUsername">Enter your username to view favourites:</label>
+    <input type="text" id="favUsername" name="favUsername" placeholder="Your Username">
+    <button onclick="goToUserFavorites()">Go to Favorites</button>
+</div>
 <div class="container">
-    <form action="/get-city-info" method="get">
+    <form id="explorationForm" action="/get-city-info" method="get">
         <h2>Enter your exploration details:</h2>
 
         <label for="username">Username:</label>
@@ -151,6 +155,11 @@
 </div>
 
 <br><br><br>
-
+<script>
+    function goToUserFavorites() {
+        const username = document.getElementById('favUsername').value;
+        window.location.href = `/favorites/${username}`;
+    }
+</script>
 </body>
 </html>

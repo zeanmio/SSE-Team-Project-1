@@ -1,0 +1,94 @@
+<!-- user_favourites.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Favourites</title>
+    <!-- Include the HERE Map API script -->
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <style>
+        /* Set the size of the map container */
+        #map {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ username }}'s Favourites</h1>
+    <div id="map"></div>
+
+    <script>
+        var favouritedAttractions = [];
+        var map;
+
+        // Function to fetch favourited attractions from the Flask route
+        function fetchFavouritesFromServer() {
+            fetch(`/favourites/${current_username}`)
+                .then(response => response.json())
+                .then(data => {
+                    favouritedAttractions = data;
+                    addMarkers();
+                })
+                .catch(error => console.error('Error fetching favourites:', error));
+        }
+
+        // Add this function to create an info bubble
+        function addInfoBubble(map, coordinate, attractionName) {
+            var group = new H.map.Group();
+            map.addObject(group);
+
+            group.addEventListener('tap', function (evt) {
+                var bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
+                    content: evt.target.getData()
+                });
+                ui.addBubble(bubble);
+            }, false);
+
+            var htmlContent = `<div>${attractionName}</div>`;
+            addMarkerToGroup(group, coordinate, htmlContent);
+        }
+
+        // Modify your existing addMarkers function
+        function addMarkers() {
+            map.removeObjects(map.getObjects());
+
+            // Loop through your favourited attractions and add markers
+            for (const favouritedAttraction of favouritedAttractions) {
+                const attraction_lat = parseFloat(favouritedAttraction.latitude); // Replace with the correct latitude field
+                const attraction_lon = parseFloat(favouritedAttraction.longitude); // Replace with the correct longitude field
+                const coordinate = { lat: attraction_lat, lng: attraction_lon };
+                const attractionName = favouritedAttraction.name;
+
+                addInfoBubble(map, coordinate, attractionName);
+            }
+        }
+
+        window.onload = function () {
+            // Initialize the HERE map
+            map = new H.Map(document.getElementById('map'),
+                new H.service.Platform({
+                    'apikey': 'J_jCI8FU0l9fJkPkv6FLn9PusIeY1jxSECepGED2WP4'
+                }).createDefaultLayers().vector.normal.map,
+                {
+                    center: { lat: 0, lng: 0 },
+                    zoom: 2
+                });
+
+            // Add behaviour to the map
+            var behaviour = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+            // Create the default UI components
+            var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+            fetchFavouritesFromServer();
+        }
+
+    </script>
+
+</body>
+</html>

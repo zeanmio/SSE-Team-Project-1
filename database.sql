@@ -29,3 +29,11 @@ CREATE TABLE attractions (
 );
 INSERT INTO attractions (id, name, latitude, longitude, rate, wikidata) VALUES ('exampleid', 'examplename', 0.0, 0.0, 0, 'examplewikidata');
 SELECT * FROM attractions;
+
+CREATE TABLE user_favourites (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    latitude FLOAT,
+    longitude FLOAT
+);
