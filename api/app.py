@@ -48,7 +48,7 @@ BASE_URLS = {
 
 
 # Tourist Attractions
-def get_places_data(city, food_type):
+def get_places_data(city, attraction_type):
     geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
     geoname_response = requests.get(geoname_url)
 
@@ -63,7 +63,7 @@ def get_places_data(city, food_type):
     lon = geoname_data["lon"]
     lat = geoname_data["lat"]
 
-    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={food_type}&rate=3&limit=10&apikey={API_KEYS['opentripmap']}"
+    places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3&limit=10&apikey={API_KEYS['opentripmap']}"
     places_response = requests.get(places_url)
 
     if not places_response.ok:
@@ -75,7 +75,7 @@ def get_places_data(city, food_type):
 
 
 # Dining
-def get_dining_data(city, attraction_type):
+def get_dining_data(city, food_type):
     geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
     geoname_response = requests.get(geoname_url)
 
@@ -90,7 +90,7 @@ def get_dining_data(city, attraction_type):
     lon = geoname_data["lon"]
     lat = geoname_data["lat"]
 
-    dining_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3&limit=10&apikey={API_KEYS['opentripmap']}"
+    dining_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={food_type}&rate=3&limit=10&apikey={API_KEYS['opentripmap']}"
     dining_response = requests.get(dining_url)
 
     if not dining_response.ok:
@@ -98,7 +98,7 @@ def get_dining_data(city, attraction_type):
 
     dining_data = dining_response.json()
 
-    return dining_data, None
+    return dining_data, lon, lat, None
 
 
 # Upcoming Events
@@ -349,7 +349,7 @@ def get_city_info():
                 connection.close()
 
     # Dining
-    dining_data, dining_error = get_dining_data(city, attraction_type)
+    dining_data, lon, lat, dining_error = get_dining_data(city, attraction_type)
     if dining_error:
         logging.error(f"Error in getting dining data: {dining_error}")
         return jsonify({"error": dining_error}), 500
@@ -451,8 +451,6 @@ def get_city_info():
         "results.html",
         places_data=places_data,
         dining_data=dining_data,
-        attraction_type=attraction_type,
-        food_type=food_type,
         events_data=events_data,
         weather_data=weather_data,
         sunrise_time=sunrise_time,

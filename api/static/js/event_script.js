@@ -1,11 +1,11 @@
 // carousel script
 const placeItems = document.querySelectorAll('.place-carousel-item');
-const eventItems = document.querySelectorAll('.event-carousel-item');
 const diningItems = document.querySelectorAll('.dining-carousel-item');
+const eventItems = document.querySelectorAll('.event-carousel-item');
 
 let currentPlaceIndex = 0;
-let currentEventIndex = 0;
 let currentDiningIndex = 0;
+let currentEventIndex = 0;
 
 function updateCarousel(items, currentIndex, direction) {
     items[currentIndex].classList.remove('active');
@@ -18,11 +18,11 @@ function updateCarousel(items, currentIndex, direction) {
 if (placeItems.length > 0) {
     placeItems[0].classList.add('active');
 }
-if (eventItems.length > 0) {
-    eventItems[0].classList.add('active');
-}
 if (diningItems.length > 0) {
     diningItems[0].classList.add('active');
+}
+if (eventItems.length > 0) {
+    eventItems[0].classList.add('active');
 }
 
 document.getElementById('place-prev').addEventListener('click', function() {
@@ -35,18 +35,18 @@ document.getElementById('place-next').addEventListener('click', function() {
     addMarkers();
 });
 
-document.getElementById('event-prev').addEventListener('click', function() {
-    currentEventIndex = updateCarousel(eventItems, currentEventIndex, -1);
-});
-
-document.getElementById('event-next').addEventListener('click', function() {
-    currentEventIndex = updateCarousel(eventItems, currentEventIndex, 1);
-});
-
 document.getElementById('dining-prev').addEventListener('click', function() {
     currentDiningIndex = updateCarousel(diningItems, currentDiningIndex, -1);
 });
 
 document.getElementById('dining-next').addEventListener('click', function() {
     currentDiningIndex = updateCarousel(diningItems, currentDiningIndex, 1);
+});
+
+document.getElementById('event-prev').addEventListener('click', function() {
+    currentEventIndex = updateCarousel(eventItems, currentEventIndex, -1);
+});
+
+document.getElementById('event-next').addEventListener('click', function() {
+    currentEventIndex = updateCarousel(eventItems, currentEventIndex, 1);
 });
