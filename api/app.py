@@ -309,8 +309,7 @@ def get_city_info():
             if connection is not None:
                 connection.close()
 
-    Tourist Attractions
-    print(get_places_data(city, attraction_type))
+    # Tourist Attractions
     places_data, lon, lat, places_error = get_places_data(city, attraction_type)
     if places_error:
         logging.error(f"Error in getting places data: {places_error}")
