@@ -45,7 +45,7 @@
         <div class="event-carousel">
             {% if events_data %}
                 {% for event in events_data %}
-                    <div class="event-carousel-item">
+                    <div class="event-carousel-item" data-lat="{{ event.venue.latitude }}" data-lon="{{ event.venue.longitude }}">
                         <h2>{{ event.title }}</h2>
                         <p>Date: {{ event.datetime_local }}</p>
                         <p>Venue: {{ event.venue.name }}</p>
