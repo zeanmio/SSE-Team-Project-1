@@ -18,22 +18,39 @@ var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
 var ui = H.ui.UI.createDefault(map, defaultLayers);
 
+var currentPlaceMarker = null;
+
+var currentEventMarker = null;
 
 function moveMapToCity(map){
     map.setCenter({lat: lat, lng: lon});
     map.setZoom(14);
 }
 
-window.onload = function () {
-    moveMapToCity(map);
-    addMarkers();
+function addPlaceMarker() {
+    if (currentPlaceMarker) {
+        map.removeObject(currentPlaceMarker);
+    }
+    const currentPlace = placeItems[currentPlaceIndex];
+    const lat = parseFloat(currentPlace.dataset.lat);
+    const lng = parseFloat(currentPlace.dataset.lon);
+    currentPlaceMarker = new H.map.Marker({lat: lat, lng: lng});
+    map.addObject(currentPlaceMarker);
 }
 
-function addMarkers(){
-    map.removeObjects(map.getObjects());
-    const currentPlace = placeItems[currentPlaceIndex];
-    const attraction_lat = parseFloat(currentPlace.dataset.lat);
-    const attraction_lon = parseFloat(currentPlace.dataset.lon);
-    var marker = new H.map.Marker({lat: attraction_lat, lng: attraction_lon});
-    map.addObject(marker);
+function addEventMarker() {
+    if (currentEventMarker) {
+        map.removeObject(currentEventMarker);
+    }
+    const currentEvent = eventItems[currentEventIndex];
+    const lat = parseFloat(currentEvent.dataset.lat);
+    const lng = parseFloat(currentEvent.dataset.lon);
+    currentEventMarker = new H.map.Marker({lat: lat, lng: lng});
+    map.addObject(currentEventMarker);
+}
+
+window.onload = function () {
+    moveMapToCity(map);
+    addPlaceMarker();
+    addEventMarker();
 }
