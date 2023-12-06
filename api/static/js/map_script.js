@@ -49,6 +49,14 @@ function addEventMarker() {
     map.addObject(currentEventMarker);
 }
 
+function updateMapMarkers() {
+    if (currentMarkerType === 'attractions') {
+        addPlaceMarker();
+    } else if (currentMarkerType === 'events') {
+        addEventMarker();
+    }
+}
+
 window.onload = function () {
     moveMapToCity(map);
     addPlaceMarker();

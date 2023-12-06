@@ -27,12 +27,12 @@ if (eventItems.length > 0) {
 
 document.getElementById('place-prev').addEventListener('click', function() {
     currentPlaceIndex = updateCarousel(placeItems, currentPlaceIndex, -1);
-    addMarkers();
+    addPlaceMarker();
 });
 
 document.getElementById('place-next').addEventListener('click', function() {
     currentPlaceIndex = updateCarousel(placeItems, currentPlaceIndex, 1);
-    addMarkers();
+    addPlaceMarker();
 });
 
 document.getElementById('dining-prev').addEventListener('click', function() {
@@ -45,8 +45,10 @@ document.getElementById('dining-next').addEventListener('click', function() {
 
 document.getElementById('event-prev').addEventListener('click', function() {
     currentEventIndex = updateCarousel(eventItems, currentEventIndex, -1);
+    addEventMarker();
 });
 
 document.getElementById('event-next').addEventListener('click', function() {
     currentEventIndex = updateCarousel(eventItems, currentEventIndex, 1);
+    addEventMarker();
 });
