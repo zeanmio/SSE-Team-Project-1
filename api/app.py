@@ -74,7 +74,7 @@ def get_places_data(city, attraction_type):
     return places_data, lon, lat, None
 
 
-# Tourist Attractions
+# Dining
 def get_dining_data(city, food_type):
     geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
     geoname_response = requests.get(geoname_url)
@@ -98,7 +98,7 @@ def get_dining_data(city, food_type):
 
     dining_data = dining_response.json()
 
-    return dining_data, lon, lat, None
+    return dining_data, None
 
 
 # Upcoming Events
