@@ -318,6 +318,7 @@ def get_city_info():
     # Weather
     min_temp = max_temp = None
     weather_data = {}  # Initialize weather_data as an empty dictionary
+    weather_condition = None
     sunrise_time = None
     sunset_time = None
     golden_hour_time = None  # Initialize sunrise, sunset, and golden hour times
