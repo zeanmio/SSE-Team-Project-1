@@ -20,22 +20,14 @@ class AppTestCase(unittest.TestCase):
     @patch("app.get_weather_data")
     @patch("app.get_airquality_forecast_data")
     def test_city_info_page(
-        self,
-        mock_db_connection,
-        mock_places_data,
-        mock_place_information,
-        mock_events_data,
-        mock_weather_data,
-        mock_airquality_forecast_data,
-    ):
-        #     self,
-        #     mock_weather_data,
-        #     mock_airquality_forecast_data,
-        #     mock_events_data,
-        #     mock_place_information,
-        #     mock_places_data,
-        #     mock_db_connection,
-        # ):
+            self,
+            mock_weather_data,
+            mock_airquality_forecast_data,
+            mock_events_data,
+            mock_place_information,
+            mock_places_data,
+            mock_db_connection,
+        ):
         mock_db_connection.return_value = MagicMock()
 
         mock_places_data.return_value = ([], 0, 0, None)
