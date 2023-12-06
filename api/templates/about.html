@@ -35,14 +35,18 @@
             background-color: #ddd;
             color: black;
         }
+        .image-container {
+            display: flex;
+            justify-content: center;
+        }
         .container {
             max-width: 1200px;
             margin: auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            color: #333; /* Darker text color for readability */
+            color: #333;
         }
         .hero-image {
             height: 400px;
@@ -144,14 +148,6 @@
 <br><br><br>
 
 <div class="container">
-    <h2 class="h2-spacing">Our Web Architecture</h2>
-    <img src="{{ url_for('static', filename='General_Architecture_Diagram.svg') }}" alt="Web Architecture Diagram" style="max-width:100%; height:auto;">
-    <p>This diagram illustrates the basic structure of our web application, including the interactions between the browser, server, database, and API.</p>
-</div>
-
-<br><br><br>
-
-<div class="container">
     <h2 class="h2-spacing">Meet the Team</h2>
     <div class="team-grid">
         <div class="team-member">
@@ -179,6 +175,36 @@
             </a>
         </div>
     </div>
+</div>
+
+<br><br><br>
+
+<div class="container">
+    <h2 class="h2-spacing">Web Architecture</h2>
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='Architecture_Diagram.svg') }}" alt="Architecture Diagram" style="max-width:140%; height:auto;">
+    </div>
+    <p>The architecture diagram illustrates the core structure of our web application, clarifying how the client, server, database, and API interact with each other.</p>
+</div>
+
+<br><br><br>
+
+<div class="container">
+    <h2 class="h2-spacing">API-Server Interaction</h2>
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='API_Diagram.svg') }}" alt="API-Server Interaction Diagram" style="max-width:50%; height:auto;">
+    </div>
+    <p>This diagram demonstrates the data exchange between different APIs and the server.</p>
+</div>
+
+<br><br><br>
+
+<div class="container">
+    <h2 class="h2-spacing">Database Schema</h2>
+    <div class="image-container">
+    <img src="{{ url_for('static', filename='ER_Diagram.svg') }}" alt="Entity-Relationship Diagram" style="max-width:100%; height:auto;">
+    </div>
+    <p>The Entity-Relationship diagram above visualises the relational schema of our database, detailing the interconnections between different data entities.</p>
 </div>
 
 <br><br><br>

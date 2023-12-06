@@ -1,5 +1,6 @@
-__pycache__/
 *.log
 .venv/
+.vercel/
+__pycache__/
 .pytest_cache/
 api/__pycache__/
