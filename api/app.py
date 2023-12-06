@@ -215,6 +215,9 @@ def user_favourites(username):
     methods=["POST"],
 )
 def save_favourite(username, name, latitude, longitude):
+    print(
+        f"Received data: username={username}, name={name}, latitude={latitude}, longitude={longitude}"
+    )
     # Extract the data from the JSON request body
     data = request.get_json()
 

@@ -187,6 +187,7 @@
 
         function saveFavourite(username, name, latitude, longitude) {
         // Use AJAX or fetch to send a request to your Flask backend to save the favourite
+        console.log(`Data to be sent: username=${username}, name=${name}, latitude=${latitude}, longitude=${longitude}`);
         fetch(`/save-favourite/${username}/${name}/${latitude}/${longitude}`, {
             method: 'POST',
             headers: {
