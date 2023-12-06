@@ -180,22 +180,3 @@ button:hover {
     flex-grow: 1;
     margin: 0 20px;
 }
-
-.calendar-day {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-    vertical-align: top;
-    min-height: 100px;
-  }
-  
-  .calendar-day-header {
-    background-color: #eee;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .calendar-row {
-    display: flex;
-  }
-  
