@@ -3,3 +3,4 @@ psycopg2_binary==2.9.9
 pytest==6.2.5
 Requests==2.31.0
 unittest2==1.1.0
+numpy==1.26.2

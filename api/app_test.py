@@ -17,8 +17,14 @@ class AppTestCase(unittest.TestCase):
     @patch("app.get_places_data")
     @patch("app.get_seatgeek_events")
     @patch("app.get_weather_data")
+    @patch("app.get_airquality_forecast_data")
     def test_city_info_page(
-        self, mock_weather_data, mock_events_data, mock_places_data, mock_db_connection
+        self,
+        mock_weather_data,
+        mock_airquality_forecast_data,
+        mock_events_data,
+        mock_places_data,
+        mock_db_connection,
     ):
         mock_db_connection.return_value = MagicMock()
 
@@ -28,7 +34,10 @@ class AppTestCase(unittest.TestCase):
             {"temperature": {"min": 280, "max": 285}},
             None,
         )
-
+        mock_airquality_forecast_data.return_value = (
+            [{"time": 1701864000, "avg_aqi": 2.3333333333333335}, ...],  # Example data
+            None,
+        )
         response = self.app.get(
             "/get-city-info?city=London&username=test&country=UK&date=2023-12-31"
         )
