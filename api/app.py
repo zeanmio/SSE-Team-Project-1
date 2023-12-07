@@ -444,6 +444,24 @@ def get_city_info():
         # Tourist Attractions
         places_future = executor.submit(get_places_data, city, attraction_type)
 
+    # Wait for the future to complete
+    places_data, places_error = places_future.result()
+
+    # Check for errors in the future
+    if places_error:
+        # Handle errors, perhaps return an error response or log them
+        logging.error(f"Error in get_places_data: {places_error}")
+        return jsonify({"error": "Error in get_places_data"}), 500
+
+    # Extract data if places_data is available
+    if places_data and "features" in places_data:
+        location = places_data["features"][0]["geometry"]["coordinates"]
+        lat, lon = location[1], location[0]
+        start = 1699228800
+        end = 699574400
+
+    # Execute other API calls concurrently using ThreadPoolExecutor
+    with executor as executor:
         # Dining
         dining_future = executor.submit(get_dining_data, city, food_type)
 
@@ -460,7 +478,6 @@ def get_city_info():
         airquality_future = executor.submit(get_airquality_forecast_data, lat, lon)
 
     # Wait for all futures to complete
-    places_data, places_error = places_future.result()
     dining_data, dining_error = dining_future.result()
     events_data, events_error = events_future.result()
     weather_data, weather_error = weather_future.result()
@@ -470,7 +487,6 @@ def get_city_info():
     # Check for errors in any of the futures
     if any(
         [
-            places_error,
             dining_error,
             events_error,
             weather_error,
@@ -480,16 +496,9 @@ def get_city_info():
     ):
         # Handle errors, perhaps return an error response or log them
         logging.error(
-            f"Error in one of the futures: {places_error}, {dining_error}, {events_error}, {weather_error}, {sunrisesunset_error}, {airquality_forecast_error}"
+            f"Error in one of the futures: {dining_error}, {events_error}, {weather_error}, {sunrisesunset_error}, {airquality_forecast_error}"
         )
         return jsonify({"error": "One or more errors occurred"}), 500
-
-    # Extract data if places_data is available
-    if places_data and "features" in places_data:
-        location = places_data["features"][0]["geometry"]["coordinates"]
-        lat, lon = location[1], location[0]
-        start = 1699228800
-        end = 699574400
 
     # Extract sunrise and sunset times from the API response
     sunrise_str = sunrisesunset_data.get("results", {}).get("sunrise", "")
