@@ -440,9 +440,7 @@ def get_city_info():
     save_user_data(username, country, city, date, attraction_type, food_type)
 
     # Execute API calls concurrently using ThreadPoolExecutor
-    with executor as executor:
-        # Tourist Attractions
-        places_future = executor.submit(get_places_data, city, attraction_type)
+    places_future = executor.submit(get_places_data, city, attraction_type)
 
     # Wait for the future to complete
     places_data, places_error = places_future.result()
@@ -461,23 +459,24 @@ def get_city_info():
         end = 699574400
 
     # Execute other API calls concurrently using ThreadPoolExecutor
-    with executor:
-        # Dining
-        dining_future = executor.submit(get_dining_data, city, food_type)
-
-        # Upcoming Events
-        events_future = executor.submit(get_seatgeek_events, lat, lon, date)
-
-        # Weather
-        weather_future = executor.submit(get_weather_data, lat, lon, date)
-
-        # Sunrisesunset
-        sunrisesunset_future = executor.submit(get_sunrisesunset_data, lat, lon, date)
-
-        # Air Quality Forecast
-        airquality_future = executor.submit(get_airquality_forecast_data, lat, lon)
+    dining_future = executor.submit(get_dining_data, city, food_type)
+    events_future = executor.submit(get_seatgeek_events, lat, lon, date)
+    weather_future = executor.submit(get_weather_data, lat, lon, date)
+    sunrisesunset_future = executor.submit(get_sunrisesunset_data, lat, lon, date)
+    airquality_future = executor.submit(get_airquality_forecast_data, lat, lon)
 
     # Wait for all futures to complete
+    concurrent.futures.wait(
+        [
+            dining_future,
+            events_future,
+            weather_future,
+            sunrisesunset_future,
+            airquality_future,
+        ]
+    )
+
+    # Retrieve results
     dining_data, dining_error = dining_future.result()
     events_data, events_error = events_future.result()
     weather_data, weather_error = weather_future.result()
