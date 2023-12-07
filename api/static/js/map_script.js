@@ -28,15 +28,6 @@ var lat = {{ lat }};
 
 var lon = {{ lon }};
 
-var placeIcon = new H.map.Icon("https://cdn0.iconfinder.com/data/icons/citycons/150/Citycons_building-1024.png", 
-{size: {w: 40, h: 40}});
-
-var diningIcon = new H.map.Icon("https://cdn1.iconfinder.com/data/icons/minimal-fruit/128/apple-1024.png", 
-{size: {w: 40, h: 40}});
-
-var eventIcon = new H.map.Icon("https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/microphone-1024.png", 
-{size: {w: 40, h: 40}});
-
 function moveMapToCity(map){
     map.setCenter({lat: lat, lng: lon});
     map.setZoom(14);
@@ -49,7 +40,7 @@ function addPlaceMarker() {
     const currentPlace = placeItems[currentPlaceIndex];
     const lat = parseFloat(currentPlace.dataset.lat);
     const lng = parseFloat(currentPlace.dataset.lon);
-    currentPlaceMarker = new H.map.Marker({lat: lat, lng: lng}, { icon: placeIcon });
+    currentPlaceMarker = new H.map.Marker({lat: lat, lng: lng});
     map.addObject(currentPlaceMarker);
 }
 
@@ -60,7 +51,7 @@ function addDiningMarker() {
     const currentDining = diningItems[currentDiningIndex];
     const lat = parseFloat(currentDining.dataset.lat);
     const lng = parseFloat(currentDining.dataset.lon);
-    currentDiningMarker = new H.map.Marker({lat: lat, lng: lng}, { icon: diningIcon });
+    currentDiningMarker = new H.map.Marker({lat: lat, lng: lng});
     map.addObject(currentDiningMarker);
 }
 
@@ -71,7 +62,7 @@ function addEventMarker() {
     const currentEvent = eventItems[currentEventIndex];
     const lat = parseFloat(currentEvent.dataset.lat);
     const lng = parseFloat(currentEvent.dataset.lon);
-    currentEventMarker = new H.map.Marker({lat: lat, lng: lng}, { icon: eventIcon });
+    currentEventMarker = new H.map.Marker({lat: lat, lng: lng});
     map.addObject(currentEventMarker);
 }
 
