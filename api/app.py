@@ -461,7 +461,7 @@ def get_city_info():
         end = 699574400
 
     # Execute other API calls concurrently using ThreadPoolExecutor
-    with executor as executor:
+    with executor:
         # Dining
         dining_future = executor.submit(get_dining_data, city, food_type)
 
