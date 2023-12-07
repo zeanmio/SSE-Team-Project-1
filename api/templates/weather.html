@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='results_style.css') }}">
 </head>
 <body>
-    <h1>Weather Information</h1>
-    <p>City: {{ shared_data.city }}</p>
-    <p>Date: {{ shared_data.date }}</p>
+    <div class="header-text">
+        <h2 style="text-align: center;">Weather Information for {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
+    </div>
     <!-- Display other weather information as needed -->
     <div class="section">
         <h1 style="text-align:center;">Weather</h1>
@@ -74,11 +74,6 @@
                 </div>
         </div>
     </div>
-    <script>
-        var airquality_forecast = {{ airquality_forecast | tojson }};
-        var lat = {{ lat }};
-        var lon = {{ lon }};
-    </script>
     <script src="/static/js/weather_script.js"></script>
 </body>
 </html>

@@ -24,6 +24,10 @@ var currentDiningMarker = null;
 
 var currentEventMarker = null;
 
+var lat = {{ lat }};
+
+var lon = {{ lon }};
+
 function moveMapToCity(map){
     map.setCenter({lat: lat, lng: lon});
     map.setZoom(14);

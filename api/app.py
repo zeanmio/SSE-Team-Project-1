@@ -163,7 +163,7 @@ def get_dining_data(city, food_type):
 
     dining_data = dining_response.json()
 
-    return dining_data, lon, lat, None
+    return dining_data, None
 
 
 # Upcoming Events
