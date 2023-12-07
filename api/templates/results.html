@@ -32,7 +32,7 @@
             <h1 style="text-align:center;">Discover Attractions</h1>
                 <div class="place-carousel">
                 {% for place in places_data.features %}
-                    <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
+                    <div class="place-carousel-item" data-name="{{ place.properties.name }}" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
                         <h2>{{ place.properties.name }}</h2>
                     {% if place.properties.description %}
                         <p>{{ place.properties.description }}</p>
@@ -77,7 +77,7 @@
             <h1 style="text-align:center;">Discover Food</h1>
             <div class="dining-carousel">
                 {% for dining in dining_data.features %}
-                    <div class="dining-carousel-item" data-lat="{{ dining.geometry.coordinates[1] }}" data-lon="{{ dining.geometry.coordinates[0] }}" >
+                    <div class="dining-carousel-item" data-name="{{ dining.properties.name }}" data-lat="{{ dining.geometry.coordinates[1] }}" data-lon="{{ dining.geometry.coordinates[0] }}" >
                         <h2>{{ dining.properties.name }}</h2>
                     {% if dining.properties.description %}
                         <p>{{ dining.properties.description }}</p>
@@ -123,7 +123,7 @@
             <div class="event-carousel">
                 {% if events_data %}
                     {% for event in events_data %}
-                        <div class="event-carousel-item" data-lat="{{ event.venue.latitude }}" data-lon="{{ event.venue.longitude }}">
+                        <div class="event-carousel-item" data-name="{{ event.title }}" data-lat="{{ event.venue.latitude }}" data-lon="{{ event.venue.longitude }}">
                             <h2>{{ event.title }}</h2>
                             <p>Date: {{ event.datetime_local }}</p>
                             <p>Venue: {{ event.venue.name }}</p>
