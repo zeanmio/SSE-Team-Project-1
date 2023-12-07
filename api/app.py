@@ -472,14 +472,6 @@ def get_city_info():
     # Save events data to the database
     save_data_to_database(username, events_data, "events")
 
-    # Pass shared data to the template
-    shared_data = {
-        "username": username,
-        "country": country,
-        "city": city,
-        "date": date,
-    }
-
     return render_template(
         "results.html",
         places_data=places_data,
@@ -487,7 +479,10 @@ def get_city_info():
         events_data=events_data,
         lon=lon,
         lat=lat,
-        shared_data=shared_data,
+        username=username,
+        country=country,
+        city=city,
+        date=date,
     )
 
 
@@ -572,14 +567,6 @@ def get_weather_info():
             )
             return jsonify({"error": airquality_forecast_error}), 500
 
-    # Pass shared data to the template
-    shared_data = {
-        "username": username,
-        "country": country,
-        "city": city,
-        "date": date,
-    }
-
     return render_template(
         "weather.html",
         places_data=places_data,
@@ -588,7 +575,10 @@ def get_weather_info():
         sunset_time=sunset_time,
         golden_hour_time=golden_hour_time,
         airquality_forecast=airquality_forecast_data,
-        shared_data=shared_data,
+        username=username,
+        country=country,
+        city=city,
+        date=date,
         lon=lon,
         lat=lat,
     )
