@@ -74,6 +74,11 @@
                 </div>
         </div>
     </div>
+    <script>
+        var airquality_forecast = {{ airquality_forecast | tojson }};
+        var lat = {{ lat }};
+        var lon = {{ lon }};
+    </script>
     <script src="/static/js/weather_script.js"></script>
 </body>
 </html>
