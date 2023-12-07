@@ -15,7 +15,7 @@ body {
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     color: #333;
     text-align: center;
@@ -85,6 +85,12 @@ body {
 
 .second-weather-column .icon{
     max-width: 6%; 
+    height: auto; /* Maintain aspect ratio */
+    vertical-align: middle; 
+}
+
+.place-carousel-item .icon{
+    max-width: 3%; 
     height: auto; /* Maintain aspect ratio */
     vertical-align: middle; 
 }
@@ -176,10 +182,11 @@ button:hover {
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
+    margin-top: -100px;
     margin-bottom: -50px;
     z-index: 2;
-    align-self: flex-start;
-  }
+    position: relative;
+}
 
 .text-and-carousel {
     width: 100%;
@@ -189,8 +196,8 @@ button:hover {
 
 .content-container {
     display: flex;
-    align-items: center;
-    justify-content: start;
+    align-items: flex-start;
+    justify-content: flex-start;
     flex-direction: row;
 }
 

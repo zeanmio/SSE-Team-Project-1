@@ -23,7 +23,6 @@
                 <button onclick="redirectToIndex()">Start a New Exploration</button>
         </div>
         <br><br>
-
     <div class="container">
         <br>
         <div class="section">
@@ -83,7 +82,7 @@
                     <!-- Third Column -->
                     <div class="third-weather-column">
                         <!-- <h2>Air Quality Index</h2> -->
-                        <p style="text-align: center;">Air Quality Forecast for the Next 48 Hours</p>
+                        <p style="text-align: center;">Air Quality Forecast for the Next 4 Days</p>
                         <canvas id="airQualityChart"></canvas> 
                     </div>
             </div>
@@ -100,6 +99,34 @@
                 {% for place in places_data.features %}
                     <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
                         <h2>{{ place.properties.name }}</h2>
+                        {% if place.properties.description %}
+                        <p>{{ place.properties.description }}</p>
+                    {% endif %}
+                    {% if place.properties.instagram %}
+                        <p>
+                            <img src="/static/images/instagram.png" class="icon">
+                            Instagram: {{ place.properties.instagram }}
+                        </p>
+                    {% endif %}
+                    {% if place.properties.twitter %}
+                        <p>
+                            <img src="/static/images/twitter.png" class="icon">
+                            X: {{ place.properties.twitter }}
+                        </p>
+                    {% endif %}
+                    {% if place.properties.facebook %}
+                        <p>
+                            <img src="/static/images/facebook.png" class="icon">
+                            Facebook: {{ place.properties.facebook }}
+                        </p>
+                    {% endif %}
+                    {% if place.properties.official_websites %}
+                        {% for website in place.properties.official_websites %}
+                            <a href="{{ website }}" target="_blank">
+                                <button type="button">Official Website</button>
+                            </a>
+                        {% endfor %}
+                    {% endif %} 
                     </div>
                 {% endfor %}
             </div>
@@ -159,14 +186,11 @@
         </div>     
 
     <br><br><br>
- 
-    </div>
 
     <script>
         var airquality_forecast = {{ airquality_forecast | tojson }};
         var lat = {{ lat }};
         var lon = {{ lon }};
-
         function redirectToIndex() {
             window.location.href = '/';
         }

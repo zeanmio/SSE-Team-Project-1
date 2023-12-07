@@ -70,8 +70,73 @@ def get_places_data(city, attraction_type):
         return None, "Error fetching places from OpenTripMap"
 
     places_data = places_response.json()
-
     return places_data, lon, lat, None
+
+
+def get_place_information(wikidata_id):
+    description_params = {
+        "action": "wbgetentities",
+        "ids": wikidata_id,
+        "format": "json",
+        "languages": "en",
+    }
+    websites_params = {
+        "action": "wbgetentities",
+        "ids": wikidata_id,
+        "format": "json",
+        "languages": "en",
+        "props": "claims",
+    }
+    description_response = requests.get(
+        "https://www.wikidata.org/w/api.php", params=description_params
+    )
+    websites_response = requests.get(
+        "https://www.wikidata.org/w/api.php", params=websites_params
+    )
+
+    if not (description_response.ok and websites_response.ok):
+        return None, "Error fetching data from Wikidata"
+
+    description_data = description_response.json()
+    description = (
+        description_data["entities"][wikidata_id]
+        .get("descriptions", {})
+        .get("en", {})
+        .get("value", None)
+    )
+
+    # Retrieve official website and social media accounts if available
+    websites_data = websites_response.json()
+    official_websites = None
+    instagram = None
+    twitter = None
+    facebook = None
+    try:
+        official_websites = [
+            v["mainsnak"]["datavalue"]["value"]
+            for v in websites_data["entities"][wikidata_id]["claims"]["P856"]
+        ]
+    except KeyError:
+        pass
+    try:
+        instagram = websites_data["entities"][wikidata_id]["claims"]["P2003"][0][
+            "mainsnak"
+        ]["datavalue"]["value"]
+    except KeyError:
+        pass
+    try:
+        twitter = websites_data["entities"][wikidata_id]["claims"]["P2002"][0][
+            "mainsnak"
+        ]["datavalue"]["value"]
+    except KeyError:
+        pass
+    try:
+        facebook = websites_data["entities"][wikidata_id]["claims"]["P2013"][0][
+            "mainsnak"
+        ]["datavalue"]["value"]
+    except KeyError:
+        pass
+    return description, official_websites, instagram, twitter, facebook, None
 
 
 # Dining
@@ -182,9 +247,7 @@ def process_airquality_data(forecasts):
             avg_aqi = np.mean(aqi_values)
             avg_aqi_values.append(avg_aqi)
         else:
-            avg_aqi_values.append(
-                None
-            )  # Append None or a default value if no aqi values are found
+            avg_aqi_values.append(None)
 
     line_chart_data = []
     for chunk, avg_aqi in zip(chunks, avg_aqi_values):
@@ -316,9 +379,32 @@ def get_city_info():
 
     # Tourist Attractions
     places_data, lon, lat, places_error = get_places_data(city, attraction_type)
+
     if places_error:
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
+
+    # Enrich the places data with descriptions from Wikidata
+    if places_data:
+        for feature in places_data.get("features", []):
+            wikidata_id = feature["properties"].get("wikidata")
+            if wikidata_id:
+                (
+                    description_data,
+                    official_websites,
+                    instagram,
+                    twitter,
+                    facebook,
+                    description_error,
+                ) = get_place_information(wikidata_id)
+                if description_error:
+                    feature["properties"]["description"] = None
+                else:
+                    feature["properties"]["description"] = description_data
+                    feature["properties"]["official_websites"] = official_websites
+                    feature["properties"]["instagram"] = instagram
+                    feature["properties"]["twitter"] = twitter
+                    feature["properties"]["facebook"] = facebook
 
     # Connect to database & Save attractions data
     connection = get_db_connection()
@@ -421,7 +507,8 @@ def get_city_info():
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
         lat, lon = location[1], location[0]
-
+        start = 1699228800
+        end = 699574400
         # Sunrisesunset
         sunrisesunset_data, sunrisesunset_error = get_sunrisesunset_data(lat, lon, date)
         if sunrisesunset_error:
@@ -472,8 +559,6 @@ def get_city_info():
                 f"Error in getting air quality forecast data: {airquality_forecast_error}"
             )
             return jsonify({"error": airquality_forecast_error}), 500
-
-        print(airquality_forecast_data)
 
     return render_template(
         "results.html",
