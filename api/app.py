@@ -525,43 +525,31 @@ def get_city_info():
     weather_data["weather_condition"] = weather_condition
     weather_data["weather_icon"] = weather_icon
 
-    # Extract air quality data from the API response
-    (
-        airquality_forecast_data,
-        airquality_forecast_error,
-    ) = get_airquality_forecast_data(lat, lon)
-    if airquality_forecast_error:
-        logging.error(
-            f"Error in getting air quality forecast data: {airquality_forecast_error}"
-        )
-        return jsonify({"error": airquality_forecast_error}), 500
+    # Process air quality data
+    processed_aqi_data = process_airquality_data(airquality_forecast_data)
 
+    # Save data to the database
+    save_data_to_database(username, places_data, "attractions")
+    save_data_to_database(username, dining_data, "dinings")
+    save_data_to_database(username, events_data, "events")
 
-# Process air quality data
-processed_aqi_data = process_airquality_data(airquality_forecast_data)
-
-# Save data to the database
-save_data_to_database(username, places_data, "attractions")
-save_data_to_database(username, dining_data, "dinings")
-save_data_to_database(username, events_data, "events")
-
-return render_template(
-    "results.html",
-    places_data=places_data,
-    dining_data=dining_data,
-    events_data=events_data,
-    weather_data=weather_data,
-    sunrise_time=sunrise_time,
-    sunset_time=sunset_time,
-    golden_hour_time=golden_hour_time,
-    airquality_forecast=processed_aqi_data,
-    lon=lon,
-    lat=lat,
-    country=country,
-    username=username,
-    city=city,
-    date=date,
-)
+    return render_template(
+        "results.html",
+        places_data=places_data,
+        dining_data=dining_data,
+        events_data=events_data,
+        weather_data=weather_data,
+        sunrise_time=sunrise_time,
+        sunset_time=sunset_time,
+        golden_hour_time=golden_hour_time,
+        airquality_forecast=processed_aqi_data,
+        lon=lon,
+        lat=lat,
+        country=country,
+        username=username,
+        city=city,
+        date=date,
+    )
 
 
 if __name__ == "__main__":
