@@ -17,6 +17,7 @@ class AppTestCase(unittest.TestCase):
     @patch("app.get_places_data")
     @patch("app.get_place_information")
     @patch("app.get_dining_data")
+    @patch("app.get_seatgeek_events")
     def test_city_info_page(
         self,
         mock_events_data,
