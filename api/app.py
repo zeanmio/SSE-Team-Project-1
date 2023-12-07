@@ -366,7 +366,7 @@ def save_data_to_database(username, data, table_name):
 
 @app.route("/", methods=["GET", "POST"])
 def form():
-    history = {'userdata': []} 
+    history = {"userdata": []}
     if request.method == "POST":
         username = request.form.get("username")
 
@@ -374,22 +374,26 @@ def form():
         if conn:
             try:
                 with conn.cursor() as cur:
-                    cur.execute("SELECT userid FROM users WHERE username = %s", (username,))
+                    cur.execute(
+                        "SELECT userid FROM users WHERE username = %s", (username,)
+                    )
                     user_row = cur.fetchone()
                     print("User row:", user_row)
                     if user_row:
                         userid = user_row[0]
-                        cur.execute("SELECT * FROM userdata WHERE userid = %s", (userid,))
+                        cur.execute(
+                            "SELECT * FROM userdata WHERE userid = %s", (userid,)
+                        )
                         history_records = cur.fetchall()
                         for record in history_records:
                             record_dict = {
-                                'country': record[2],
-                                'city': record[3],
-                                'date': record[4],
-                                'attraction_type': record[5],
-                                'food_type': record[6]
+                                "country": record[2],
+                                "city": record[3],
+                                "date": record[4],
+                                "attraction_type": record[5],
+                                "food_type": record[6],
                             }
-                            history['userdata'].append(record_dict)
+                            history["userdata"].append(record_dict)
             except (Exception, psycopg2.Error) as error:
                 print("Error executing query:", error)
             finally:
@@ -401,7 +405,7 @@ def form():
         attraction_type = request.form.get("attraction_type")
         food_type = request.form.get("food_type")
         return redirect(url_for("get-city-info", city=city))
-    
+
     return render_template("index.html", history=history)
 
 
