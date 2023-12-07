@@ -85,6 +85,20 @@
         input[type="submit"]:hover {
             background-color: #555;
         }
+        button {
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
@@ -109,6 +123,14 @@
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" placeholder="Choose a cool explorer name" value="{{username}}">
         
+        <div class="options">
+            <button type="button" id="btn_new_explore">Start New Explore</button>
+            <button type="button" id="btn_retrieve_history">Retrieve History</button>
+        </div>
+
+        <br><br>
+
+    <div id="new_exploration_section" style="display: none;">
         <label for="country">Country:</label>
         <input type="text" id="country" name="country" placeholder="Which country are we adventuring to" value="{{country}}">
 
@@ -143,13 +165,42 @@
         </select>
 
         <input type="submit" value="Explore City">
+    </div>
     </form>
 
-    <div id="results"></div>
+    <div id="retrieve_history_section" style="display: none;">
+        {% if history.get('userdata') %}
+        <h2>Exploration History</h2>
+        <ul>
+            {% for record in history['userdata'] %}
+                <li>
+                    Country: {{ record['country'] }}, City: {{ record['city'] }},
+                    Date: {{ record['date'].strftime('%Y-%m-%d') }},
+                    Attractions: {{ record['attraction_type'] }},
+                    Dining: {{ record['food_type'] }}
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No history to display.</p>
+        {% endif %}
+    </div>
 
 </div>
 
 <br><br><br>
+
+<script>
+    document.getElementById('btn_new_explore').addEventListener('click', function() {
+        document.getElementById('new_exploration_section').style.display = 'block';
+        document.getElementById('retrieve_history_section').style.display = 'none';
+    });
+
+    document.getElementById('btn_retrieve_history').addEventListener('click', function() {
+        document.getElementById('new_exploration_section').style.display = 'none';
+        document.getElementById('retrieve_history_section').style.display = 'block';
+    });
+</script>
 
 </body>
 </html>
