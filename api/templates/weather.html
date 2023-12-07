@@ -1,0 +1,79 @@
+<!-- templates/weather.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='results_style.css') }}">
+</head>
+<body>
+    <div class="header-text">
+        <h2 style="text-align: center;">Weather Information for {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
+    </div>
+    <!-- Display other weather information as needed -->
+    <div class="section">
+        <h1 style="text-align:center;">Weather</h1>
+        <div class="weather-columns">
+            <!-- First Column -->
+            <div class="first-weather-column">
+                    <div class="temperature-range">
+                        <p>
+                            <span class="min-temp">{{ weather_data.min_temp }}°C</span>
+                            <span class="temp-divider"> - </span>         
+                            <span class="max-temp">{{ weather_data.max_temp }}°C</span>
+                        </p>
+                    </div>
+                <div class="weather-condition">
+                    {% if weather_data.weather_condition %}
+                        <p>
+                            {% if weather_data.weather_icon %}
+                                <img src="https://openweathermap.org/img/wn/{{ weather_data.weather_icon }}@2x.png" alt="Weather Icon" class="weather-icon">
+                            {% endif %}
+                            {{ weather_data.weather_condition }}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        
+            <!-- Second Column -->
+            <div class="second-weather-column">
+                {% if weather_data.wind and weather_data.wind.max %}
+                    <p class="wind-info">
+                        <img src="/static/images/wind.png" class="icon">
+                        Wind: {{ weather_data.wind.max.speed }} mph
+                    </p>
+                {% endif %} 
+                {% if weather_data.humidity and weather_data.humidity.afternoon %}
+                    <p class="humidity-info">
+                        <img src="/static/images/humidity.png" class="icon">
+                        Humidity: {{ weather_data.humidity.afternoon }} %
+                    </p>
+                {% endif %} 
+                {% if sunrise_time and sunset_time and golden_hour_time %}
+                    <p>
+                        <img src="/static/images/sunrise.png" class="icon">
+                        Sunrise: {{ sunrise_time }}
+                    </p>
+                    <p>
+                        <img src="/static/images/sunset.png" class="icon">
+                        Sunset: {{ sunset_time }}                       
+                    </p>
+                    <p>
+                        <img src="/static/images/golden_hour.png" class="icon">
+                        Golden hour: {{ golden_hour_time }}
+                    </p>
+                {% endif %}
+            </div>
+
+                <!-- Third Column -->
+                <div class="third-weather-column">
+                    <!-- <h2>Air Quality Index</h2> -->
+                    <p style="text-align: center;">Air Quality Forecast for the Next 4 Days</p>
+                    <canvas id="airQualityChart"></canvas> 
+                </div>
+        </div>
+    </div>
+    <script src="/static/js/weather_script.js"></script>
+</body>
+</html>
