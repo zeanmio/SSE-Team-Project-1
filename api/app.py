@@ -2,10 +2,11 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from datetime import datetime
 import requests, logging, psycopg2, os
 import numpy as np
+from concurrent.futures import ThreadPoolExecutor
 
 
 app = Flask(__name__)
-
+executor = ThreadPoolExecutor()
 
 # SQL
 DB_HOST = "db.doc.ic.ac.uk"
@@ -438,123 +439,129 @@ def get_city_info():
     # Save user data to the database
     save_user_data(username, country, city, date, attraction_type, food_type)
 
-    # Tourist Attractions
-    places_data, lon, lat, places_error = get_places_data(city, attraction_type)
+    # Execute API calls concurrently using ThreadPoolExecutor
+    with executor as executor:
+        # Tourist Attractions
+        places_future = executor.submit(get_places_data, city, attraction_type)
 
-    if places_error:
-        logging.error(f"Error in getting places data: {places_error}")
-        return jsonify({"error": places_error}), 500
+        # Dining
+        dining_future = executor.submit(get_dining_data, city, food_type)
 
-    # Enrich places data with Wikidata information
-    enrich_data_with_wikidata(places_data)
+        # Upcoming Events
+        events_future = executor.submit(get_seatgeek_events, lat, lon, date)
 
-    # Save attractions data to the database
-    save_data_to_database(username, places_data, "attractions")
+        # Weather
+        weather_future = executor.submit(get_weather_data, lat, lon, date)
 
-    # Dining
-    dining_data, lon, lat, dining_error = get_dining_data(city, food_type)
-    if dining_error:
-        logging.error(f"Error in getting dining data: {dining_error}")
-        return jsonify({"error": dining_error}), 500
+        # Sunrisesunset
+        sunrisesunset_future = executor.submit(get_sunrisesunset_data, lat, lon, date)
 
-    # Enrich dining data with Wikidata information
-    enrich_data_with_wikidata(dining_data)
+        # Air Quality Forecast
+        airquality_future = executor.submit(get_airquality_forecast_data, lat, lon)
 
-    # Save dining data to the database
-    save_data_to_database(username, dining_data, "dinings")
+    # Wait for all futures to complete
+    places_data, places_error = places_future.result()
+    dining_data, dining_error = dining_future.result()
+    events_data, events_error = events_future.result()
+    weather_data, weather_error = weather_future.result()
+    sunrisesunset_data, sunrisesunset_error = sunrisesunset_future.result()
+    airquality_forecast_data, airquality_forecast_error = airquality_future.result()
 
-    # Upcoming Events
-    events_data, events_error = get_seatgeek_events(lat, lon, date)
-    if events_error:
-        logging.error(f"Error in getting events data: {events_error}")
-        return jsonify({"error": events_error}), 500
+    # Check for errors in any of the futures
+    if any(
+        [
+            places_error,
+            dining_error,
+            events_error,
+            weather_error,
+            sunrisesunset_error,
+            airquality_forecast_error,
+        ]
+    ):
+        # Handle errors, perhaps return an error response or log them
+        logging.error(
+            f"Error in one of the futures: {places_error}, {dining_error}, {events_error}, {weather_error}, {sunrisesunset_error}, {airquality_forecast_error}"
+        )
+        return jsonify({"error": "One or more errors occurred"}), 500
 
-    # Save events data to the database
-    save_data_to_database(username, events_data, "events")
-
-    # Weather
-    min_temp = max_temp = None
-    weather_data = {}  # Initialize weather_data as an empty dictionary
-    weather_condition = None
-    sunrise_time = None
-    sunset_time = None
-    golden_hour_time = None  # Initialize sunrise, sunset, and golden hour times
-    airquality_forecast_data = {}
-    processed_aqi_data = []
-
+    # Extract data if places_data is available
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
         lat, lon = location[1], location[0]
         start = 1699228800
         end = 699574400
-        # Sunrisesunset
-        sunrisesunset_data, sunrisesunset_error = get_sunrisesunset_data(lat, lon, date)
-        if sunrisesunset_error:
-            logging.error(f"Error in getting sunrisesunset data: {sunrisesunset_error}")
-            return jsonify({"error": sunrisesunset_error}), 500
 
-        # Extract sunrise and sunset times from the API response
-        sunrise_str = sunrisesunset_data.get("results", {}).get("sunrise", "")
-        sunset_str = sunrisesunset_data.get("results", {}).get("sunset", "")
-        golden_hour_str = sunrisesunset_data.get("results", {}).get("golden_hour", "")
+    # Extract sunrise and sunset times from the API response
+    sunrise_str = sunrisesunset_data.get("results", {}).get("sunrise", "")
+    sunset_str = sunrisesunset_data.get("results", {}).get("sunset", "")
+    golden_hour_str = sunrisesunset_data.get("results", {}).get("golden_hour", "")
 
-        # Parse and format sunrise time, sunset time, and golden hour
-        if sunrise_str:
-            sunrise_datetime = datetime.strptime(sunrise_str, "%I:%M:%S %p")
-            sunrise_time = sunrise_datetime.strftime("%I:%M %p")
+    # Parse and format sunrise time, sunset time, and golden hour
+    if sunrise_str:
+        sunrise_datetime = datetime.strptime(sunrise_str, "%I:%M:%S %p")
+        sunrise_time = sunrise_datetime.strftime("%I:%M %p")
 
-        if sunset_str:
-            sunset_datetime = datetime.strptime(sunset_str, "%I:%M:%S %p")
-            sunset_time = sunset_datetime.strftime("%I:%M %p")
+    if sunset_str:
+        sunset_datetime = datetime.strptime(sunset_str, "%I:%M:%S %p")
+        sunset_time = sunset_datetime.strftime("%I:%M %p")
 
-        if golden_hour_str:
-            golden_hour_datetime = datetime.strptime(golden_hour_str, "%I:%M:%S %p")
-            golden_hour_time = golden_hour_datetime.strftime("%I:%M %p")
+    if golden_hour_str:
+        golden_hour_datetime = datetime.strptime(golden_hour_str, "%I:%M:%S %p")
+        golden_hour_time = golden_hour_datetime.strftime("%I:%M %p")
 
-        # Extract weather data from the API response
-        weather_data, weather_error = get_weather_data(lat, lon, date)
-        if weather_error:
-            logging.error(f"Error in getting weather data: {weather_error}")
-            return jsonify({"error": weather_error}), 500
+    # Extract weather data from the API response
+    weather_data, weather_error = get_weather_data(lat, lon, date)
+    if weather_error:
+        logging.error(f"Error in getting weather data: {weather_error}")
+        return jsonify({"error": weather_error}), 500
 
-        min_temp = round(weather_data["temperature"]["min"])
-        max_temp = round(weather_data["temperature"]["max"])
-        weather_data["min_temp"] = min_temp
-        weather_data["max_temp"] = max_temp
+    min_temp = round(weather_data["temperature"]["min"])
+    max_temp = round(weather_data["temperature"]["max"])
+    weather_data["min_temp"] = min_temp
+    weather_data["max_temp"] = max_temp
 
-        # Determine weather conditions
-        weather_condition, weather_icon = determine_weather_condition(weather_data)
-        weather_data["weather_condition"] = weather_condition
-        weather_data["weather_icon"] = weather_icon
+    # Determine weather conditions
+    weather_condition, weather_icon = determine_weather_condition(weather_data)
+    weather_data["weather_condition"] = weather_condition
+    weather_data["weather_icon"] = weather_icon
 
-        # Extract air quality data from the API response
-        (
-            airquality_forecast_data,
-            airquality_forecast_error,
-        ) = get_airquality_forecast_data(lat, lon)
-        if airquality_forecast_error:
-            logging.error(
-                f"Error in getting air quality forecast data: {airquality_forecast_error}"
-            )
-            return jsonify({"error": airquality_forecast_error}), 500
+    # Extract air quality data from the API response
+    (
+        airquality_forecast_data,
+        airquality_forecast_error,
+    ) = get_airquality_forecast_data(lat, lon)
+    if airquality_forecast_error:
+        logging.error(
+            f"Error in getting air quality forecast data: {airquality_forecast_error}"
+        )
+        return jsonify({"error": airquality_forecast_error}), 500
 
-    return render_template(
-        "results.html",
-        places_data=places_data,
-        dining_data=dining_data,
-        events_data=events_data,
-        weather_data=weather_data,
-        sunrise_time=sunrise_time,
-        sunset_time=sunset_time,
-        golden_hour_time=golden_hour_time,
-        airquality_forecast=airquality_forecast_data,
-        lon=lon,
-        lat=lat,
-        country=country,
-        username=username,
-        city=city,
-        date=date,
-    )
+
+# Process air quality data
+processed_aqi_data = process_airquality_data(airquality_forecast_data)
+
+# Save data to the database
+save_data_to_database(username, places_data, "attractions")
+save_data_to_database(username, dining_data, "dinings")
+save_data_to_database(username, events_data, "events")
+
+return render_template(
+    "results.html",
+    places_data=places_data,
+    dining_data=dining_data,
+    events_data=events_data,
+    weather_data=weather_data,
+    sunrise_time=sunrise_time,
+    sunset_time=sunset_time,
+    golden_hour_time=golden_hour_time,
+    airquality_forecast=processed_aqi_data,
+    lon=lon,
+    lat=lat,
+    country=country,
+    username=username,
+    city=city,
+    date=date,
+)
 
 
 if __name__ == "__main__":
