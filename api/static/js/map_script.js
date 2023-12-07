@@ -20,6 +20,8 @@ var ui = H.ui.UI.createDefault(map, defaultLayers);
 
 var currentPlaceMarker = null;
 
+var currentDiningMarker = null;
+
 var currentEventMarker = null;
 
 function moveMapToCity(map){
@@ -38,6 +40,17 @@ function addPlaceMarker() {
     map.addObject(currentPlaceMarker);
 }
 
+function addDiningMarker() {
+    if (currentDiningMarker) {
+        map.removeObject(currentDiningMarker);
+    }
+    const currentDining = diningItems[currentDiningIndex];
+    const lat = parseFloat(currentDining.dataset.lat);
+    const lng = parseFloat(currentDining.dataset.lon);
+    currentDiningMarker = new H.map.Marker({lat: lat, lng: lng});
+    map.addObject(currentDiningMarker);
+}
+
 function addEventMarker() {
     if (currentEventMarker) {
         map.removeObject(currentEventMarker);
@@ -49,9 +62,12 @@ function addEventMarker() {
     map.addObject(currentEventMarker);
 }
 
+
 function updateMapMarkers() {
     if (currentMarkerType === 'attractions') {
         addPlaceMarker();
+    } else if (currentMarkerType === 'dining') {
+        addDiningMarker();
     } else if (currentMarkerType === 'events') {
         addEventMarker();
     }
@@ -60,5 +76,6 @@ function updateMapMarkers() {
 window.onload = function () {
     moveMapToCity(map);
     addPlaceMarker();
+    addDiningMarker();
     addEventMarker();
 }

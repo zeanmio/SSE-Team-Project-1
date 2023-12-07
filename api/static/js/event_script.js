@@ -37,10 +37,12 @@ document.getElementById('place-next').addEventListener('click', function() {
 
 document.getElementById('dining-prev').addEventListener('click', function() {
     currentDiningIndex = updateCarousel(diningItems, currentDiningIndex, -1);
+    addDiningMarker();
 });
 
 document.getElementById('dining-next').addEventListener('click', function() {
     currentDiningIndex = updateCarousel(diningItems, currentDiningIndex, 1);
+    addDiningMarker();
 });
 
 document.getElementById('event-prev').addEventListener('click', function() {
