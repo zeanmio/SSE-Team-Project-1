@@ -90,73 +90,73 @@
         </div>
 
         <br><br>
+    
+    <div class="section" id="map"></div>
 
-    <div class="container">
-        <h1 style="text-align:center;">Discover Attractions</h1>
-        <div class="place-carousel">
-            {% for place in places_data.features %}
-                <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
-                    <h2>{{ place.properties.name }}</h2>
-                </div>
-            {% endfor %}
-        </div>
-        <div class="button-container">
-            <button id="place-prev">Previous</button>
-            <button id="place-next">Next</button>
-        </div>
-        <div class="section">
-            <div id="map"></div>
-        </div>
-    </div>
-
-    <br><br><br>
-
-    <div class="container">
-        <h1 style="text-align:center;">Discover Food</h1>
-        <div class="dining-carousel">
-            {% for dining in dining_data.features %}
-                <div class="dining-carousel-item" data-lat="{{ dining.geometry.coordinates[1] }}" data-lon="{{ dining.geometry.coordinates[0] }}" >
-                    <h2>{{ dining.properties.name }}</h2>
-                    <p>{{ dining.properties.kinds }}</p>
-                    <p>{{ dining.properties.wikidata }}</p>
-                </div>
-            {% endfor %}
-        </div>
-        <div class="button-container">
-            <button id="dining-prev">Previous</button>
-            <button id="dining-next">Next</button>
-        </div>
-    </div>
-
-    <br><br><br>
-
-    <div class="container">
-        <h1 style="text-align:center;">Upcoming Events</h1>
-        <div class="event-carousel">
-            {% if events_data %}
-                {% for event in events_data %}
-                    <div class="event-carousel-item" data-lat="{{ event.venue.latitude }}" data-lon="{{ event.venue.longitude }}">
-                        <h2>{{ event.title }}</h2>
-                        <p>Date: {{ event.datetime_local }}</p>
-                        <p>Venue: {{ event.venue.name }}</p>
-                        <p>City: {{ event.venue.city }}</p>
-                        <p>Performers:</p>
-                            <ul>
-                                {% for performer in event.performers %}
-                                    <li>{{ performer.name }}</li>
-                                {% endfor %}
-                            </ul>
+    <div class="row">
+        <div class="column">
+            <h1 style="text-align:center;">Discover Attractions</h1>
+                <div class="place-carousel">
+                {% for place in places_data.features %}
+                    <div class="place-carousel-item" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
+                        <h2>{{ place.properties.name }}</h2>
                     </div>
                 {% endfor %}
-            {% else %}
-                <p>No events found.</p>
-            {% endif %}
+            </div>
+            <div class="button-container">
+                <button id="place-prev">Previous</button>
+                <button id="place-next">Next</button>
+            </div>
         </div>
-        <div class="button-container">
-            <button id="event-prev">Previous</button>
-            <button id="event-next">Next</button>
+
+    <br><br><br>
+
+        <div class="column">
+            <h1 style="text-align:center;">Discover Food</h1>
+            <div class="dining-carousel">
+                {% for dining in dining_data.features %}
+                    <div class="dining-carousel-item" data-lat="{{ dining.geometry.coordinates[1] }}" data-lon="{{ dining.geometry.coordinates[0] }}" >
+                        <h2>{{ dining.properties.name }}</h2>
+                        <p>{{ dining.properties.kinds }}</p>
+                        <p>{{ dining.properties.wikidata }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="button-container">
+                <button id="dining-prev">Previous</button>
+                <button id="dining-next">Next</button>
+            </div>
         </div>
-    </div>     
+
+    <br><br><br>
+
+        <div class="column">
+            <h1 style="text-align:center;">Upcoming Events</h1>
+            <div class="event-carousel">
+                {% if events_data %}
+                    {% for event in events_data %}
+                        <div class="event-carousel-item" data-lat="{{ event.venue.latitude }}" data-lon="{{ event.venue.longitude }}">
+                            <h2>{{ event.title }}</h2>
+                            <p>Date: {{ event.datetime_local }}</p>
+                            <p>Venue: {{ event.venue.name }}</p>
+                            <p>City: {{ event.venue.city }}</p>
+                            <p>Performers:</p>
+                                <ul>
+                                    {% for performer in event.performers %}
+                                        <li>{{ performer.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No events found.</p>
+                {% endif %}
+            </div>
+            <div class="button-container">
+                <button id="event-prev">Previous</button>
+                <button id="event-next">Next</button>
+            </div>
+        </div>     
 
     <br><br><br>
  

@@ -199,3 +199,22 @@ button:hover {
     flex-grow: 1;
     margin: 0 20px;
 }
+
+.row {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .column {
+    width: 33.33%; /* You can adjust the width as necessary */
+    padding: 0 10px; /* Adjust the padding to manage the space between columns */
+  }
+  
+  /* Responsive adjustments */
+  @media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+      padding: 0;
+    }
+  }
+  
