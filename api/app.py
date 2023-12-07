@@ -280,6 +280,89 @@ def determine_weather_condition(data):
         return "Rainy", "10d"
 
 
+# database
+def save_user_data(username, country, city, date, attraction_type, food_type):
+    # Connect to database & Save user data
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT userid FROM users WHERE username = %s", (username,))
+            result = cursor.fetchone()
+            if result is None:
+                cursor.execute(
+                    "INSERT INTO users (username) VALUES (%s) RETURNING userid",
+                    (username,),
+                )
+                userid = cursor.fetchone()[0]
+            else:
+                userid = result[0]
+            query = "INSERT INTO userdata (userid, country, city, exploration_date, attraction_preference, dining_preference) VALUES (%s, %s, %s, %s, %s, %s)"
+            cursor.execute(
+                query, (userid, country, city, date, attraction_type, food_type)
+            )
+            connection.commit()
+        except (Exception, psycopg2.Error) as error:
+            logging.error("Error while inserting data into Postgres", error)
+        finally:
+            if connection is not None:
+                connection.close()
+
+
+def enrich_data_with_wikidata(places_data):
+    # Enrich the places or dining data with descriptions from Wikidata
+    if places_data:
+        for feature in places_data.get("features", []):
+            wikidata_id = feature["properties"].get("wikidata")
+            if wikidata_id:
+                (
+                    description_data,
+                    official_websites,
+                    instagram,
+                    twitter,
+                    facebook,
+                    description_error,
+                ) = get_place_information(wikidata_id)
+                if description_error:
+                    feature["properties"]["description"] = None
+                else:
+                    feature["properties"]["description"] = description_data
+                    feature["properties"]["official_websites"] = official_websites
+                    feature["properties"]["instagram"] = instagram
+                    feature["properties"]["twitter"] = twitter
+                    feature["properties"]["facebook"] = facebook
+
+
+def save_data_to_database(username, data, table_name):
+    # Connect to database & Save data to the specified table
+    connection = get_db_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT userid FROM users WHERE username = %s", (username,))
+            result = cursor.fetchone()
+            userid = result[0]
+            if data and "features" in data:
+                for feature in data["features"]:
+                    name = feature["properties"]["name"]
+                    cursor.execute(
+                        f"SELECT id FROM {table_name} WHERE userid = %s AND name = %s",
+                        (userid, name),
+                    )
+                    result = cursor.fetchone()
+                    if not result:
+                        insert_sql = (
+                            f"INSERT INTO {table_name} (userid, name) VALUES (%s, %s)"
+                        )
+                        cursor.execute(insert_sql, (userid, name))
+            connection.commit()
+        except (Exception, psycopg2.Error) as error:
+            logging.error("Error while inserting data into Postgres", error)
+        finally:
+            if connection is not None:
+                connection.close()
+
+
 @app.route("/", methods=["GET", "POST"])
 def form():
     if request.method == "POST":
@@ -344,6 +427,7 @@ def submit_feedback():
 
 @app.route("/get-city-info", methods=["GET"])
 def get_city_info():
+    # Extract request parameters
     username = request.args.get("username")
     country = request.args.get("country")
     city = request.args.get("city")
@@ -351,31 +435,8 @@ def get_city_info():
     attraction_type = request.args.get("attraction_type")
     food_type = request.args.get("food_type")
 
-    # Connect to database & Save user data
-    connection = get_db_connection()
-    if connection:
-        try:
-            cursor = connection.cursor()
-            cursor.execute("SELECT userid FROM users WHERE username = %s", (username,))
-            result = cursor.fetchone()
-            if result is None:
-                cursor.execute(
-                    "INSERT INTO users (username) VALUES (%s) RETURNING userid",
-                    (username,),
-                )
-                userid = cursor.fetchone()[0]
-            else:
-                userid = result[0]
-            query = "INSERT INTO userdata (userid, country, city, exploration_date, attraction_preference, dining_preference) VALUES (%s, %s, %s, %s, %s, %s)"
-            cursor.execute(
-                query, (userid, country, city, date, attraction_type, food_type)
-            )
-            connection.commit()
-        except (Exception, psycopg2.Error) as error:
-            print("Error while inserting data into Postgres", error)
-        finally:
-            if connection is not None:
-                connection.close()
+    # Save user data to the database
+    save_user_data(username, country, city, date, attraction_type, food_type)
 
     # Tourist Attractions
     places_data, lon, lat, places_error = get_places_data(city, attraction_type)
@@ -384,55 +445,11 @@ def get_city_info():
         logging.error(f"Error in getting places data: {places_error}")
         return jsonify({"error": places_error}), 500
 
-    # Enrich the places data with descriptions from Wikidata
-    if places_data:
-        for feature in places_data.get("features", []):
-            wikidata_id = feature["properties"].get("wikidata")
-            if wikidata_id:
-                (
-                    description_data,
-                    official_websites,
-                    instagram,
-                    twitter,
-                    facebook,
-                    description_error,
-                ) = get_place_information(wikidata_id)
-                if description_error:
-                    feature["properties"]["description"] = None
-                else:
-                    feature["properties"]["description"] = description_data
-                    feature["properties"]["official_websites"] = official_websites
-                    feature["properties"]["instagram"] = instagram
-                    feature["properties"]["twitter"] = twitter
-                    feature["properties"]["facebook"] = facebook
+    # Enrich places data with Wikidata information
+    enrich_data_with_wikidata(places_data)
 
-    # Connect to database & Save attractions data
-    connection = get_db_connection()
-    if connection:
-        try:
-            cursor = connection.cursor()
-            cursor.execute("SELECT userid FROM users WHERE username = %s", (username,))
-            result = cursor.fetchone()
-            userid = result[0]
-            if places_data and "features" in places_data:
-                for feature in places_data["features"]:
-                    name = feature["properties"]["name"]
-                    cursor.execute(
-                        "SELECT id FROM attractions WHERE userid = %s AND name = %s",
-                        (userid, name),
-                    )
-                    result = cursor.fetchone()
-                    if not result:
-                        insert_sql = (
-                            "INSERT INTO attractions (userid, name) VALUES (%s, %s)"
-                        )
-                        cursor.execute(insert_sql, (userid, name))
-            connection.commit()
-        except (Exception, psycopg2.Error) as error:
-            print("Error while inserting data into Postgres", error)
-        finally:
-            if connection is not None:
-                connection.close()
+    # Save attractions data to the database
+    save_data_to_database(username, places_data, "attractions")
 
     # Dining
     dining_data, lon, lat, dining_error = get_dining_data(city, food_type)
@@ -440,55 +457,11 @@ def get_city_info():
         logging.error(f"Error in getting dining data: {dining_error}")
         return jsonify({"error": dining_error}), 500
 
-    # Enrich the dining data with descriptions from Wikidata
-    if dining_data:
-        for feature in dining_data.get("features", []):
-            wikidata_id = feature["properties"].get("wikidata")
-            if wikidata_id:
-                (
-                    description_data,
-                    official_websites,
-                    instagram,
-                    twitter,
-                    facebook,
-                    description_error,
-                ) = get_place_information(wikidata_id)
-                if description_error:
-                    feature["properties"]["description"] = None
-                else:
-                    feature["properties"]["description"] = description_data
-                    feature["properties"]["official_websites"] = official_websites
-                    feature["properties"]["instagram"] = instagram
-                    feature["properties"]["twitter"] = twitter
-                    feature["properties"]["facebook"] = facebook
+    # Enrich dining data with Wikidata information
+    enrich_data_with_wikidata(dining_data)
 
-    # Connect to database & Save dinings data
-    connection = get_db_connection()
-    if connection:
-        try:
-            cursor = connection.cursor()
-            cursor.execute("SELECT userid FROM users WHERE username = %s", (username,))
-            result = cursor.fetchone()
-            userid = result[0]
-            if dining_data and "features" in dining_data:
-                for feature in dining_data["features"]:
-                    name = feature["properties"]["name"]
-                    cursor.execute(
-                        "SELECT id FROM dinings WHERE userid = %s AND name = %s",
-                        (userid, name),
-                    )
-                    result = cursor.fetchone()
-                    if not result:
-                        insert_sql = (
-                            "INSERT INTO dinings (userid, name) VALUES (%s, %s)"
-                        )
-                        cursor.execute(insert_sql, (userid, name))
-            connection.commit()
-        except (Exception, psycopg2.Error) as error:
-            print("Error while inserting data into Postgres", error)
-        finally:
-            if connection is not None:
-                connection.close()
+    # Save dining data to the database
+    save_data_to_database(username, dining_data, "dinings")
 
     # Upcoming Events
     events_data, events_error = get_seatgeek_events(lat, lon, date)
@@ -496,25 +469,36 @@ def get_city_info():
         logging.error(f"Error in getting events data: {events_error}")
         return jsonify({"error": events_error}), 500
 
-    # Connect to database & Save events data
-    connection = get_db_connection()
-    if connection:
-        try:
-            cursor = connection.cursor()
-            cursor.execute("SELECT userid FROM users WHERE username = %s", (username,))
-            result = cursor.fetchone()
-            userid = result[0]
-            if events_data:
-                for event in events_data:
-                    title = event["title"]
-                    insert_sql = "INSERT INTO events (userid, title) VALUES (%s, %s)"
-                    cursor.execute(insert_sql, (userid, title))
-            connection.commit()
-        except (Exception, psycopg2.Error) as error:
-            print("Error while inserting data into Postgres", error)
-        finally:
-            if connection is not None:
-                connection.close()
+    # Save events data to the database
+    save_data_to_database(username, events_data, "events")
+
+    # Pass shared data to the template
+    shared_data = {
+        "username": username,
+        "country": country,
+        "city": city,
+        "date": date,
+    }
+
+    return render_template(
+        "results.html",
+        places_data=places_data,
+        dining_data=dining_data,
+        events_data=events_data,
+        lon=lon,
+        lat=lat,
+        shared_data=shared_data,
+    )
+
+
+@app.route("/get-weather-info", methods=["GET"])
+def get_weather_info():
+    # Extract request parameters
+    username = request.args.get("username")
+    country = request.args.get("country")
+    city = request.args.get("city")
+    date = request.args.get("date")
+    attraction_type = request.args.get("attraction_type")
 
     # Weather
     min_temp = max_temp = None
@@ -524,13 +508,19 @@ def get_city_info():
     sunset_time = None
     golden_hour_time = None  # Initialize sunrise, sunset, and golden hour times
     airquality_forecast_data = {}
-    processed_aqi_data = []
 
+    # Shared function to get places data
+    places_data, lon, lat, places_error = get_places_data(city, attraction_type)
+
+    if places_error:
+        logging.error(f"Error in getting places data: {places_error}")
+        return jsonify({"error": places_error}), 500
+
+    # Additional logic for Weather
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
         lat, lon = location[1], location[0]
-        start = 1699228800
-        end = 699574400
+
         # Sunrisesunset
         sunrisesunset_data, sunrisesunset_error = get_sunrisesunset_data(lat, lon, date)
         if sunrisesunset_error:
@@ -582,22 +572,25 @@ def get_city_info():
             )
             return jsonify({"error": airquality_forecast_error}), 500
 
+    # Pass shared data to the template
+    shared_data = {
+        "username": username,
+        "country": country,
+        "city": city,
+        "date": date,
+    }
+
     return render_template(
         "results.html",
         places_data=places_data,
-        dining_data=dining_data,
-        events_data=events_data,
         weather_data=weather_data,
         sunrise_time=sunrise_time,
         sunset_time=sunset_time,
         golden_hour_time=golden_hour_time,
         airquality_forecast=airquality_forecast_data,
+        shared_data=shared_data,
         lon=lon,
         lat=lat,
-        country=country,
-        username=username,
-        city=city,
-        date=date,
     )
 
 
