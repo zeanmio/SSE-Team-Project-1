@@ -2,11 +2,9 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from datetime import datetime
 import requests, logging, psycopg2, os
 import numpy as np
-from concurrent.futures import ThreadPoolExecutor
 
 
 app = Flask(__name__)
-executor = ThreadPoolExecutor()
 
 # SQL
 DB_HOST = "db.doc.ic.ac.uk"
@@ -473,6 +471,34 @@ def get_city_info():
     # Save events data to the database
     save_data_to_database(username, events_data, "events")
 
+    # Pass shared data to the template
+    shared_data = {
+        "username": username,
+        "country": country,
+        "city": city,
+        "date": date,
+    }
+
+    return render_template(
+        "results.html",
+        places_data=places_data,
+        dining_data=dining_data,
+        events_data=events_data,
+        lon=lon,
+        lat=lat,
+        shared_data=shared_data,
+    )
+
+
+@app.route("/get-weather-info", methods=["GET"])
+def get_weather_info():
+    # Extract request parameters
+    username = request.args.get("username")
+    country = request.args.get("country")
+    city = request.args.get("city")
+    date = request.args.get("date")
+    attraction_type = request.args.get("attraction_type")
+
     # Weather
     min_temp = max_temp = None
     weather_data = {}  # Initialize weather_data as an empty dictionary
@@ -481,13 +507,19 @@ def get_city_info():
     sunset_time = None
     golden_hour_time = None  # Initialize sunrise, sunset, and golden hour times
     airquality_forecast_data = {}
-    processed_aqi_data = []
 
+    # Shared function to get places data
+    places_data, lon, lat, places_error = get_places_data(city, attraction_type)
+
+    if places_error:
+        logging.error(f"Error in getting places data: {places_error}")
+        return jsonify({"error": places_error}), 500
+
+    # Additional logic for Weather
     if places_data and "features" in places_data:
         location = places_data["features"][0]["geometry"]["coordinates"]
         lat, lon = location[1], location[0]
-        start = 1699228800
-        end = 699574400
+
         # Sunrisesunset
         sunrisesunset_data, sunrisesunset_error = get_sunrisesunset_data(lat, lon, date)
         if sunrisesunset_error:
@@ -539,22 +571,25 @@ def get_city_info():
             )
             return jsonify({"error": airquality_forecast_error}), 500
 
+    # Pass shared data to the template
+    shared_data = {
+        "username": username,
+        "country": country,
+        "city": city,
+        "date": date,
+    }
+
     return render_template(
-        "results.html",
+        "weather.html",
         places_data=places_data,
-        dining_data=dining_data,
-        events_data=events_data,
         weather_data=weather_data,
         sunrise_time=sunrise_time,
         sunset_time=sunset_time,
         golden_hour_time=golden_hour_time,
         airquality_forecast=airquality_forecast_data,
+        shared_data=shared_data,
         lon=lon,
         lat=lat,
-        country=country,
-        username=username,
-        city=city,
-        date=date,
     )
 
 

@@ -21,75 +21,10 @@
         </div>
         <div class="button-container">
                 <button onclick="redirectToIndex()">Start a New Exploration</button>
+                <button onclick="redirectToWeather()">View Weather Information</button>
         </div>
         <br><br>
     <div class="container">
-        <br>
-        <div class="section">
-            <h1 style="text-align:center;">Weather</h1>
-            <div class="weather-columns">
-                <!-- First Column -->
-                <div class="first-weather-column">
-                        <div class="temperature-range">
-                            <p>
-                                <span class="min-temp">{{ weather_data.min_temp }}°C</span>
-                                <span class="temp-divider"> - </span>         
-                                <span class="max-temp">{{ weather_data.max_temp }}°C</span>
-                            </p>
-                        </div>
-                    <div class="weather-condition">
-                        {% if weather_data.weather_condition %}
-                            <p>
-                                {% if weather_data.weather_icon %}
-                                    <img src="https://openweathermap.org/img/wn/{{ weather_data.weather_icon }}@2x.png" alt="Weather Icon" class="weather-icon">
-                                {% endif %}
-                                {{ weather_data.weather_condition }}
-                            </p>
-                        {% endif %}
-                    </div>
-                </div>
-            
-                <!-- Second Column -->
-                <div class="second-weather-column">
-                    {% if weather_data.wind and weather_data.wind.max %}
-                        <p class="wind-info">
-                            <img src="/static/images/wind.png" class="icon">
-                            Wind: {{ weather_data.wind.max.speed }} mph
-                        </p>
-                    {% endif %} 
-                    {% if weather_data.humidity and weather_data.humidity.afternoon %}
-                        <p class="humidity-info">
-                            <img src="/static/images/humidity.png" class="icon">
-                            Humidity: {{ weather_data.humidity.afternoon }} %
-                        </p>
-                    {% endif %} 
-                    {% if sunrise_time and sunset_time and golden_hour_time %}
-                        <p>
-                            <img src="/static/images/sunrise.png" class="icon">
-                            Sunrise: {{ sunrise_time }}
-                        </p>
-                        <p>
-                            <img src="/static/images/sunset.png" class="icon">
-                            Sunset: {{ sunset_time }}                       
-                        </p>
-                        <p>
-                            <img src="/static/images/golden_hour.png" class="icon">
-                            Golden hour: {{ golden_hour_time }}
-                        </p>
-                    {% endif %}
-                </div>
-
-                    <!-- Third Column -->
-                    <div class="third-weather-column">
-                        <!-- <h2>Air Quality Index</h2> -->
-                        <p style="text-align: center;">Air Quality Forecast for the Next 4 Days</p>
-                        <canvas id="airQualityChart"></canvas> 
-                    </div>
-            </div>
-        </div>
-
-        <br><br>
-    
     <div class="section" id="map"></div>
 
     <div class="row">
@@ -220,9 +155,13 @@
         function redirectToIndex() {
             window.location.href = '/';
         }
+        function redirectToWeather() {
+        window.location.href = '/get-weather-info?username={{ shared_data.username }}'
+            + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
+            + '&date={{ shared_data.date }}&attraction_type={{ request.args.get("attraction_type") }}';
+    }
     </script>
     <script src="/static/js/event_script.js"></script>
-    <script src="/static/js/weather_script.js"></script>
     <script src="/static/js/map_script.js"></script>
 </body>
 </html>
