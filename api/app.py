@@ -440,6 +440,28 @@ def get_city_info():
         logging.error(f"Error in getting dining data: {dining_error}")
         return jsonify({"error": dining_error}), 500
 
+    # Enrich the dining data with descriptions from Wikidata
+    if dining_data:
+        for feature in dining_data.get("features", []):
+            wikidata_id = feature["properties"].get("wikidata")
+            if wikidata_id:
+                (
+                    description_data,
+                    official_websites,
+                    instagram,
+                    twitter,
+                    facebook,
+                    description_error,
+                ) = get_place_information(wikidata_id)
+                if description_error:
+                    feature["properties"]["description"] = None
+                else:
+                    feature["properties"]["description"] = description_data
+                    feature["properties"]["official_websites"] = official_websites
+                    feature["properties"]["instagram"] = instagram
+                    feature["properties"]["twitter"] = twitter
+                    feature["properties"]["facebook"] = facebook
+
     # Connect to database & Save dinings data
     connection = get_db_connection()
     if connection:
