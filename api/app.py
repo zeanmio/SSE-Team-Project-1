@@ -443,7 +443,14 @@ def get_city_info():
     places_future = executor.submit(get_places_data, city, attraction_type)
 
     # Wait for the future to complete
-    places_data, places_error = places_future.result()
+    places_data = places_future.result()
+
+    # Check for errors in the future
+    places_error = None
+    try:
+        places_data.result()  # This will raise an exception if there was an error
+    except Exception as e:
+        places_error = str(e)
 
     # Check for errors in the future
     if places_error:
@@ -466,37 +473,58 @@ def get_city_info():
     airquality_future = executor.submit(get_airquality_forecast_data, lat, lon)
 
     # Wait for all futures to complete
-    concurrent.futures.wait(
-        [
-            dining_future,
-            events_future,
-            weather_future,
-            sunrisesunset_future,
-            airquality_future,
-        ]
-    )
-
-    # Retrieve results
-    dining_data, dining_error = dining_future.result()
-    events_data, events_error = events_future.result()
-    weather_data, weather_error = weather_future.result()
-    sunrisesunset_data, sunrisesunset_error = sunrisesunset_future.result()
-    airquality_forecast_data, airquality_forecast_error = airquality_future.result()
+    dining_data = dining_future.result()
+    events_data = events_future.result()
+    weather_data = weather_future.result()
+    sunrisesunset_data = sunrisesunset_future.result()
+    airquality_forecast_data = airquality_future.result()
 
     # Check for errors in any of the futures
-    if any(
-        [
-            dining_error,
-            events_error,
-            weather_error,
-            sunrisesunset_error,
-            airquality_forecast_error,
-        ]
-    ):
+    errors = {
+        "dining": None,
+        "events": None,
+        "weather": None,
+        "sunrisesunset": None,
+        "airquality_forecast": None,
+    }
+
+    # Handle errors for dining_data
+    try:
+        dining_data.result()  # This will raise an exception if there was an error
+    except Exception as e:
+        errors["dining"] = str(e)
+
+    # Handle errors for events_data
+    try:
+        events_data.result()  # This will raise an exception if there was an error
+    except Exception as e:
+        errors["events"] = str(e)
+
+    # Handle errors for weather_data
+    try:
+        weather_data.result()  # This will raise an exception if there was an error
+    except Exception as e:
+        errors["weather"] = str(e)
+
+    # Handle errors for sunrisesunset_data
+    try:
+        sunrisesunset_data.result()  # This will raise an exception if there was an error
+    except Exception as e:
+        errors["sunrisesunset"] = str(e)
+
+    # Handle errors for airquality_forecast_data
+    try:
+        airquality_forecast_data.result()  # This will raise an exception if there was an error
+    except Exception as e:
+        errors["airquality_forecast"] = str(e)
+
+    # Check for errors in any of the futures
+    if any(errors.values()):
         # Handle errors, perhaps return an error response or log them
-        logging.error(
-            f"Error in one of the futures: {dining_error}, {events_error}, {weather_error}, {sunrisesunset_error}, {airquality_forecast_error}"
+        error_messages = ", ".join(
+            [f"{key}: {value}" for key, value in errors.items() if value]
         )
+        logging.error(f"Error in one of the futures: {error_messages}")
         return jsonify({"error": "One or more errors occurred"}), 500
 
     # Extract sunrise and sunset times from the API response
@@ -516,12 +544,6 @@ def get_city_info():
     if golden_hour_str:
         golden_hour_datetime = datetime.strptime(golden_hour_str, "%I:%M:%S %p")
         golden_hour_time = golden_hour_datetime.strftime("%I:%M %p")
-
-    # Extract weather data from the API response
-    weather_data, weather_error = get_weather_data(lat, lon, date)
-    if weather_error:
-        logging.error(f"Error in getting weather data: {weather_error}")
-        return jsonify({"error": weather_error}), 500
 
     min_temp = round(weather_data["temperature"]["min"])
     max_temp = round(weather_data["temperature"]["max"])
