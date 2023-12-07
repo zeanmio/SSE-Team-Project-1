@@ -19,11 +19,23 @@ var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 var ui = H.ui.UI.createDefault(map, defaultLayers);
 
 var currentPlaceMarker = null;
+
 var currentDiningMarker = null;
+
 var currentEventMarker = null;
 
 var lat = {{ lat }};
+
 var lon = {{ lon }};
+
+var placeIcon = new H.map.Icon("https://cdn0.iconfinder.com/data/icons/citycons/150/Citycons_building-1024.png", 
+{size: {w: 40, h: 40}});
+
+var diningIcon = new H.map.Icon("https://cdn1.iconfinder.com/data/icons/minimal-fruit/128/apple-1024.png", 
+{size: {w: 40, h: 40}});
+
+var eventIcon = new H.map.Icon("https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/microphone-1024.png", 
+{size: {w: 40, h: 40}});
 
 function moveMapToCity(map){
     map.setCenter({lat: lat, lng: lon});
@@ -34,23 +46,10 @@ function addPlaceMarker() {
     if (currentPlaceMarker) {
         map.removeObject(currentPlaceMarker);
     }
-
     const currentPlace = placeItems[currentPlaceIndex];
     const lat = parseFloat(currentPlace.dataset.lat);
     const lng = parseFloat(currentPlace.dataset.lon);
-
-    currentPlaceMarker = new H.map.Marker({lat: lat, lng: lng});
-    const infoContent = `<div>${currentPlace.dataset.name}</div>`; // Assuming you have a 'name' attribute in your place dataset
-    currentPlaceMarker.setData(infoContent);
-
-    // Add 'tap' event listener to the marker to open an info bubble
-    currentPlaceMarker.addEventListener('tap', function (evt) {
-        var bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
-            content: evt.target.getData()
-        });
-        ui.addBubble(bubble);
-    }, false);
-
+    currentPlaceMarker = new H.map.Marker({lat: lat, lng: lng}, { icon: placeIcon });
     map.addObject(currentPlaceMarker);
 }
 
@@ -58,23 +57,10 @@ function addDiningMarker() {
     if (currentDiningMarker) {
         map.removeObject(currentDiningMarker);
     }
-
     const currentDining = diningItems[currentDiningIndex];
     const lat = parseFloat(currentDining.dataset.lat);
     const lng = parseFloat(currentDining.dataset.lon);
-
-    currentDiningMarker = new H.map.Marker({lat: lat, lng: lng});
-    const infoContent = `<div>${currentDining.dataset.name}</div>`; // Assuming you have a 'name' attribute in your dining dataset
-    currentDiningMarker.setData(infoContent);
-
-    // Add 'tap' event listener to the marker to open an info bubble
-    currentDiningMarker.addEventListener('tap', function (evt) {
-        var bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
-            content: evt.target.getData()
-        });
-        ui.addBubble(bubble);
-    }, false);
-
+    currentDiningMarker = new H.map.Marker({lat: lat, lng: lng}, { icon: diningIcon });
     map.addObject(currentDiningMarker);
 }
 
@@ -82,25 +68,13 @@ function addEventMarker() {
     if (currentEventMarker) {
         map.removeObject(currentEventMarker);
     }
-
     const currentEvent = eventItems[currentEventIndex];
     const lat = parseFloat(currentEvent.dataset.lat);
     const lng = parseFloat(currentEvent.dataset.lon);
-
-    currentEventMarker = new H.map.Marker({lat: lat, lng: lng});
-    const infoContent = `<div>${currentEvent.dataset.name}</div>`; // Assuming you have a 'name' attribute in your event dataset
-    currentEventMarker.setData(infoContent);
-
-    // Add 'tap' event listener to the marker to open an info bubble
-    currentEventMarker.addEventListener('tap', function (evt) {
-        var bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
-            content: evt.target.getData()
-        });
-        ui.addBubble(bubble);
-    }, false);
-
+    currentEventMarker = new H.map.Marker({lat: lat, lng: lng}, { icon: eventIcon });
     map.addObject(currentEventMarker);
 }
+
 
 function updateMapMarkers() {
     if (currentMarkerType === 'attractions') {
