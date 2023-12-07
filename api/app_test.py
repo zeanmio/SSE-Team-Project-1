@@ -29,7 +29,7 @@ class AppTestCase(unittest.TestCase):
         mock_db_connection.return_value = MagicMock()
 
         mock_places_data.return_value = ([], 0, 0, None)
-        mock_dining_data.return_value = ([], 0, 0, None)
+        mock_dining_data.return_value = ([], None)
         mock_events_data.return_value = ([], None)
         mock_place_information.return_value = (
             "Example Description",
