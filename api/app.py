@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from datetime import datetime
-import requests, logging, psycopg2, os
+import requests, logging, os
+import psycopg2 as psycopg
 import numpy as np
 
 
@@ -16,7 +17,7 @@ DB_PORT = "5432"
 
 def get_db_connection():
     try:
-        connection = psycopg2.connect(
+        connection = psycopg.connect(
             user=DB_USER,
             password=DB_PASSWORD,
             host=DB_HOST,
@@ -24,7 +25,7 @@ def get_db_connection():
             database=DB_NAME,
         )
         return connection
-    except (Exception, psycopg2.Error) as error:
+    except (Exception, psycopg.Error) as error:
         print("Error while connecting to PostgreSQL", error)
         return None
 
@@ -301,7 +302,7 @@ def save_user_data(username, country, city, date, attraction_type, food_type):
                 query, (userid, country, city, date, attraction_type, food_type)
             )
             connection.commit()
-        except (Exception, psycopg2.Error) as error:
+        except (Exception, psycopg.Error) as error:
             logging.error("Error while inserting data into Postgres", error)
         finally:
             if connection is not None:
@@ -355,7 +356,7 @@ def save_data_to_database(username, data, table_name):
                         )
                         cursor.execute(insert_sql, (userid, name))
             connection.commit()
-        except (Exception, psycopg2.Error) as error:
+        except (Exception, psycopg.Error) as error:
             logging.error("Error while inserting data into Postgres", error)
         finally:
             if connection is not None:
@@ -415,7 +416,7 @@ def submit_feedback():
                 connection.commit()
             else:
                 return "Username not found"
-        except (Exception, psycopg2.Error) as error:
+        except (Exception, psycopg.Error) as error:
             print("Error while inserting data into PostgreSQL", error)
         finally:
             if connection is not None:
