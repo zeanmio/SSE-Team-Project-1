@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Explorer Results</title>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" /> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='results_style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script>window.ENV_VARIABLE = 'developer.here.com'</script>
+</head>
+
+<body>
+        <br><br>
+        <div class="header-text">
+            <h2 style="text-align: center;">Exploring {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
+        </div>
+        <div class="button-container">
+                <button onclick="redirectToIndex()">Start a New Exploration</button>
+                <button onclick="redirectToWeather()">View Weather Information</button>
+                <button onclick="redirectToPlaces()">Explore Attractions</button>
+                <button onclick="redirectToDining()">Explore Dining Options</button>
+        </div>
+        <br><br>
+    <div class="container">
+    <div class="section" id="map"></div>
+
+        <div class="column">
+            <h1 style="text-align:center;">Upcoming Events</h1>
+            <div class="event-carousel">
+                {% if events_data %}
+                    {% for event in events_data %}
+                        <div class="event-carousel-item" data-name="{{ event.title }}" data-lat="{{ event.venue.latitude }}" data-lon="{{ event.venue.longitude }}">
+                            <h2>{{ event.title }}</h2>
+                            <p>Date: {{ event.datetime_local }}</p>
+                            <p>Venue: {{ event.venue.name }}</p>
+                            <p>City: {{ event.venue.city }}</p>
+                            <p>Performers:</p>
+                                <ul>
+                                    {% for performer in event.performers %}
+                                        <li>{{ performer.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No events found.</p>
+                {% endif %}
+            </div>
+            <div class="button-container">
+                <button id="event-prev">Previous</button>
+                <button id="event-next">Next</button>
+            </div>
+        </div>     
+
+    <br><br><br>
+
+    <script>
+        function redirectToIndex() {
+            window.location.href = '/';
+        }
+        function redirectToWeather() {
+        window.location.href = '/get-weather-info?username={{ shared_data.username }}'
+            + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
+            + '&date={{ shared_data.date }}&attraction_type={{ request.args.get("attraction_type") }}';
+    }
+        function redirectToPlaces() {
+        window.location.href = '/get-dining-info?username={{ shared_data.username }}'
+            + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
+            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type}}'
+            + '&food_type={{ shared_data.food_type }}';
+    }  
+        function redirectToDining() {
+        window.location.href = '/get-dining-info?username={{ shared_data.username }}'
+            + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
+            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type}}'
+            + '&food_type={{ shared_data.food_type }}';
+    }  
+    </script>
+    <script src="/static/js/event_script.js"></script>
+    <script src="/static/js/map_script.js"></script>
+</body>
+</html>

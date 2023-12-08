@@ -163,7 +163,7 @@ def get_dining_data(city, food_type):
 
     dining_data = dining_response.json()
 
-    return dining_data, None
+    return dining_data, lon, lat, None
 
 
 # Upcoming Events
@@ -425,8 +425,8 @@ def submit_feedback():
     return redirect(url_for("feedback"))
 
 
-@app.route("/get-city-info", methods=["GET"])
-def get_city_info():
+@app.route("/get-places-info", methods=["GET"])
+def get_places_info():
     # Extract request parameters
     username = request.args.get("username")
     country = request.args.get("country")
@@ -451,8 +451,37 @@ def get_city_info():
     # Save attractions data to the database
     save_data_to_database(username, places_data, "attractions")
 
+    # Pass shared data to the template
+    shared_data = {
+        "username": username,
+        "country": country,
+        "city": city,
+        "date": date,
+        "attraction_type": attraction_type,
+        "food_type": food_type,
+    }
+
+    return render_template(
+        "results.html",
+        places_data=places_data,
+        lon=lon,
+        lat=lat,
+        shared_data=shared_data,
+    )
+
+
+@app.route("/get-dining-info", methods=["GET"])
+def get_dining_info():
+    # Extract request parameters
+    username = request.args.get("username")
+    country = request.args.get("country")
+    city = request.args.get("city")
+    date = request.args.get("date")
+    attraction_type = requests.args.get("attraction_type")
+    food_type = request.args.get("food_type")
+
     # Dining
-    dining_data, dining_error = get_dining_data(city, food_type)
+    dining_data, lon, lat, dining_error = get_dining_data(city, food_type)
     if dining_error:
         logging.error(f"Error in getting dining data: {dining_error}")
         return jsonify({"error": dining_error}), 500
@@ -462,6 +491,36 @@ def get_city_info():
 
     # Save dining data to the database
     save_data_to_database(username, dining_data, "dinings")
+
+    # Pass shared data to the template
+    shared_data = {
+        "username": username,
+        "country": country,
+        "city": city,
+        "date": date,
+        "food_type": food_type,
+    }
+
+    return render_template(
+        "dining.html",
+        dining_data=dining_data,
+        lon=lon,
+        lat=lat,
+        shared_data=shared_data,
+    )
+
+
+@app.route("/get-events-info", methods=["GET"])
+def get_events_info():
+    # Extract request parameters
+    username = request.args.get("username")
+    country = request.args.get("country")
+    city = request.args.get("city")
+    date = request.args.get("date")
+    attraction_type = request.args.get("attraction_type")
+    food_type = request.args.get("food_type")
+    lat = request.args.get("lat")
+    lon = request.args.get("lon")
 
     # Upcoming Events
     events_data, events_error = get_seatgeek_events(lat, lon, date)
@@ -478,15 +537,13 @@ def get_city_info():
         "country": country,
         "city": city,
         "date": date,
+        "attraction_type": attraction_type,
+        "food_type": food_type,
     }
 
     return render_template(
-        "results.html",
-        places_data=places_data,
-        dining_data=dining_data,
+        "events.html",
         events_data=events_data,
-        lon=lon,
-        lat=lat,
         shared_data=shared_data,
     )
 

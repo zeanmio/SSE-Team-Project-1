@@ -22,43 +22,42 @@
         <div class="button-container">
                 <button onclick="redirectToIndex()">Start a New Exploration</button>
                 <button onclick="redirectToWeather()">View Weather Information</button>
-                <button onclick="redirectToDining()">Explore Dining Options</button>
+                <button onclick="redirectToPlaces()">Explore Attractions</button>
                 <button onclick="redirectToEvents()">View Upcoming Events</button>
         </div>
         <br><br>
     <div class="container">
     <div class="section" id="map"></div>
 
-    <div class="row">
         <div class="column">
-            <h1 style="text-align:center;">Discover Attractions</h1>
-                <div class="place-carousel">
-                {% for place in places_data.features %}
-                    <div class="place-carousel-item" data-name="{{ place.properties.name }}" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
-                        <h2>{{ place.properties.name }}</h2>
-                    {% if place.properties.description %}
-                        <p>{{ place.properties.description }}</p>
+            <h1 style="text-align:center;">Discover Food</h1>
+            <div class="dining-carousel">
+                {% for dining in dining_data.features %}
+                    <div class="dining-carousel-item" data-name="{{ dining.properties.name }}" data-lat="{{ dining.geometry.coordinates[1] }}" data-lon="{{ dining.geometry.coordinates[0] }}" >
+                        <h2>{{ dining.properties.name }}</h2>
+                    {% if dining.properties.description %}
+                        <p>{{ dining.properties.description }}</p>
                     {% endif %}
-                    {% if place.properties.instagram %}
+                    {% if dining.properties.instagram %}
                         <p>
                             <img src="/static/images/instagram.png" class="icon">
-                            Instagram: {{ place.properties.instagram }}
+                            Instagram: {{ dining.properties.instagram }}
                         </p>
                     {% endif %}
-                    {% if place.properties.twitter %}
+                    {% if dining.properties.twitter %}
                         <p>
                             <img src="/static/images/twitter.png" class="icon">
-                            X: {{ place.properties.twitter }}
+                            X: {{ dining.properties.twitter }}
                         </p>
                     {% endif %}
-                    {% if place.properties.facebook %}
+                    {% if dining.properties.facebook %}
                         <p>
                             <img src="/static/images/facebook.png" class="icon">
-                            Facebook: {{ place.properties.facebook }}
+                            Facebook: {{ dining.properties.facebook }}
                         </p>
                     {% endif %}
-                    {% if place.properties.official_websites %}
-                        {% for website in place.properties.official_websites %}
+                    {% if dining.properties.official_websites %}
+                        {% for website in dining.properties.official_websites %}
                             <a href="{{ website }}" target="_blank">
                                 <button type="button">Official Website</button>
                             </a>
@@ -68,10 +67,12 @@
                 {% endfor %}
             </div>
             <div class="button-container">
-                <button id="place-prev">Previous</button>
-                <button id="place-next">Next</button>
+                <button id="dining-prev">Previous</button>
+                <button id="dining-next">Next</button>
             </div>
         </div>
+
+    <br><br><br>
 
     <script>
         function redirectToIndex() {
@@ -80,10 +81,10 @@
         function redirectToWeather() {
         window.location.href = '/get-weather-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
-            + '&date={{ shared_data.date }}&attraction_type={{ attraction_type }}';
+            + '&date={{ shared_data.date }}&attraction_type={{ request.args.get("attraction_type") }}';
     }
-        function redirectToDining() {
-        window.location.href = '/get-dining-info?username={{ shared_data.username }}'
+        function redirectToPlaces() {
+        window.location.href = '/get-places-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
             + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type}}'
             + '&food_type={{ shared_data.food_type }}';
@@ -93,7 +94,7 @@
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
             + '&date={{ shared_data.date }}&attraction_type={{ shared_data.food_type }}'
             + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
-    }     
+    }       
     </script>
     <script src="/static/js/event_script.js"></script>
     <script src="/static/js/map_script.js"></script>
