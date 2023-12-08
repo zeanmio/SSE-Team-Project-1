@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}">
     <title>City Explorer</title>
 </head>
+
 <body>
 
 <div class="navbar">
@@ -30,7 +31,7 @@
         <input type="text" id="username" name="username" placeholder="Choose a cool explorer name" value="{{username}}">
         
         <div class="options">
-            <button type="button" id="btn_new_explore">Start A New Exploration</button>
+            <button type="button" id="btn_new_explore">Start New Exploration</button>
             <button type="button" id="btn_retrieve_history">Retrieve History</button>
         </div>
 
@@ -127,8 +128,8 @@
         let historyHtml = '<h2>Exploration History</h2><ul>';
 
         globalUserData.slice(startIndex, startIndex + 5).forEach(function(record) {
-            var link = `/get-places-info?country=${encodeURIComponent(record.country)}&city=${encodeURIComponent(record.city)}&date=${encodeURIComponent(record.date)}&attraction_type=${encodeURIComponent(record.attraction_type)}&food_type=${encodeURIComponent(record.food_type)}`;
-            historyHtml += `<li><a href="${link}"><strong>${record.city}</strong>, <strong>${record.country}</strong>, ${record.date}. Attractions: ${record.attraction_type}. Dining: ${record.food_type}</a></li>.`;
+            var link = `/get-places-info?username=${encodeURIComponent(username)}&country=${encodeURIComponent(record.country)}&city=${encodeURIComponent(record.city)}&date=${encodeURIComponent(record.date)}&attraction_type=${encodeURIComponent(record.attraction_type)}&food_type=${encodeURIComponent(record.food_type)}`;
+            historyHtml += `<li><a href="${link}"><strong>${record.city}</strong>, <strong>${record.country}</strong>, ${record.date}. Attractions: ${record.attraction_type}. Dining: ${record.food_type}.</a></li>`;
         });
 
         historyHtml += '</ul>';
@@ -165,8 +166,6 @@
         }
     }
 
-
 </script>
-
 </body>
 </html>
