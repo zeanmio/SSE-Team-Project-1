@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>City Explorer Results</title>
+    <title>Events</title>
     <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" /> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/results_style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,7 +17,7 @@
 <body>
         <br><br>
         <div class="header-text">
-            <h2 style="text-align: center;">Exploring {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
+            <h2 style="text-align: center;">Upcoming Events in {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
         </div>
         <div class="button-container">
             <button onclick="redirectToWeather()">Weather Information</button>
@@ -26,9 +26,10 @@
             <button onclick="redirectToIndex()">Start New Exploration</button>
         </div>
         <br><br>
-    <div class="container">
+
     <div class="section" id="map"></div>
 
+    <div class="container">
         <div class="column">
             <h1 style="text-align:center;">Upcoming Events</h1>
             <div class="event-carousel">
@@ -55,13 +56,14 @@
                 <button id="event-prev">Previous</button>
                 <button id="event-next">Next</button>
             </div>
-        </div>     
+        </div> 
+    </div>    
 
     <br><br><br>
 
     <script>
-        var lat = {{ lat }};
-        var lon = {{ lon }};
+        var lat = "{{ lat }}";
+        var lon = "{{ lon }}";
 
         function redirectToIndex() {
             window.location.href = '/';

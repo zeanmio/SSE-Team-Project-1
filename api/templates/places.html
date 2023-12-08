@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attraction Information</title>
+    <title>Attractions</title>
     <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" /> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/results_style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,7 +17,7 @@
 <body>
         <br><br>
         <div class="header-text">
-            <h2 style="text-align: center;">Exploring {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
+            <h2 style="text-align: center;">Recommended Attractions in {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
         </div>
         <div class="button-container">
             <button onclick="redirectToWeather()">Weather Information</button>
@@ -76,8 +76,8 @@
         </div>
     </div>
     <script>
-        var lat = {{ lat }};
-        var lon = {{ lon }};
+        var lat = lat;
+        var lon = lon;
         function redirectToIndex() {
             window.location.href = '/';
         }

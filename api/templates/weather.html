@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Information</title>
+    <title>Weather</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/results_style.css') }}">
 </head>
 
@@ -85,10 +85,10 @@
         </div>
     </div>
     <script>
-        var airquality_forecast = {{ airquality_forecast | tojson }};
+        var airquality_forecast = airquality_forecast | tojson;
 
-            var lat = {{ lat }};
-            var lon = {{ lon }};
+            var lat = lat;
+            var lon = lon;
             function redirectToIndex() {
                 window.location.href = '/';
             }
