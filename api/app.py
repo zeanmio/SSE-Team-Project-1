@@ -642,6 +642,7 @@ def get_weather_info():
     city = request.args.get("city")
     date = request.args.get("date")
     attraction_type = request.args.get("attraction_type")
+    food_type = request.args.get("food_type")
 
     # DEBUG STATEMENTS
     print("-----------inside get_weather_info-----------")
@@ -650,6 +651,7 @@ def get_weather_info():
     print("city: ", city)
     print("date: ", date)
     print("attraction_type: ", attraction_type)
+    print("food_type: ", food_type)
 
     # Weather
     min_temp = max_temp = None
@@ -729,6 +731,8 @@ def get_weather_info():
         "country": country,
         "city": city,
         "date": date,
+        "attraction_type": attraction_type,
+        "food_type": food_type,
     }
 
     return render_template(
