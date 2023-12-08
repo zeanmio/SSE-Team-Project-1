@@ -87,13 +87,13 @@
         function redirectToDining() {
         window.location.href = '/get-dining-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
-            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type}}'
+            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
             + '&food_type={{ shared_data.food_type }}';
     }    
         function redirectToEvents() {
         window.location.href = '/get-event-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
-            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.food_type }}'
+            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
             + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
     }     
     </script>
