@@ -1,7 +1,3 @@
-var airquality_forecast = {{ airquality_forecast | tojson }};
-var lat = {{ lat }};
-var lon = {{ lon }};
-
 function renderAqiChart(airqualityData) {
     const labels = airqualityData.map(forecast => {
         let date = new Date(forecast.time * 1000);

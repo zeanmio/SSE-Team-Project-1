@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-import requests, logging, os
+import requests, logging, os, urllib.parse
 import psycopg2 as psycopg
 import numpy as np
 
@@ -50,16 +50,31 @@ BASE_URLS = {
 
 # Tourist Attractions
 def get_places_data(city, attraction_type):
-    geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
+    encoded_city = urllib.parse.quote(city)
+    geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={encoded_city}&apikey={API_KEYS['opentripmap']}"
+
+    #DEBUG STATEMENTS
+    print ("----------inside get_places_data-----------")
+    print ("city: ", city)
+    print ("attraction_type: ", attraction_type)
+    print ("geoname_url: ", geoname_url)
+
     geoname_response = requests.get(geoname_url)
 
+    #DEBUG STATEMENTS
+    print ("geoname_response: ", geoname_response)
+    print ("geoname response content: ", geoname_response.content)
+    
     if not geoname_response.ok:
-        return None, "Error fetching geoname data from OpenTripMap"
+        return None, None, None,"Error fetching geoname data from OpenTripMap"
 
     geoname_data = geoname_response.json()
 
+    #DEBUG STATEMENTS
+    print ("geoname data: ", geoname_data)
+
     if "lon" not in geoname_data or "lat" not in geoname_data:
-        return None, "Invalid data received from OpenTripMap"
+        return None, None, None, "Invalid data received from OpenTripMap"
 
     lon = geoname_data["lon"]
     lat = geoname_data["lat"]
@@ -67,8 +82,14 @@ def get_places_data(city, attraction_type):
     places_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/radius?radius=20000&lon={lon}&lat={lat}&kinds={attraction_type}&rate=3&limit=10&apikey={API_KEYS['opentripmap']}"
     places_response = requests.get(places_url)
 
+    #DEBUG STATEMENTS
+    print ("----------------")
+    print ("places url: ", places_url)
+    print ("places response: ", places_response)
+    print ("places response content: ", places_response.content)  
+
     if not places_response.ok:
-        return None, "Error fetching places from OpenTripMap"
+        return None, None, None, "Error fetching places from OpenTripMap"
 
     places_data = places_response.json()
     return places_data, lon, lat, None
@@ -144,9 +165,6 @@ def get_place_information(wikidata_id):
 def get_dining_data(city, food_type):
     geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
     geoname_response = requests.get(geoname_url)
-
-    if not geoname_response.ok:
-        return None, "Error fetching geoname data from OpenTripMap"
 
     geoname_data = geoname_response.json()
 
@@ -603,6 +621,14 @@ def get_weather_info():
     city = request.args.get("city")
     date = request.args.get("date")
     attraction_type = request.args.get("attraction_type")
+
+     #DEBUG STATEMENTS
+    print ("-----------inside get_weather_info-----------")
+    print ("username: ", username)
+    print ("country: ", country)
+    print ("city: ", city)
+    print ("date: ", date)
+    print ("attraction_type: ", attraction_type)
 
     # Weather
     min_temp = max_temp = None

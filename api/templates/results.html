@@ -74,13 +74,15 @@
         </div>
 
     <script>
+        var lat = {{ lat }};
+        var lon = {{ lon }};
         function redirectToIndex() {
             window.location.href = '/';
         }
         function redirectToWeather() {
         window.location.href = '/get-weather-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
-            + '&date={{ shared_data.date }}&attraction_type={{ attraction_type }}';
+            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}';
     }
         function redirectToDining() {
         window.location.href = '/get-dining-info?username={{ shared_data.username }}'
