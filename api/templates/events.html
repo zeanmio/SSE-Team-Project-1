@@ -20,10 +20,10 @@
             <h2 style="text-align: center;">Exploring {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
         </div>
         <div class="button-container">
-                <button onclick="redirectToIndex()">Start a New Exploration</button>
-                <button onclick="redirectToWeather()">View Weather Information</button>
-                <button onclick="redirectToPlaces()">Explore Attractions</button>
-                <button onclick="redirectToDining()">Explore Dining Options</button>
+            <button onclick="redirectToWeather()">Weather Information</button>
+            <button onclick="redirectToPlaces()">Find Attractions</button>
+            <button onclick="redirectToDining()">Find Restaurants</button>
+            <button onclick="redirectToIndex()">Start New Exploration</button>
         </div>
         <br><br>
     <div class="container">
@@ -72,16 +72,16 @@
             + '&date={{ shared_data.date }}&attraction_type={{ request.args.get("attraction_type") }}';
     }
         function redirectToPlaces() {
-        window.location.href = '/get-dining-info?username={{ shared_data.username }}'
+        window.location.href = '/get-places-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
             + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type}}'
-            + '&food_type={{ shared_data.food_type }}';
+            + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
     }  
         function redirectToDining() {
         window.location.href = '/get-dining-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
             + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type}}'
-            + '&food_type={{ shared_data.food_type }}';
+            + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
     }  
     </script>
     <script src="/static/js/event_script.js"></script>
