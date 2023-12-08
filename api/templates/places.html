@@ -27,12 +27,12 @@
         </div>
         <br><br>
     
+<div class="content-wrapper">
+    <div class="container map-container" id="map"></div>
+
+<br><br>
     
-    <div class="section" id="map"></div>
-    
-<div class="container">
-    <div class="row">
-        <div class="column">
+<div class="container text-container">
             <h1 style="text-align:center;">Discover Attractions</h1>
                 <div class="place-carousel">
                 {% for place in places_data.features %}
@@ -73,8 +73,8 @@
                 <button id="place-prev">Previous</button>
                 <button id="place-next">Next</button>
             </div>
-        </div>
-    </div>
+</div>
+
     <script>
         var lat = lat;
         var lon = lon;

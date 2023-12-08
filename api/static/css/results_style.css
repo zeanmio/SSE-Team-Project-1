@@ -34,6 +34,23 @@ body {
     color: #333;
 }
 
+.content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.map-container {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.text-container {
+    flex: 1;
+    padding: 20px;
+}
+
 .carousel {
     overflow: hidden;
     margin-bottom: 20px;
@@ -222,6 +239,17 @@ button:hover {
     .column {
       width: 100%;
       padding: 0;
+    }
+    .content-wrapper {
+        flex-direction: column;
+    }
+    .map-container {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    .text-container {
+        width: 100%;
     }
   }
   
