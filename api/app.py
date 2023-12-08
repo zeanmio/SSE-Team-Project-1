@@ -545,6 +545,15 @@ def get_dining_info():
     attraction_type = requests.args.get("attraction_type")
     food_type = request.args.get("food_type")
 
+    # DEBUG STATEMENTS
+    print("-----------inside get_dining_info-----------")
+    print("username: ", username)
+    print("country: ", country)
+    print("city: ", city)
+    print("date: ", date)
+    print("attraction_type: ", attraction_type)
+    print("food_type: ", food_type)
+
     # Dining
     dining_data, lon, lat, dining_error = get_dining_data(city, food_type)
     if dining_error:
@@ -563,6 +572,7 @@ def get_dining_info():
         "country": country,
         "city": city,
         "date": date,
+        "attraction_type": attraction_type,
         "food_type": food_type,
     }
 
@@ -586,6 +596,17 @@ def get_events_info():
     food_type = request.args.get("food_type")
     lat = request.args.get("lat")
     lon = request.args.get("lon")
+
+    # DEBUG STATEMENTS
+    print("-----------inside get_dining_info-----------")
+    print("username: ", username)
+    print("country: ", country)
+    print("city: ", city)
+    print("date: ", date)
+    print("attraction_type: ", attraction_type)
+    print("food_type: ", food_type)
+    print("lat: ", lat)
+    print("lon: ", lon)
 
     # Upcoming Events
     events_data, events_error = get_seatgeek_events(lat, lon, date)
