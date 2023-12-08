@@ -3,89 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}">
     <title>City Explorer</title>
-    
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #000;
-            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)), url('https://source.unsplash.com/featured/?city,travel');
-            background-attachment: fixed;
-            background-position: center top;
-            background-repeat: no-repeat;
-            background-size: cover;
-            color: white;
-        }
-        .navbar {
-            background-color: #333;
-            overflow: hidden;
-        }
-        .navbar a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            color: #333; /* Darker text color for readability */
-        }
-        .hero-image {
-            height: 400px;
-            position: relative;
-        }
-        .hero-text {
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-        }
-        .hero-text h1 {
-            margin: 0;
-        }
-        form {
-            margin-top: 20px;
-        }
-        input[type="text"], input[type="date"], select {
-            box-sizing: border-box;
-            display: block;
-            width: 30%;
-            padding: 10px;
-            margin: 5px 0 15px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        input[type="submit"] {
-            border: none;
-            padding: 10px 20px;
-            margin-top: 10px;
-            border-radius: 5px;
-            background-color: #333;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        input[type="submit"]:hover {
-            background-color: #555;
-        }
-    </style>
 </head>
 <body>
 
@@ -97,8 +16,9 @@
 
 <div class="hero-image">
     <div class="hero-text">
-        <h1>City Explorer: Your Local Guide</h1>
-        <p>Unlock the latest in local weather, vibrant events, and must-see attractions for an unforgettable urban journey.</p>
+        <h1>City Explorer: Your Tailored City Compass</h1>
+        <p>Experience the heartbeat of the city with real-time insights into local weather, vibrant events,
+             a curated selection of attractions and dining tailored to your taste.</p>
     </div>
 </div>
 
@@ -109,6 +29,14 @@
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" placeholder="Choose a cool explorer name" value="{{username}}">
         
+        <div class="options">
+            <button type="button" id="btn_new_explore">Start A New Exploration</button>
+            <button type="button" id="btn_retrieve_history">Retrieve History</button>
+        </div>
+
+        <br><br>
+
+    <div id="new_exploration_section" style="display: none;">
         <label for="country">Country:</label>
         <input type="text" id="country" name="country" placeholder="Which country are we adventuring to" value="{{country}}">
 
@@ -143,13 +71,102 @@
         </select>
 
         <input type="submit" value="Explore City">
+    </div>
     </form>
 
-    <div id="results"></div>
+    <div id="retrieve_history_section" style="display: none;">
+        {% if history.get('userdata') %}
+        <h2>Exploration History</h2>
+        <ul>
+            {% for record in history['userdata'] %}
+                <li>
+                    Country: {{ record['country'] }}, City: {{ record['city'] }},
+                    Date: {{ record['date'].strftime('%Y-%m-%d') }},
+                    Attractions: {{ record['attraction_type'] }},
+                    Dining: {{ record['food_type'] }}
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No history to display.</p>
+        {% endif %}
+    </div>
 
 </div>
 
 <br><br><br>
+
+<script>
+    document.getElementById('btn_new_explore').addEventListener('click', function() {
+        document.getElementById('new_exploration_section').style.display = 'block';
+        document.getElementById('retrieve_history_section').style.display = 'none';
+    });
+
+    let currentIndex = 0; // Global variable to track the current index
+    let globalUserData = []; // Global variable to store the fetched user data
+
+    document.getElementById('btn_retrieve_history').addEventListener('click', function() {
+        var username = document.getElementById('username').value;
+        if (username) {
+            fetch('/get-history?username=' + encodeURIComponent(username))
+                .then(response => response.json())
+                .then(data => {
+                    globalUserData = data.userdata; // Store fetched data globally
+                    currentIndex = 0; // Reset index when new history is loaded
+                    displayHistory(currentIndex);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } else {
+            alert("Please enter a username.");
+        }
+    });
+
+        function displayHistory(startIndex) {
+        let historyHtml = '<h2>Exploration History</h2><ul>';
+
+        globalUserData.slice(startIndex, startIndex + 5).forEach(function(record) {
+            var link = `/get-city-info?country=${encodeURIComponent(record.country)}&city=${encodeURIComponent(record.city)}&date=${encodeURIComponent(record.date)}&attraction_type=${encodeURIComponent(record.attraction_type)}&food_type=${encodeURIComponent(record.food_type)}`;
+            historyHtml += `<li><a href="${link}"><strong>${record.city}</strong>, <strong>${record.country}</strong>, ${record.date}. Attractions: ${record.attraction_type}. Dining: ${record.food_type}</a></li>.`;
+        });
+
+        historyHtml += '</ul>';
+
+        // Check if there are items before or after the current slice
+        const hasPreviousItems = startIndex > 0;
+        const hasNextItems = startIndex + 5 < globalUserData.length;
+        if (hasPreviousItems || hasNextItems) {
+            historyHtml += '<div class="history-navigation">';
+            if (hasPreviousItems) {
+                historyHtml += '<button id="btn_previous">Previous</button>';
+            }
+            if (hasNextItems) {
+                historyHtml += '<button id="btn_next">Next</button>';
+            }
+            historyHtml += '</div>';
+        }
+
+        document.getElementById('retrieve_history_section').innerHTML = historyHtml;
+        document.getElementById('retrieve_history_section').style.display = 'block';
+
+        // Add event listeners after updating the HTML
+        if (hasPreviousItems) {
+            document.getElementById('btn_previous').addEventListener('click', function() {
+                currentIndex -= 5;
+                displayHistory(currentIndex);
+            });
+        }
+        if (hasNextItems) {
+            document.getElementById('btn_next').addEventListener('click', function() {
+                currentIndex += 5;
+                displayHistory(currentIndex);
+            });
+        }
+    }
+
+
+</script>
 
 </body>
 </html>

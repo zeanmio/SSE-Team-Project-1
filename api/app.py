@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 import requests, logging, os
 import psycopg2 as psycopg
@@ -365,25 +366,71 @@ def save_data_to_database(username, data, table_name):
 
 @app.route("/", methods=["GET", "POST"])
 def form():
+    history = {"userdata": []}
     if request.method == "POST":
+        # Handling new exploration form submission
         username = request.form.get("username")
         country = request.form.get("country")
         city = request.form.get("city")
         date = request.form.get("date")
         attraction_type = request.form.get("attraction_type")
         food_type = request.form.get("food_type")
-        return redirect(url_for("get-city-info", city=city))
-    return render_template("index.html")
+        return redirect(url_for("get_city_info", city=city))
+
+    return render_template("index.html", history=history)
+
+
+@app.route("/get-history")
+def get_history():
+    username = request.args.get("username")
+    history = {"userdata": []}
+    seen = set()  # Set to track unique entries
+
+    if username:
+        conn = get_db_connection()
+        if conn:
+            try:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "SELECT userid FROM users WHERE username = %s", (username,)
+                    )
+                    user_row = cur.fetchone()
+                    if user_row:
+                        userid = user_row[0]
+                        cur.execute(
+                            "SELECT * FROM userdata WHERE userid = %s", (userid,)
+                        )
+                        history_records = cur.fetchall()
+                        for record in history_records:
+                            # Create a unique key for each record
+                            unique_key = (
+                                record[2],
+                                record[3],
+                                record[4],
+                                record[5],
+                                record[6],
+                            )
+                            if unique_key not in seen:
+                                seen.add(unique_key)
+                                record_dict = {
+                                    "country": record[2],
+                                    "city": record[3],
+                                    "date": record[4].strftime("%Y-%m-%d"),
+                                    "attraction_type": record[5],
+                                    "food_type": record[6],
+                                }
+                                history["userdata"].append(record_dict)
+            except (Exception, psycopg2.Error) as error:
+                print("Error executing query:", error)
+            finally:
+                conn.close()
+
+    return jsonify(history)
 
 
 @app.route("/about")
 def about():
     return render_template("about.html")
-
-
-@app.route("/")
-def home():
-    return render_template("index.html")
 
 
 @app.route("/feedback", methods=["GET", "POST"])
