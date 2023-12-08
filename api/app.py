@@ -161,6 +161,30 @@ def get_place_information(wikidata_id):
     return description, official_websites, instagram, twitter, facebook, None
 
 
+def enrich_data_with_wikidata(places_data):
+    # Enrich the places or dining data with descriptions from Wikidata
+    if places_data:
+        for feature in places_data.get("features", []):
+            wikidata_id = feature["properties"].get("wikidata")
+            if wikidata_id:
+                (
+                    description_data,
+                    official_websites,
+                    instagram,
+                    twitter,
+                    facebook,
+                    description_error,
+                ) = get_place_information(wikidata_id)
+                if description_error:
+                    feature["properties"]["description"] = None
+                else:
+                    feature["properties"]["description"] = description_data
+                    feature["properties"]["official_websites"] = official_websites
+                    feature["properties"]["instagram"] = instagram
+                    feature["properties"]["twitter"] = twitter
+                    feature["properties"]["facebook"] = facebook
+
+
 # Dining
 def get_dining_data(city, food_type):
     geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
@@ -299,7 +323,7 @@ def determine_weather_condition(data):
         return "Rainy", "10d"
 
 
-# database
+# Database
 def save_user_data(username, country, city, date, attraction_type, food_type):
     # Connect to database & Save user data
     connection = get_db_connection()
@@ -326,30 +350,6 @@ def save_user_data(username, country, city, date, attraction_type, food_type):
         finally:
             if connection is not None:
                 connection.close()
-
-
-def enrich_data_with_wikidata(places_data):
-    # Enrich the places or dining data with descriptions from Wikidata
-    if places_data:
-        for feature in places_data.get("features", []):
-            wikidata_id = feature["properties"].get("wikidata")
-            if wikidata_id:
-                (
-                    description_data,
-                    official_websites,
-                    instagram,
-                    twitter,
-                    facebook,
-                    description_error,
-                ) = get_place_information(wikidata_id)
-                if description_error:
-                    feature["properties"]["description"] = None
-                else:
-                    feature["properties"]["description"] = description_data
-                    feature["properties"]["official_websites"] = official_websites
-                    feature["properties"]["instagram"] = instagram
-                    feature["properties"]["twitter"] = twitter
-                    feature["properties"]["facebook"] = facebook
 
 
 def save_data_to_database(username, data, table_name):
