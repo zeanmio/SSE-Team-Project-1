@@ -128,7 +128,7 @@
 
         globalUserData.slice(startIndex, startIndex + 5).forEach(function(record) {
             var link = `/get-city-info?country=${encodeURIComponent(record.country)}&city=${encodeURIComponent(record.city)}&date=${encodeURIComponent(record.date)}&attraction_type=${encodeURIComponent(record.attraction_type)}&food_type=${encodeURIComponent(record.food_type)}`;
-            historyHtml += `<li><a href="${link}"><strong>${record.city}</strong>, <strong>${record.country}</strong>, ${record.date}. Attractions: ${record.attraction_type}. Dining: ${record.food_type}</a></li>`;
+            historyHtml += `<li><a href="${link}"><strong>${record.city}</strong>, <strong>${record.country}</strong>, ${record.date}. Attractions: ${record.attraction_type}. Dining: ${record.food_type}</a></li>.`;
         });
 
         historyHtml += '</ul>';
