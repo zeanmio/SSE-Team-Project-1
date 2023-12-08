@@ -375,7 +375,7 @@ def form():
         date = request.form.get("date")
         attraction_type = request.form.get("attraction_type")
         food_type = request.form.get("food_type")
-        return redirect(url_for("get_city_info", city=city))
+        return redirect(url_for("get_places_info", city=city))
 
     return render_template("index.html", history=history)
 
