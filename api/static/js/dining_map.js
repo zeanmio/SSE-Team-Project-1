@@ -1,10 +1,6 @@
 var map;
 
-var currentPlaceMarker = null;
-
 var currentDiningMarker = null;
-
-var currentEventMarker = null;
 
 function initMap() {
     var platform = new H.service.Platform({
@@ -26,17 +22,6 @@ function initMap() {
     var ui = H.ui.UI.createDefault(map, defaultLayers);
 }
 
-function addPlaceMarker() {
-    if (currentPlaceMarker) {
-        map.removeObject(currentPlaceMarker);
-    }
-    const currentPlace = placeItems[currentPlaceIndex];
-    const lat = parseFloat(currentPlace.dataset.lat);
-    const lng = parseFloat(currentPlace.dataset.lon);
-    currentPlaceMarker = new H.map.Marker({lat: lat, lng: lng});
-    map.addObject(currentPlaceMarker);
-}
-
 function addDiningMarker() {
     if (currentDiningMarker) {
         map.removeObject(currentDiningMarker);
@@ -48,31 +33,7 @@ function addDiningMarker() {
     map.addObject(currentDiningMarker);
 }
 
-function addEventMarker() {
-    if (currentEventMarker) {
-        map.removeObject(currentEventMarker);
-    }
-    const currentEvent = eventItems[currentEventIndex];
-    const lat = parseFloat(currentEvent.dataset.lat);
-    const lng = parseFloat(currentEvent.dataset.lon);
-    currentEventMarker = new H.map.Marker({lat: lat, lng: lng});
-    map.addObject(currentEventMarker);
-}
-
-
-function updateMapMarkers() {
-    if (currentMarkerType === 'attractions') {
-        addPlaceMarker();
-    } else if (currentMarkerType === 'dining') {
-        addDiningMarker();
-    } else if (currentMarkerType === 'events') {
-        addEventMarker();
-    }
-}
-
 window.onload = function () {
     initMap();
-    addPlaceMarker();
     addDiningMarker();
-    addEventMarker();
 }
