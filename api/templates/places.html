@@ -76,8 +76,8 @@
 </div>
 
     <script>
-        var lat = lat;
-        var lon = lon;
+        var lat = {{ lat }};
+        var lon = {{ lon }};
         function redirectToIndex() {
             window.location.href = '/';
         }
@@ -97,7 +97,8 @@
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
             + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
             + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
-    }     
+    }
+       
     </script>
     <script src="/static/js/event_script.js"></script>
     <script src="/static/js/map_script.js"></script>

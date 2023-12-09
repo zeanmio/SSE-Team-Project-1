@@ -524,6 +524,8 @@ def get_places_info():
         "date": date,
         "attraction_type": attraction_type,
         "food_type": food_type,
+        "lon": lon,
+        "lat": lat,
     }
 
     return render_template(

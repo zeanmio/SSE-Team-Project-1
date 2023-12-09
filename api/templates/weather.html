@@ -23,7 +23,6 @@
 
     <!-- Display other weather information as needed -->
     <div class="container">
-        <h1 style="text-align:center;">Weather</h1>
         <div class="weather-columns">
             <!-- First Column -->
             <div class="first-weather-column">
@@ -87,8 +86,8 @@
     <script>
         var airquality_forecast = airquality_forecast | tojson;
 
-            var lat = lat;
-            var lon = lon;
+            var lat = {{ lat }};
+            var lon = {{ lon }};
             function redirectToIndex() {
                 window.location.href = '/';
             }
