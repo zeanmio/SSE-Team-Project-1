@@ -43,7 +43,6 @@
                             <h2>{{ event.title }}</h2>
                             <p>Date: {{ event.datetime_local }}</p>
                             <p>Venue: {{ event.venue.name }}</p>
-                            <p>City: {{ event.venue.city }}</p>
                             <p>Performers:</p>
                                 <ul>
                                     {% for performer in event.performers %}
