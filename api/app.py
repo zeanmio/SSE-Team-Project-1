@@ -187,11 +187,14 @@ def enrich_data_with_wikidata(places_data):
 
 # Dining
 def get_dining_data(city, food_type):
-    geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
+    encoded_city = urllib.parse.quote(city)
+    geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={encoded_city}&apikey={API_KEYS['opentripmap']}"
+    
     geoname_response = requests.get(geoname_url)
+    if not geoname_response.ok:
+        return None, None, None, "Error fetching geoname data from OpenTripMap"
 
     geoname_data = geoname_response.json()
-
     if "lon" not in geoname_data or "lat" not in geoname_data:
         return None, "Invalid data received from OpenTripMap"
 
@@ -544,7 +547,7 @@ def get_dining_info():
     country = request.args.get("country")
     city = request.args.get("city")
     date = request.args.get("date")
-    attraction_type = requests.args.get("attraction_type")
+    attraction_type = request.args.get("attraction_type")
     food_type = request.args.get("food_type")
 
     # DEBUG STATEMENTS

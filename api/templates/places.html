@@ -36,42 +36,40 @@
         <br><br>
     
         <div class="container text-container">
-            <h1 style="text-align:center;">Discover Attractions</h1>
-            
             <div class="place-carousel">
-            {% for place in places_data.features %}
-                <div class="place-carousel-item" data-name="{{ place.properties.name }}" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
-                    <h2>{{ place.properties.name }}</h2>
-                {% if place.properties.description %}
-                    <p>{{ place.properties.description }}</p>
-                {% endif %}
-                {% if place.properties.instagram %}
-                    <p>
-                        <img src="/static/images/instagram.png" class="icon">
-                        Instagram: {{ place.properties.instagram }}
-                    </p>
-                {% endif %}
-                {% if place.properties.twitter %}
-                    <p>
-                        <img src="/static/images/twitter.png" class="icon">
-                        X: {{ place.properties.twitter }}
-                    </p>
-                {% endif %}
-                {% if place.properties.facebook %}
-                    <p>
-                        <img src="/static/images/facebook.png" class="icon">
-                        Facebook: {{ place.properties.facebook }}
-                    </p>
-                {% endif %}
-                {% if place.properties.official_websites %}
-                    {% for website in place.properties.official_websites %}
-                        <a href="{{ website }}" target="_blank">
-                            <button type="button">Official Website</button>
-                        </a>
-                    {% endfor %}
-                {% endif %} 
-                </div>
-            {% endfor %}
+                {% for place in places_data.features %}
+                    <div class="place-carousel-item" data-name="{{ place.properties.name }}" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
+                        <h2>{{ place.properties.name }}</h2>
+                    {% if place.properties.description %}
+                        <p>{{ place.properties.description }}</p>
+                    {% endif %}
+                    {% if place.properties.instagram %}
+                        <p>
+                            <img src="/static/images/instagram.png" class="icon">
+                            Instagram: {{ place.properties.instagram }}
+                        </p>
+                    {% endif %}
+                    {% if place.properties.twitter %}
+                        <p>
+                            <img src="/static/images/twitter.png" class="icon">
+                            X: {{ place.properties.twitter }}
+                        </p>
+                    {% endif %}
+                    {% if place.properties.facebook %}
+                        <p>
+                            <img src="/static/images/facebook.png" class="icon">
+                            Facebook: {{ place.properties.facebook }}
+                        </p>
+                    {% endif %}
+                    {% if place.properties.official_websites %}
+                        {% for website in place.properties.official_websites %}
+                            <a href="{{ website }}" target="_blank">
+                                <button type="button">Official Website</button>
+                            </a>
+                        {% endfor %}
+                    {% endif %} 
+                    </div>
+                {% endfor %}
             </div>
 
             <div class="button-container">
@@ -80,6 +78,8 @@
             </div>
         </div>
     </div>
+
+    <br><br>
 
     <script>
         var lat = {{ lat }};

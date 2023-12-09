@@ -1,3 +1,4 @@
+// weather script
 function renderAqiChart(airqualityData) {
     const labels = airqualityData.map(forecast => {
         let date = new Date(forecast.time * 1000);

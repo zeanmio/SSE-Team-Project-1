@@ -15,25 +15,27 @@
 </head>
 
 <body>
-        <br><br>
-        <div class="header-text">
-            <h2 style="text-align: center;">Recommended Dining in {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}</h2>
-        </div>
-        <div class="button-container">
-            <button onclick="redirectToWeather()">Weather Information</button>
-            <button onclick="redirectToPlaces()">Find Attractions</button>
-            <button onclick="redirectToEvents()">Upcoming Events</button>
-            <button onclick="redirectToIndex()">Start New Exploration</button>
-        </div>
-        <br><br>
+    <br><br>
 
-<div class="content-wrapper">
-    <div class="container map-container" id="map"></div>
+    <div class="header-text">
+        <h2 style="text-align: center;">Recommended Dining in {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}</h2>
+    </div>
 
-<br><br>
+    <div class="button-container">
+        <button onclick="redirectToWeather()">Weather Information</button>
+        <button onclick="redirectToPlaces()">Find Attractions</button>
+        <button onclick="redirectToEvents()">Upcoming Events</button>
+        <button onclick="redirectToIndex()">Start New Exploration</button>
+    </div>
+
+    <br><br>
+
+    <div class="content-wrapper">
+        <div class="container map-container" id="map"></div>
+
+        <br><br>
     
-<div class="container text-container">
-            <h1 style="text-align:center;">Discover Food</h1>
+        <div class="container text-container">
             <div class="dining-carousel">
                 {% for dining in dining_data.features %}
                     <div class="dining-carousel-item" data-name="{{ dining.properties.name }}" data-lat="{{ dining.geometry.coordinates[1] }}" data-lon="{{ dining.geometry.coordinates[0] }}" >
@@ -69,40 +71,43 @@
                     </div>
                 {% endfor %}
             </div>
+
             <div class="button-container">
                 <button id="dining-prev">Previous</button>
                 <button id="dining-next">Next</button>
             </div>
         </div>
+    </div>
 
-    <br><br><br>
+    <br><br>
 
     <script>
-        var lat = "{{ lat }}";
-        var lon = "{{ lon }}";
+        var lat = {{ lat }};
+        var lon = {{ lon }};
 
         function redirectToIndex() {
             window.location.href = '/';
         }
         function redirectToWeather() {
-        window.location.href = '/get-weather-info?username={{ shared_data.username }}'
-            + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
-            + '&date={{ shared_data.date }}&attraction_type={{ request.args.get("attraction_type") }}';
-    }
+            window.location.href = '/get-weather-info?username={{ shared_data.username }}'
+                + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
+                + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}';
+        }
         function redirectToPlaces() {
         window.location.href = '/get-places-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
             + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type}}'
             + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
-    }    
+        }    
         function redirectToEvents() {
         window.location.href = '/get-event-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
             + '&date={{ shared_data.date }}&attraction_type={{ shared_data.food_type }}'
             + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
-    }       
+        }       
     </script>
+    
     <script src="/static/js/dining_carousel.js"></script>
-    <script src="/static/js/map_script.js"></script>
+    <script src="/static/js/dining_map.js"></script>
 </body>
 </html>

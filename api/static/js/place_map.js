@@ -1,3 +1,4 @@
+// place map script
 var map;
 
 var currentPlaceMarker = null;
