@@ -531,9 +531,9 @@ def get_places_info():
     return render_template(
         "places.html",
         places_data=places_data,
+        shared_data=shared_data,
         lon=lon,
         lat=lat,
-        shared_data=shared_data,
     )
 
 
@@ -576,14 +576,16 @@ def get_dining_info():
         "date": date,
         "attraction_type": attraction_type,
         "food_type": food_type,
+        "lat": lat,
+        "lon": lon,
     }
 
     return render_template(
         "dining.html",
         dining_data=dining_data,
+        shared_data=shared_data,
         lon=lon,
         lat=lat,
-        shared_data=shared_data,
     )
 
 
@@ -627,12 +629,16 @@ def get_events_info():
         "date": date,
         "attraction_type": attraction_type,
         "food_type": food_type,
+        "lon": lon,
+        "lat": lat,
     }
 
     return render_template(
         "events.html",
         events_data=events_data,
         shared_data=shared_data,
+        lon=lon,
+        lat=lat,
     )
 
 
@@ -735,6 +741,8 @@ def get_weather_info():
         "date": date,
         "attraction_type": attraction_type,
         "food_type": food_type,
+        "lon": lon,
+        "lat": lat,
     }
 
     return render_template(
