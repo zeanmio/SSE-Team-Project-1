@@ -3,7 +3,6 @@ function renderAqiChart(airqualityData) {
         let date = new Date(forecast.time * 1000);
         return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours() % 12 === 0 ? 12 : date.getHours() % 12}${date.getHours() >= 12 ? 'PM' : 'AM'}`;
     });
-    console.log(labels);
     const values = airqualityData.map(forecast => forecast.avg_aqi);
     const ctx = document.getElementById('airQualityChart').getContext('2d');
 
@@ -129,5 +128,6 @@ function renderAqiChart(airqualityData) {
 }
 
 window.onload = function () {
-    renderAqiChart(airquality_forecast);
+    let airqualityData = JSON.parse(airquality_forecast);
+    renderAqiChart(airqualityData);
 }
