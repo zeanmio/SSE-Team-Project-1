@@ -84,8 +84,8 @@
         </div>
     </div>
     <script>
-        var airquality_forecast = airquality_forecast | tojson;
-
+        var airquality_forecast = '{{ airquality_forecast | tojson | safe }}';
+        
             var lat = {{ lat }};
             var lon = {{ lon }};
             function redirectToIndex() {
@@ -110,6 +110,7 @@
                 + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
         }     
         </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/js/weather_script.js"></script>
 </body>
 </html>

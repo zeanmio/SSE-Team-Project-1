@@ -225,7 +225,9 @@ def get_seatgeek_events(lat, lon, date):
     }
 
     response = requests.get(base_url, params=params)
-
+    print("----------inside get_seatgeek_events---------")
+    print(response)
+    print(response.content)
     if response.ok:
         data = response.json()
         events_data = data.get("events", [])
@@ -605,7 +607,7 @@ def get_events_info():
     lon = request.args.get("lon")
 
     # DEBUG STATEMENTS
-    print("-----------inside get_dining_info-----------")
+    print("-----------inside get_events_info-----------")
     print("username: ", username)
     print("country: ", country)
     print("city: ", city)
