@@ -15,91 +15,98 @@
 </head>
 
 <body>
-        <br><br>
-        <div class="header-text">
-            <h2 style="text-align: center;">Recommended Attractions in {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
-        </div>
-        <div class="button-container">
-            <button onclick="redirectToWeather()">Weather Information</button>
-            <button onclick="redirectToDining()">Find Restaurants</button>
-            <button onclick="redirectToEvents()">Upcoming Events</button>
-            <button onclick="redirectToIndex()">Start New Exploration</button>
-        </div>
-        <br><br>
-    
-<div class="content-wrapper">
-    <div class="container map-container" id="map"></div>
+    <br><br>
 
-<br><br>
+    <div class="header-text">
+        <h2 style="text-align: center;">Recommended Attractions in {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}</h2>
+    </div>
     
-<div class="container text-container">
+    <div class="button-container">
+        <button onclick="redirectToWeather()">Weather Information</button>
+        <button onclick="redirectToDining()">Find Restaurants</button>
+        <button onclick="redirectToEvents()">Upcoming Events</button>
+        <button onclick="redirectToIndex()">Start New Exploration</button>
+    </div>
+
+    <br><br>
+    
+    <div class="content-wrapper">
+        <div class="container map-container" id="map"></div>
+
+        <br><br>
+    
+        <div class="container text-container">
             <h1 style="text-align:center;">Discover Attractions</h1>
-                <div class="place-carousel">
-                {% for place in places_data.features %}
-                    <div class="place-carousel-item" data-name="{{ place.properties.name }}" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
-                        <h2>{{ place.properties.name }}</h2>
-                    {% if place.properties.description %}
-                        <p>{{ place.properties.description }}</p>
-                    {% endif %}
-                    {% if place.properties.instagram %}
-                        <p>
-                            <img src="/static/images/instagram.png" class="icon">
-                            Instagram: {{ place.properties.instagram }}
-                        </p>
-                    {% endif %}
-                    {% if place.properties.twitter %}
-                        <p>
-                            <img src="/static/images/twitter.png" class="icon">
-                            X: {{ place.properties.twitter }}
-                        </p>
-                    {% endif %}
-                    {% if place.properties.facebook %}
-                        <p>
-                            <img src="/static/images/facebook.png" class="icon">
-                            Facebook: {{ place.properties.facebook }}
-                        </p>
-                    {% endif %}
-                    {% if place.properties.official_websites %}
-                        {% for website in place.properties.official_websites %}
-                            <a href="{{ website }}" target="_blank">
-                                <button type="button">Official Website</button>
-                            </a>
-                        {% endfor %}
-                    {% endif %} 
-                    </div>
-                {% endfor %}
+            
+            <div class="place-carousel">
+            {% for place in places_data.features %}
+                <div class="place-carousel-item" data-name="{{ place.properties.name }}" data-lat="{{ place.geometry.coordinates[1] }}" data-lon="{{ place.geometry.coordinates[0] }}" >
+                    <h2>{{ place.properties.name }}</h2>
+                {% if place.properties.description %}
+                    <p>{{ place.properties.description }}</p>
+                {% endif %}
+                {% if place.properties.instagram %}
+                    <p>
+                        <img src="/static/images/instagram.png" class="icon">
+                        Instagram: {{ place.properties.instagram }}
+                    </p>
+                {% endif %}
+                {% if place.properties.twitter %}
+                    <p>
+                        <img src="/static/images/twitter.png" class="icon">
+                        X: {{ place.properties.twitter }}
+                    </p>
+                {% endif %}
+                {% if place.properties.facebook %}
+                    <p>
+                        <img src="/static/images/facebook.png" class="icon">
+                        Facebook: {{ place.properties.facebook }}
+                    </p>
+                {% endif %}
+                {% if place.properties.official_websites %}
+                    {% for website in place.properties.official_websites %}
+                        <a href="{{ website }}" target="_blank">
+                            <button type="button">Official Website</button>
+                        </a>
+                    {% endfor %}
+                {% endif %} 
+                </div>
+            {% endfor %}
             </div>
+
             <div class="button-container">
                 <button id="place-prev">Previous</button>
                 <button id="place-next">Next</button>
             </div>
-</div>
+        </div>
+    </div>
 
     <script>
         var lat = {{ lat }};
         var lon = {{ lon }};
+
         function redirectToIndex() {
             window.location.href = '/';
         }
         function redirectToWeather() {
-        window.location.href = '/get-weather-info?username={{ shared_data.username }}'
-            + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
-            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}';
-    }
+            window.location.href = '/get-weather-info?username={{ shared_data.username }}'
+                + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
+                + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}';
+        }
         function redirectToDining() {
-        window.location.href = '/get-dining-info?username={{ shared_data.username }}'
-            + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
-            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
-            + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
-    }    
+            window.location.href = '/get-dining-info?username={{ shared_data.username }}'
+                + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
+                + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
+                + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
+        }    
         function redirectToEvents() {
-        window.location.href = '/get-events-info?username={{ shared_data.username }}'
-            + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
-            + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
-            + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
-    }
-       
+            window.location.href = '/get-events-info?username={{ shared_data.username }}'
+                + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
+                + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
+                + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
+        }
     </script>
+
     <script src="/static/js/event_script.js"></script>
     <script src="/static/js/map_script.js"></script>
 </body>
