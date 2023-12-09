@@ -222,9 +222,9 @@ def get_seatgeek_events(lat, lon, date):
     }
 
     response = requests.get(base_url, params=params)
-    print ("----------inside get_seatgeek_events---------")
-    print (response)
-    print (response.content)
+    print("----------inside get_seatgeek_events---------")
+    print(response)
+    print(response.content)
     if response.ok:
         data = response.json()
         events_data = data.get("events", [])
@@ -734,7 +734,7 @@ def get_weather_info():
                 f"Error in getting air quality forecast data: {airquality_forecast_error}"
             )
             return jsonify({"error": airquality_forecast_error}), 500
-    
+
     # Pass shared data to the template
     shared_data = {
         "username": username,
