@@ -9,11 +9,16 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     color: white;
+    margin-top: 70px;
 }
 
 .navbar {
     background-color: #333;
     overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .navbar a {
@@ -101,30 +106,30 @@ button:hover {
     background: #333;
 }
 
-.dining-carousel {
+.place-carousel {
     overflow: hidden;
     width: 100%;
     margin-bottom: 20px;
 }
 
-.dining-carousel-item {
+.place-carousel-item {
     width: 100%;
     display: none;
     padding: 15px;
     border-bottom: 1px solid #ddd;
 }
 
-.dining-carousel-item .icon{
+.place-carousel-item .icon{
     max-width: 3%; 
     height: auto; /* Maintain aspect ratio */
     vertical-align: middle; 
 }
 
-.dining-carousel-item.active {
+.place-carousel-item.active {
     display: block;
 }
 
-.dining-item {
+.place-item {
     margin-bottom: 20px;
 }
 

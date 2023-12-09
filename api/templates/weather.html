@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/weather.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/weather_css.css') }}">
     <style>
         .navbar {
             background-color: #333;
@@ -100,14 +100,15 @@
                 {% endif %}
             </div>
 
-                <!-- Third Column -->
-                <div class="third-weather-column">
-                    <!-- <h2>Air Quality Index</h2> -->
-                    <p style="text-align: center;">Air Quality Forecast for the Next 4 Days</p>
-                    <canvas id="airQualityChart"></canvas> 
-                </div>
+             <!-- Third Column -->
+            <div class="third-weather-column">
+                <!-- <h2>Air Quality Index</h2> -->
+                <p style="text-align: center;">Air Quality Forecast for the Next 4 Days</p>
+                <canvas id="airQualityChart"></canvas> 
+            </div>
         </div>
     </div>
+
     <script>
         var airquality_forecast = '{{ airquality_forecast | tojson | safe }}';
 
