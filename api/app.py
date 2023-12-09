@@ -189,7 +189,7 @@ def enrich_data_with_wikidata(places_data):
 def get_dining_data(city, food_type):
     encoded_city = urllib.parse.quote(city)
     geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={encoded_city}&apikey={API_KEYS['opentripmap']}"
-    
+
     geoname_response = requests.get(geoname_url)
     if not geoname_response.ok:
         return None, None, None, "Error fetching geoname data from OpenTripMap"

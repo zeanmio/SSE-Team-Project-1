@@ -11,7 +11,7 @@
 <body>
     <br><br>
     <div class="header-text">
-        <h2 style="text-align: center;">Weather Information for {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}<h2>
+        <h2 style="text-align: center;">Weather Information for {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}</h2>
     </div>
     <div class="button-container">
         <button onclick="redirectToPlaces()">Find Attractions</button>
@@ -85,31 +85,32 @@
     </div>
     <script>
         var airquality_forecast = '{{ airquality_forecast | tojson | safe }}';
-        
-            var lat = {{ lat }};
-            var lon = {{ lon }};
-            function redirectToIndex() {
-                window.location.href = '/';
-            }
-            function redirectToPlaces() {
+
+        var lat = {{ lat }};
+        var lon = {{ lon }};
+        function redirectToIndex() {
+            window.location.href = '/';
+        }
+        function redirectToPlaces() {
             window.location.href = '/get-places-info?username={{ shared_data.username }}'
                 + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
                 + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
                 + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
         }
-            function redirectToDining() {
+        function redirectToDining() {
             window.location.href = '/get-dining-info?username={{ shared_data.username }}'
                 + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
                 + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
                 + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
         }    
-            function redirectToEvents() {
+        function redirectToEvents() {
             window.location.href = '/get-events-info?username={{ shared_data.username }}'
                 + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
                 + '&date={{ shared_data.date }}&attraction_type={{ shared_data.attraction_type }}'
                 + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
         }     
         </script>
+        
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/js/weather_script.js"></script>
 </body>
