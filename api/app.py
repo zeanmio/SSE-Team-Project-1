@@ -527,7 +527,7 @@ def get_places_info():
     }
 
     return render_template(
-        "results.html",
+        "places.html",
         places_data=places_data,
         lon=lon,
         lat=lat,

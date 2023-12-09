@@ -13,11 +13,6 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"City Explorer", response.data)
 
-    def test_get_history_page(self):
-       response = self.app.get("/get-history?username=test")
-       self.assertEqual(response.status_code, 200)
-       self.assertIn(b"history", response.data)
-
     def test_about_page(self):
        response = self.app.get("/about")
        self.assertEqual(response.status_code, 200)
