@@ -161,40 +161,13 @@ def get_place_information(wikidata_id):
     return description, official_websites, instagram, twitter, facebook, None
 
 
-def enrich_data_with_wikidata(places_data):
-    # Enrich the places or dining data with descriptions from Wikidata
-    if places_data:
-        for feature in places_data.get("features", []):
-            wikidata_id = feature["properties"].get("wikidata")
-            if wikidata_id:
-                (
-                    description_data,
-                    official_websites,
-                    instagram,
-                    twitter,
-                    facebook,
-                    description_error,
-                ) = get_place_information(wikidata_id)
-                if description_error:
-                    feature["properties"]["description"] = None
-                else:
-                    feature["properties"]["description"] = description_data
-                    feature["properties"]["official_websites"] = official_websites
-                    feature["properties"]["instagram"] = instagram
-                    feature["properties"]["twitter"] = twitter
-                    feature["properties"]["facebook"] = facebook
-
-
 # Dining
 def get_dining_data(city, food_type):
-    encoded_city = urllib.parse.quote(city)
-    geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={encoded_city}&apikey={API_KEYS['opentripmap']}"
-
+    geoname_url = f"{BASE_URLS['opentripmap']}/0.1/en/places/geoname?name={city}&apikey={API_KEYS['opentripmap']}"
     geoname_response = requests.get(geoname_url)
-    if not geoname_response.ok:
-        return None, None, None, "Error fetching geoname data from OpenTripMap"
 
     geoname_data = geoname_response.json()
+
     if "lon" not in geoname_data or "lat" not in geoname_data:
         return None, "Invalid data received from OpenTripMap"
 
@@ -221,13 +194,11 @@ def get_seatgeek_events(lat, lon, date):
         "lat": lat,
         "lon": lon,
         "datetime_local.gte": date,
-        "range": "10mi",
+        "range": "50mi",
     }
 
     response = requests.get(base_url, params=params)
-    print("----------inside get_seatgeek_events---------")
-    print(response)
-    print(response.content)
+
     if response.ok:
         data = response.json()
         events_data = data.get("events", [])
@@ -328,7 +299,7 @@ def determine_weather_condition(data):
         return "Rainy", "10d"
 
 
-# Database
+# database
 def save_user_data(username, country, city, date, attraction_type, food_type):
     # Connect to database & Save user data
     connection = get_db_connection()
@@ -355,6 +326,30 @@ def save_user_data(username, country, city, date, attraction_type, food_type):
         finally:
             if connection is not None:
                 connection.close()
+
+
+def enrich_data_with_wikidata(places_data):
+    # Enrich the places or dining data with descriptions from Wikidata
+    if places_data:
+        for feature in places_data.get("features", []):
+            wikidata_id = feature["properties"].get("wikidata")
+            if wikidata_id:
+                (
+                    description_data,
+                    official_websites,
+                    instagram,
+                    twitter,
+                    facebook,
+                    description_error,
+                ) = get_place_information(wikidata_id)
+                if description_error:
+                    feature["properties"]["description"] = None
+                else:
+                    feature["properties"]["description"] = description_data
+                    feature["properties"]["official_websites"] = official_websites
+                    feature["properties"]["instagram"] = instagram
+                    feature["properties"]["twitter"] = twitter
+                    feature["properties"]["facebook"] = facebook
 
 
 def save_data_to_database(username, data, table_name):
@@ -529,16 +524,14 @@ def get_places_info():
         "date": date,
         "attraction_type": attraction_type,
         "food_type": food_type,
-        "lon": lon,
-        "lat": lat,
     }
 
     return render_template(
-        "places.html",
+        "results.html",
         places_data=places_data,
-        shared_data=shared_data,
         lon=lon,
         lat=lat,
+        shared_data=shared_data,
     )
 
 
@@ -581,16 +574,14 @@ def get_dining_info():
         "date": date,
         "attraction_type": attraction_type,
         "food_type": food_type,
-        "lat": lat,
-        "lon": lon,
     }
 
     return render_template(
         "dining.html",
         dining_data=dining_data,
-        shared_data=shared_data,
         lon=lon,
         lat=lat,
+        shared_data=shared_data,
     )
 
 
@@ -607,7 +598,7 @@ def get_events_info():
     lon = request.args.get("lon")
 
     # DEBUG STATEMENTS
-    print("-----------inside get_events_info-----------")
+    print("-----------inside get_dining_info-----------")
     print("username: ", username)
     print("country: ", country)
     print("city: ", city)
@@ -634,16 +625,12 @@ def get_events_info():
         "date": date,
         "attraction_type": attraction_type,
         "food_type": food_type,
-        "lon": lon,
-        "lat": lat,
     }
 
     return render_template(
         "events.html",
         events_data=events_data,
         shared_data=shared_data,
-        lon=lon,
-        lat=lat,
     )
 
 
@@ -655,7 +642,6 @@ def get_weather_info():
     city = request.args.get("city")
     date = request.args.get("date")
     attraction_type = request.args.get("attraction_type")
-    food_type = request.args.get("food_type")
 
     # DEBUG STATEMENTS
     print("-----------inside get_weather_info-----------")
@@ -664,7 +650,6 @@ def get_weather_info():
     print("city: ", city)
     print("date: ", date)
     print("attraction_type: ", attraction_type)
-    print("food_type: ", food_type)
 
     # Weather
     min_temp = max_temp = None
@@ -744,10 +729,6 @@ def get_weather_info():
         "country": country,
         "city": city,
         "date": date,
-        "attraction_type": attraction_type,
-        "food_type": food_type,
-        "lon": lon,
-        "lat": lat,
     }
 
     return render_template(
