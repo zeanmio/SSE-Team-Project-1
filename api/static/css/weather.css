@@ -41,29 +41,9 @@ body {
     padding: 20px;
 }
 
-.map-container {
-    flex: 1;
-    margin-right: 20px;
-}
-
 .text-container {
     flex: 1;
     padding: 20px;
-}
-
-.carousel {
-    overflow: hidden;
-    margin-bottom: 20px;
-}
-
-.carousel-item {
-    display: none;
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-}
-
-.carousel-item.active {
-    display: block;
 }
 
 .header-text{
@@ -106,18 +86,6 @@ body {
     vertical-align: middle; 
 }
 
-.place-carousel-item .icon{
-    max-width: 3%; 
-    height: auto; /* Maintain aspect ratio */
-    vertical-align: middle; 
-}
-
-.dining-carousel-item .icon{
-    max-width: 3%; 
-    height: auto; /* Maintain aspect ratio */
-    vertical-align: middle; 
-}
-
 .temperature-range {
     /* font-size: 24px; */
     color: #333;
@@ -146,16 +114,6 @@ body {
     vertical-align: middle; 
 }
 
-.city h2, .event h2 {
-    color: #333;
-    margin-bottom: 10px;
-}
-
-#map {
-    height: 400px;
-    width: 100%;
-}
-
 .button-container {
     text-align: center;
     margin-bottom: 20px;
@@ -173,31 +131,6 @@ button {
 
 button:hover {
     background: #333;
-}
-
-.event-carousel, .place-carousel, .dining-carousel {
-    overflow: hidden;
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.event-carousel-item, .place-carousel-item, .dining-carousel-item {
-    width: 100%;
-    display: none;
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-}
-
-.event-carousel-item.active, .place-carousel-item.active, .dining-carousel-item.active {
-    display: block;
-}
-
-.event-item, .place-item, .dining-item {
-    margin-bottom: 20px;
-}
-
-.event-item ul {
-    padding-left: 20px;
 }
 
 .circular-image {
