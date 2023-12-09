@@ -14,19 +14,18 @@ class AppTestCase(unittest.TestCase):
         self.assertIn(b"City Explorer", response.data)
 
     def test_about_page(self):
-       response = self.app.get("/about")
-       self.assertEqual(response.status_code, 200)
-       self.assertIn(b"About", response.data)
+        response = self.app.get("/about")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"About", response.data)
 
     def test_feedback_page(self):
-       response = self.app.get("/feedback")
-       self.assertEqual(response.status_code, 200)
-       self.assertIn(b"Feedback", response.data)
+        response = self.app.get("/feedback")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Feedback", response.data)
 
     def test_submit_feedback_page(self):
-       response = self.app.get("/submit-feedback?username=test&feedback=test_feedback")
-       self.assertEqual(response.status_code, 302) # Expecting a redirect
-
+        response = self.app.get("/submit-feedback?username=test&feedback=test_feedback")
+        self.assertEqual(response.status_code, 302)  # Expecting a redirect
 
     @patch("app.get_db_connection")
     @patch("app.get_places_data")
@@ -75,8 +74,8 @@ class AppTestCase(unittest.TestCase):
             None,
         )
         response = self.app.get(
-           "/get-dining-info?city=London&username=test&country=UK&date=2023-12-31&attraction_type=architectural&food_type=restaurants"
-       )
+            "/get-dining-info?city=London&username=test&country=UK&date=2023-12-31&attraction_type=architectural&food_type=restaurants"
+        )
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Recommended Dining", response.data)
 
@@ -92,8 +91,8 @@ class AppTestCase(unittest.TestCase):
         mock_events_data.return_value = ([], None)
 
         response = self.app.get(
-           "/get-events-info?city=London&username=test&country=UK&date=2023-12-31&attraction_type=architectural&food_type=restaurants&lat=0&lon=0"
-       )
+            "/get-events-info?city=London&username=test&country=UK&date=2023-12-31&attraction_type=architectural&food_type=restaurants&lat=0&lon=0"
+        )
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Upcoming Events", response.data)
 
@@ -125,10 +124,11 @@ class AppTestCase(unittest.TestCase):
         mock_airquality_forecast_data.return_value = ([], None)
 
         response = self.app.get(
-           "/get-weather-info?city=London&username=test&country=UK&date=2023-12-31&attraction_type=architectural&food_type=restaurants"
-       )
+            "/get-weather-info?city=London&username=test&country=UK&date=2023-12-31&attraction_type=architectural&food_type=restaurants"
+        )
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Weather Information", response.data)
+
 
 if __name__ == "__main__":
     unittest.main()
