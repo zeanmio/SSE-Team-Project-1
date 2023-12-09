@@ -218,7 +218,7 @@ def get_seatgeek_events(lat, lon, date):
         "lat": lat,
         "lon": lon,
         "datetime_local.gte": date,
-        "range": "50mi",
+        "range": "10mi",
     }
 
     response = requests.get(base_url, params=params)
