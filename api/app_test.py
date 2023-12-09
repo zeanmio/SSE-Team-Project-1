@@ -57,7 +57,7 @@ class AppTestCase(unittest.TestCase):
             "/get-places-info?city=London&username=test&country=UK&date=2023-12-31&attraction_type=architectural&food_type=restaurants"
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Discover", response.data)
+        self.assertIn(b"Recommended Attractions", response.data)
 
     @patch("app.get_db_connection")
     @patch("app.get_dining_data")
