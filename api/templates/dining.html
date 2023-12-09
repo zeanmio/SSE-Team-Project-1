@@ -46,19 +46,19 @@
                     {% if dining.properties.instagram %}
                         <p>
                             <img src="/static/images/instagram.png" class="icon">
-                            Instagram: {{ dining.properties.instagram }}
+                            {{ dining.properties.instagram }}
                         </p>
                     {% endif %}
                     {% if dining.properties.twitter %}
                         <p>
                             <img src="/static/images/twitter.png" class="icon">
-                            X: {{ dining.properties.twitter }}
+                            {{ dining.properties.twitter }}
                         </p>
                     {% endif %}
                     {% if dining.properties.facebook %}
                         <p>
                             <img src="/static/images/facebook.png" class="icon">
-                            Facebook: {{ dining.properties.facebook }}
+                            {{ dining.properties.facebook }}
                         </p>
                     {% endif %}
                     {% if dining.properties.official_websites %}
@@ -100,7 +100,7 @@
             + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
         }    
         function redirectToEvents() {
-        window.location.href = '/get-event-info?username={{ shared_data.username }}'
+        window.location.href = '/get-events-info?username={{ shared_data.username }}'
             + '&country={{ shared_data.country }}&city={{ shared_data.city }}'
             + '&date={{ shared_data.date }}&attraction_type={{ shared_data.food_type }}'
             + '&food_type={{ shared_data.food_type }}&lat={{ lat }}&lon={{ lon }}';
