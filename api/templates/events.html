@@ -15,19 +15,20 @@
 </head>
 
 <body>
+    <div class="navbar">
+        <a href="javascript:void(0);" onclick="redirectToWeather()">Weather</a>
+        <a href="javascript:void(0);" onclick="redirectToPlaces()">Attraction</a>
+        <a href="javascript:void(0);" onclick="redirectToDining()">Dining</a>
+        <a href="#">Event</a>
+        <a href="javascript:void(0);" onclick="redirectToIndex()">Start New Exploration</a>
+    </div>
+    
     <br><br>
 
     <div class="header-text">
         <h2 style="text-align: center;">Upcoming Events in {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}</h2>
     </div>
     
-    <div class="button-container">
-        <button onclick="redirectToWeather()">Weather Information</button>
-        <button onclick="redirectToPlaces()">Find Attractions</button>
-        <button onclick="redirectToDining()">Find Restaurants</button>
-        <button onclick="redirectToIndex()">Start New Exploration</button>
-    </div>
-        
     <br><br>
 
     <div class="content-wrapper">

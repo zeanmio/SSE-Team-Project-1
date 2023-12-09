@@ -15,19 +15,20 @@
 </head>
 
 <body>
+    <div class="navbar">
+        <a href="javascript:void(0);" onclick="redirectToWeather()">Weather</a>
+        <a href="#">Attraction</a>
+        <a href="javascript:void(0);" onclick="redirectToDining()">Dining</a>
+        <a href="javascript:void(0);" onclick="redirectToEvents()">Event</a>
+        <a href="javascript:void(0);" onclick="redirectToIndex()">Start New Exploration</a>
+    </div>
+    
     <br><br>
 
     <div class="header-text">
         <h2 style="text-align: center;">Recommended Attractions in {{ shared_data.city }}, {{ shared_data.country }} on {{ shared_data.date }}</h2>
     </div>
     
-    <div class="button-container">
-        <button onclick="redirectToWeather()">Weather Information</button>
-        <button onclick="redirectToDining()">Find Restaurants</button>
-        <button onclick="redirectToEvents()">Upcoming Events</button>
-        <button onclick="redirectToIndex()">Start New Exploration</button>
-    </div>
-
     <br><br>
     
     <div class="content-wrapper">
@@ -63,9 +64,7 @@
                     {% endif %}
                     {% if place.properties.official_websites %}
                         {% for website in place.properties.official_websites %}
-                            <a href="{{ website }}" target="_blank">
-                                <button type="button">Official Website</button>
-                            </a>
+                            <a href="{{ place.properties.official_websites[0] }}" target="_blank">Official Website</a>
                         {% endfor %}
                     {% endif %} 
                     </div>
